@@ -1,11 +1,18 @@
 package com.mygdx.mongojocs.midletemu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
+
+import java.util.HashMap;
 
 public class Graphics {
 
@@ -18,6 +25,10 @@ public class Graphics {
     Font currentFont;
     Color currentColor;
     boolean scissorsSet = false;
+
+    static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
+    public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_";
+
 
     public Graphics()
     {
@@ -45,8 +56,33 @@ public class Graphics {
     
     public void drawString(String str, int x, int y, int z) {
 
+
+        String hash = currentFont.face+"-"+ currentFont.style+"-"+currentFont.size+"-"+currentColor;
+        BitmapFont f;
+
+        if(bitmapFonts.containsKey(hash))
+        {
+            f = bitmapFonts.get(hash);
+        }
+        else
+        {
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("8bitOperatorPlus-Bold.ttf"));
+            FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            params.minFilter = Texture.TextureFilter.Nearest;
+            params.magFilter = Texture.TextureFilter.Nearest;
+            params.size = Font.pixelWidths[currentFont.size];
+            params.borderWidth = 0;
+            //params.borderColor = Color.BLACK;
+            params.color = currentColor;
+            params.characters = fontChars;
+            f = generator.generateFont(params); // font size 12 pixels
+            generator.dispose();
+
+            bitmapFonts.put(hash,f);
+        }
+
         batch.begin();
-        currentFont.bmpFont.draw(batch, str, x, 208 - y - currentFont.getHeight() );
+        f.draw(batch, str, x, 208 - y - currentFont.getHeight()/4 );
         batch.end();
     }
 

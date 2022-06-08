@@ -20,6 +20,7 @@ import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.FullCanvas;
 import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.Image;
+import com.mygdx.mongojocs.midletemu.MIDlet;
 
 //import javax.microedition.media.*;
 //import javax.microedition.media.control.*;
@@ -733,7 +734,7 @@ public void soundTick()
 
 	public Music LoadMidi(String Name)
 	{
-		return Gdx.audio.newMusic(Gdx.files.internal(Name));
+		return Gdx.audio.newMusic(Gdx.files.internal(MIDlet.assetsFolder+"/"+Name));
 	}
 
 

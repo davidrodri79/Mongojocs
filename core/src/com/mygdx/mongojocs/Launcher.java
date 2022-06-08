@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Display;
+import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.pingpoyo.Game;
 
 public class Launcher extends ApplicationAdapter {
@@ -90,6 +91,7 @@ public class Launcher extends ApplicationAdapter {
 
 		});
 
+		MIDlet.setAssetsFolder("pingpoyo");
 		game = new Game();
 		game.runInit();
 	}

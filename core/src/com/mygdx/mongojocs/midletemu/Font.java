@@ -19,65 +19,40 @@ public class Font {
     public static final int SIZE_MEDIUM = 1;
     public static final int SIZE_LARGE = 2;
 
-    BitmapFont bmpFont;
-    static HashMap<String,Font> fonts = new HashMap<>();
+    public static final int pixelWidths[] = { 8, 10, 12};
+    public static final int pixelHeights[] = { 10, 12, 14};
+
+    int face;
+    int style;
+    int size;
 
     Font()
     {
 
     }
 
-    public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_";
-
     public static Font getFont(int face, int style, int size)
     {
-        Font f;
+        Font f = new Font();
 
-        String hash = face+"-"+style+"-"+size;
-
-        if(fonts.containsKey(hash))
-        {
-            f = fonts.get(hash);
-        }
-        else
-        {
-            f = new Font();
-
-            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("8bitOperatorPlus-Bold.ttf"));
-            FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            params.minFilter = Texture.TextureFilter.Nearest;
-            params.magFilter = Texture.TextureFilter.Nearest;
-            switch(size)
-            {
-                case SIZE_SMALL: params.size = 8; break;
-                default:
-                case SIZE_MEDIUM: params.size = 10; break;
-                case SIZE_LARGE: params.size = 14; break;
-            }
-            params.borderWidth = 0;
-            params.borderColor = Color.BLACK;
-            params.color = Color.WHITE;
-            params.characters = fontChars;
-            f.bmpFont = generator.generateFont(params); // font size 12 pixels
-            generator.dispose();
-
-            fonts.put(hash,f);
-        }
+       f.face = face;
+       f.style = style;
+       f.size = size;
 
         return f;
     }
 
     public int getHeight()
     {
-        return (int)bmpFont.getCapHeight();
+        return pixelHeights[size];
     }
 
     public int stringWidth(String s)
     {
-        return s.length() * 10;
+        return (s.length() * pixelWidths[size] * 2)/3;
     }
 
     public int charWidth(char c) {
-        return 10;
+        return pixelWidths[size];
     }
 }

@@ -224,7 +224,7 @@ public boolean colision(int x1, int y1, int xs1, int ys1, int x2, int y2, int xs
 
 public byte[] loadFile(String Nombre)
 {
-	FileHandle file = Gdx.files.internal(Nombre.substring(1));
+	FileHandle file = Gdx.files.internal(MIDlet.assetsFolder+"/"+Nombre.substring(1));
 	byte[] bytes = file.readBytes();
 
 	return bytes;
@@ -270,7 +270,7 @@ public byte[] loadFile(String Nombre)
 
 public void loadFile(byte[] buffer, String Nombre)
 {
-	FileHandle file = Gdx.files.internal(Nombre.substring(1));
+	FileHandle file = Gdx.files.internal(MIDlet.assetsFolder+"/"+Nombre.substring(1));
 	byte[] bytes = file.readBytes();
 
 	for(int i = 0; i < buffer.length; i++)
@@ -1081,6 +1081,8 @@ public void menuListTextDraw(Graphics g, int format, String str, int x, int y)
 public String[] menuListCutText(int Dato, String Texto)
 {
 	String[] str = new String[0];
+
+	Gdx.app.log("menuListCutText",Texto);
 
 	int Pos=0, PosIni=0, PosOld=0, Size=0;
 

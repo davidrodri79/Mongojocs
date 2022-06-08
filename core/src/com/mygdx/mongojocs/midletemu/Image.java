@@ -9,7 +9,7 @@ public class Image {
     public static Image createImage(String fileName)
     {
         Image im = new Image();
-        im.texture = new Texture(fileName.substring(1));
+        im.texture = new Texture(MIDlet.assetsFolder+"/"+fileName.substring(1));
         return im;
     }
 
