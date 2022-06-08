@@ -24,6 +24,7 @@ import com.mygdx.mongojocs.midletemu.RecordStore;
 import com.mygdx.mongojocs.midletemu.TextField;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 //import javax.microedition.rms.*;
 
@@ -421,6 +422,15 @@ String[][] textosCreate(byte[] textos)
 		}
 	}
 
+	// MONGOFIX ==========================================
+	char textos_char[] = new char[textos.length];
+	for(int i = 0; i < textos.length; i++)
+		if(textos[i] < 0)
+			textos_char[i]=(char)(textos[i]+256);
+		else
+			textos_char[i]=(char)textos[i];
+		//=================================================
+
 	String[][] strings = new String[size][];
 
 	dataPos=0;
@@ -433,8 +443,9 @@ String[][] textosCreate(byte[] textos)
 
 	strings[i] = new String[num];
 
+	char a = 'á';
 	for (int t=0 ; t<num; t++) {
-		strings[i][t] = new String(textos, data[dataPos++], data[dataPos++]);
+		strings[i][t] = new String(textos_char, data[dataPos++], data[dataPos++]);
 		if(strings[i][t].length() < 2) strings[i][t] = " ";
 	}
 	}
@@ -606,7 +617,11 @@ public boolean logosTick()
 {
 	if ( (System.currentTimeMillis() - timeIniLogos) < timeLogos) {return false;}
 
-	if (cntLogos == numLogos) {return true;}
+	if (cntLogos == numLogos) {
+		gc.canvasImg = null;  //MONGOFIX=========
+		gc.canvasFillShow = false; //MONGOFIX=========
+		return true;
+	}
 
 	gc.canvasFillInit(rgbLogos[cntLogos]);
 	gc.canvasImg = gc.loadImage("/Logo"+cntLogos+".png");
@@ -1086,7 +1101,11 @@ public String[] menuListCutText(int Dato, String Texto)
 
 	int Pos=0, PosIni=0, PosOld=0, Size=0;
 
-	byte[] Tex = Texto.getBytes();
+	// MONGOFIX =============================================================
+	//byte[] Texbytes = Texto.getBytes();
+	char[] Tex = new char[Texto.length()];
+	Texto.getChars(0, Texto.length(), Tex, 0);
+	//=======================================================================
 
 	Font f = menuListGetFont(Dato);
 
@@ -1124,7 +1143,12 @@ public String[] menuListCutText(int Dato, String Texto)
 
 	newStr = null;
 
-	str[i] = Texto.substring(PosIni,PosOld);
+	try {
+		str[i] = Texto.substring(PosIni, PosOld);
+	}catch(Exception e)
+	{
+		e.printStackTrace();
+	}
 
 	PosIni=PosOld+1;
 

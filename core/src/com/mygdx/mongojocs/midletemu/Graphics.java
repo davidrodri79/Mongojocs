@@ -27,7 +27,7 @@ public class Graphics {
     boolean scissorsSet = false;
 
     static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
-    public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_";
+    public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'";
 
 
     public Graphics()

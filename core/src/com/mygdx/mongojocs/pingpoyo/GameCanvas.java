@@ -224,7 +224,8 @@ public class GameCanvas extends BiosCanvas
 				showFace(20,y+5,0);
 				showFace(canvasWidth-63,y+5,1+ga.round);
 				break;
-				
+
+				case Game.NEXT_SERVICE:
 				case Game.PLAYER_SERVICE :				
 				case Game.OPPONENT_SERVICE :				
 				case Game.GAME_PLAY :				
@@ -247,7 +248,7 @@ public class GameCanvas extends BiosCanvas
 				break;
 				
 				case Game.OPPONENT_POINT :				
-				case Game.PLAYER_POINT :				
+				case Game.PLAYER_POINT :
 				showGameAction();
 				if(ga.cnt<=30) opponentTalk(ga.round,(ga.gameStatus==Game.PLAYER_POINT ? 4 : 0)+((ga.playerScore+ga.opponentScore)%4),55);										
 				if(ga.cnt>30) boxedText(ga.gameText[13][0]+" "+ga.playerScore+" - "+ga.gameText[13][1+ga.round]+" "+ga.opponentScore,140);										
@@ -310,7 +311,9 @@ public class GameCanvas extends BiosCanvas
 				break;
 				
 				case Game.SHOW_TIP :
-				if(ga.cnt<5) boxedTip(ga.gameText[31][ga.tipRequest + (ga.gameKeyconf ? 0 : 10)]);												
+				//if(ga.cnt<5) MONGOFIX
+					showGameAction();
+					boxedTip(ga.gameText[31][ga.tipRequest + (ga.gameKeyconf ? 0 : 10)]);
 				break;
 			}
 		
@@ -328,7 +331,7 @@ public class GameCanvas extends BiosCanvas
 				showGameAction();
 				break;
 			}		
-			doRepaintMenu = false;
+			doRepaintMenu = true; //MONGOFIX==========
 		}
 		
 	}

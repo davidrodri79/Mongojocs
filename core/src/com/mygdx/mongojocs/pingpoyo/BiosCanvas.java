@@ -574,17 +574,19 @@ public void canvasCreate()
 
 public void canvasDraw()
 {
-	if (canvasFillShow) { canvasFillShow=false; canvasFill(canvasFillRGB); }
+	if (canvasFillShow) { /*canvasFillShow=false; MONGOFIX*/ canvasFill(canvasFillRGB); }
 
-	if (canvasImg!=null) { showImage(canvasImg); canvasImg=null; System.gc(); }
+	if (canvasImg!=null) { showImage(canvasImg); /*canvasImg=null; MONGOFIX*/ System.gc(); }
 
 	if (canvasTextShow) { canvasTextShow=false; canvasTextDraw(); }
 
 // ------------------------
 
+	Draw(scr);
+
 	if (ga.menuShow) { ga.menuShow=false; menuDraw(); }
 
-	Draw(scr);
+
 }
 
 
@@ -601,7 +603,7 @@ public void canvasDraw()
 
 public void menuDraw()
 {
-
+	scr.setClip(0,0,176,208);
 	ga.menuListDraw(scr);
 
 }
