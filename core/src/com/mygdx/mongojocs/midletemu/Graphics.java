@@ -75,9 +75,12 @@ public class Graphics {
     public void drawRect(int x, int y, int w, int h)
     {
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.rect(x, 208 - y - h, w, h);
+        shapeRenderer.rect(x, 208 - y - h, w, 1);
+        shapeRenderer.rect(x, 208 - y - h, 1, h);
+        shapeRenderer.rect(x, 208 - y, w, 1);
+        shapeRenderer.rect(x + w - 1, 208 - y - h, 1, h);
         shapeRenderer.end();
     }
 
@@ -89,7 +92,12 @@ public class Graphics {
         shapeRenderer.end();
     }
 
-    public void fillArc(int i, int i1, int sw, int sh, int i2, int i3) {
+    public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1) {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(currentColor);
+        shapeRenderer.ellipse(cx, 208 - cy, rx, ry);
+        shapeRenderer.end();
     }
 
     public void fillRoundRect(int i, int i1, int i2, int i3, int i4, int i5) {

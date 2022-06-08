@@ -48,9 +48,9 @@ public class Launcher extends ApplicationAdapter {
 					new VirtualKey(0,104,59, 52, Canvas.KEY_NUM7),
 					new VirtualKey(59,104,59, 52, Canvas.KEY_NUM8),
 					new VirtualKey(118,104,59, 52, Canvas.KEY_NUM9),
-					new VirtualKey(0,156,59, 52, 35),
+					new VirtualKey(0,156,59, 52, -6),
 					new VirtualKey(59,156,59, 52, Canvas.KEY_NUM0),
-					new VirtualKey(118,156,59, 52, 42)
+					new VirtualKey(118,156,59, 52, -7)
 			};
 	VirtualKey pressedKey = null;
 	

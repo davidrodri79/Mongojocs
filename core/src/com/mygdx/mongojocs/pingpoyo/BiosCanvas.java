@@ -13,6 +13,8 @@ package com.mygdx.mongojocs.pingpoyo;
 //import com.nokia.mid.ui.*;		// clase CUSTOM de NOKIA
 //import com.nokia.mid.sound.*;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.FullCanvas;
@@ -649,6 +651,7 @@ public void menuDraw()
 // *******************
 
 //static javax.microedition.media.Player snd[];
+	Music snd[];
 
 
 // -------------------
@@ -657,10 +660,10 @@ public void menuDraw()
 
 public void soundCreate()
 {
-		/*snd = new javax.microedition.media.Player[8];
+		snd = new Music[8];
 		
 		for(int i = 0; i<snd.length; i++)
-			snd[i] = LoadMidi(i+".mid");*/
+			snd[i] = LoadMidi(i+".mid");
 		
 }
 
@@ -670,20 +673,22 @@ public void soundCreate()
 
 public void soundPlay(int Ary, int Loop)
 {
-	/*try{
+	try{
 		
 			soundStop();
 				
 			if(!ga.gameSound) return;				
 			
 			if(Ary>=0){
-				VolumeControl vc = (VolumeControl) snd[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(90);}					
+				/*VolumeControl vc = (VolumeControl) snd[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(90);}
 				snd[Ary].setLoopCount((Loop > 0 ? Loop : 99));			
-				snd[Ary].start();
+				snd[Ary].start();*/
+				snd[Ary].setLooping( Loop == 0);
+				snd[Ary].play();
 			}
 			
 		}catch(Exception exception) {exception.printStackTrace();} 
-				*/
+
 }
 
 // -------------------
@@ -692,12 +697,12 @@ public void soundPlay(int Ary, int Loop)
 
 public void soundStop()
 {
-	/*try{
+	try{
 		
 		for(int i=0; i<snd.length; i++)
 			snd[i].stop();
 									
-	}catch(Exception exception) {exception.printStackTrace();} */
+	}catch(Exception exception) {exception.printStackTrace();}
 }
 
 // -------------------
@@ -724,6 +729,12 @@ public void soundTick()
 	
 		return p;
 	} */
+
+
+	public Music LoadMidi(String Name)
+	{
+		return Gdx.audio.newMusic(Gdx.files.internal(Name));
+	}
 
 
 public void vibraInit(int Time)
