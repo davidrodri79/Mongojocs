@@ -10,13 +10,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.MIDlet;
+import com.mygdx.mongojocs.numa.BeastMain;
 import com.mygdx.mongojocs.pingpoyo.Game;
 
 public class Launcher extends ApplicationAdapter {
 	/*SpriteBatch batch;
 	Texture img;*/
 
-	Game game;
+	BeastMain game;
 
 	class VirtualKey
 	{
@@ -69,9 +70,10 @@ public class Launcher extends ApplicationAdapter {
 				{
 					Vector3 touchPos = new Vector3();
 					touchPos.set(screenX, screenY, 0);
-					game.gc.graphics.camera.unproject(touchPos);
+					//game.gc.graphics.camera.unproject(touchPos);
+					game.gameCanvas.g.camera.unproject(touchPos);
 
-					if(vkeys[i].inside((int)touchPos.x, (int)touchPos.y)) {
+					if(vkeys[i].inside((int)touchPos.x, 208 - (int)touchPos.y)) {
 						Display.theDisplay.canvas.keyPressed(vkeys[i].code);
 						pressedKey = vkeys[i];
 					}
@@ -91,8 +93,9 @@ public class Launcher extends ApplicationAdapter {
 
 		});
 
-		MIDlet.setAssetsFolder("pingpoyo");
-		game = new Game();
+		MIDlet.setAssetsFolder("numa");
+		game = new BeastMain();
+		game.startApp();
 		game.runInit();
 	}
 

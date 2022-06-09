@@ -18,4 +18,24 @@ public class MIDlet {
     {
 
     }
+
+    public void run()
+    {
+
+    }
+
+    public void runInit()
+    {
+
+    }
+
+    public void runTick()
+    {
+
+    }
+
+    public void runEnd()
+    {
+
+    }
 }

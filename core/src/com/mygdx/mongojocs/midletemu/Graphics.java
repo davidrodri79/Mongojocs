@@ -18,13 +18,16 @@ public class Graphics {
 
     public static final int TOP = 1;
     public static final int LEFT = 2;
+    public static final int HCENTER = 3;
 
+    public Image fromImage = null;
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
     public OrthographicCamera camera;
     Font currentFont;
     Color currentColor;
     boolean scissorsSet = false;
+    boolean allClipped = false;
 
     static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
     public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'";
@@ -54,7 +57,7 @@ public class Graphics {
         currentColor = new Color(r/255.f, g/255.f, b/255.f, 1);
     }
     
-    public void drawString(String str, int x, int y, int z) {
+    public void drawString(String str, int x, int y, int flags) {
 
 
         String hash = currentFont.face+"-"+ currentFont.style+"-"+currentFont.size+"-"+currentColor;
@@ -81,6 +84,11 @@ public class Graphics {
             bitmapFonts.put(hash,f);
         }
 
+        if((flags & HCENTER) != 0)
+        {
+            x -= currentFont.stringWidth(str)/2;
+        }
+
         batch.begin();
         f.draw(batch, str, x, 208 - y - currentFont.getHeight()/4 );
         batch.end();
@@ -88,12 +96,26 @@ public class Graphics {
 
     public void setClip(int destX, int destY, int sizeX, int sizeY) {
 
-        if(scissorsSet) ScissorStack.popScissors();
+        allClipped = false;
+        if(destX < 0) destX = 0;
+        if(destX >= 176) destX = 175;
+        if(destY < 0) destY = 0;
+        if(destY >= 208) destY = 207;
+        if(destX + sizeX >= 176) sizeX = 176 - destX;
+        if(destY + sizeY >= 208) sizeY = 208 - destY;
+        if(sizeX <= 0) { allClipped = true; return;}
+        if(sizeY <= 0) { allClipped = true; return;}
+
+        if(scissorsSet) { ScissorStack.popScissors(); scissorsSet = false; }
         Rectangle scissors = new Rectangle();
         Rectangle clipBounds = new Rectangle(destX,208 - destY - sizeY, sizeX, sizeY);
         ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
         if (ScissorStack.pushScissors(scissors)) {
             scissorsSet = true;
+        }
+        else
+        {
+            scissorsSet = false;
         }
     }
 
@@ -102,14 +124,27 @@ public class Graphics {
 
     public void drawImage(Image img, int x, int y, int flags)
     {
+        if(allClipped) return;
+
+        if(fromImage != null)
+            fromImage.fbo.begin();
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(img.texture, x, 208 - y - img.getHeight());
         batch.end();
+
+        if(fromImage != null)
+            fromImage.fbo.end();
     }
     
     public void drawRect(int x, int y, int w, int h)
     {
+        if(allClipped) return;
+
+        if(fromImage != null)
+            fromImage.fbo.begin();
+
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
@@ -118,22 +153,43 @@ public class Graphics {
         shapeRenderer.rect(x, 208 - y, w, 1);
         shapeRenderer.rect(x + w - 1, 208 - y - h, 1, h);
         shapeRenderer.end();
+
+        if(fromImage != null)
+            fromImage.fbo.end();
     }
 
     public void fillRect(int x, int y, int w, int h) {
+
+        if(allClipped) return;
+
+        if(fromImage != null)
+            fromImage.fbo.begin();
+
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
         shapeRenderer.rect(x, 208 - y - h, w, h);
         shapeRenderer.end();
+
+        if(fromImage != null)
+            fromImage.fbo.end();
     }
 
-    public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1) {
+    public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1)
+    {
+        if(allClipped) return;
+
+        if(fromImage != null)
+            fromImage.fbo.begin();
+
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
         shapeRenderer.ellipse(cx, 208 - cy, rx, ry);
         shapeRenderer.end();
+
+        if(fromImage != null)
+            fromImage.fbo.end();
     }
 
     public void fillRoundRect(int i, int i1, int i2, int i3, int i4, int i5) {
