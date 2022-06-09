@@ -211,4 +211,20 @@ public class Graphics {
     public void drawRoundRect(int i, int i1, int i2, int i3, int i4, int i5) {
         drawRect(i,i1,i2,i3);
     }
+
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        if(allClipped) return;
+
+        if(fromImage != null)
+            fromImage.fbo.begin();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(currentColor);
+        shapeRenderer.line(x1,208 - y1,x2,208 - y2);
+        shapeRenderer.end();
+
+        if(fromImage != null)
+            fromImage.fbo.end();
+    }
 }

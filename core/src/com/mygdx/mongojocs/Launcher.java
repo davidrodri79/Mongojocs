@@ -13,12 +13,13 @@ import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.numa.BeastMain;
 import com.mygdx.mongojocs.pingpoyo.Game;
 import com.mygdx.mongojocs.pingpoyo.GameCanvas;
+import com.mygdx.mongojocs.qblast.QBlastMain;
 
 public class Launcher extends ApplicationAdapter {
 	/*SpriteBatch batch;
 	Texture img;*/
 
-	Game game;
+	QBlastMain game;
 
 	class VirtualKey
 	{
@@ -71,8 +72,8 @@ public class Launcher extends ApplicationAdapter {
 				{
 					Vector3 touchPos = new Vector3();
 					touchPos.set(screenX, screenY, 0);
-					game.gc.graphics.camera.unproject(touchPos);
-					//game.gameCanvas.g.camera.unproject(touchPos);
+					//game.gc.graphics.camera.unproject(touchPos);
+					game.gameCanvas.g.camera.unproject(touchPos);
 
 					if(vkeys[i].inside((int)touchPos.x, 208 - (int)touchPos.y)) {
 						Display.theDisplay.canvas.keyPressed(vkeys[i].code);
@@ -94,8 +95,8 @@ public class Launcher extends ApplicationAdapter {
 
 		});
 
-		MIDlet.setAssetsFolder("pingpoyo");
-		game = new Game();
+		MIDlet.setAssetsFolder("qblast");
+		game = new QBlastMain();
 		//game.startApp();
 		game.runInit();
 	}
