@@ -89,6 +89,8 @@ public class BeastMain extends MIDlet //implements Runnable, CommandListener
 	{
 		gameCanvas = new BeastCanvas(this);
 		gameCanvas.initTables();
+
+		Display.getDisplay(this).setCurrent(gameCanvas);
 						
 		rnd=new Random();
 						

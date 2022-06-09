@@ -3,6 +3,7 @@ package com.mygdx.mongojocs.midletemu;
 public class MIDlet {
 
     public static String assetsFolder = "";
+    public boolean appClosed = false;
 
     public MIDlet()
     {
@@ -16,7 +17,7 @@ public class MIDlet {
 
     public void notifyDestroyed()
     {
-
+        appClosed = true;
     }
 
     public void run()
