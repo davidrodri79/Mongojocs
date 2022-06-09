@@ -12,12 +12,13 @@ import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.numa.BeastMain;
 import com.mygdx.mongojocs.pingpoyo.Game;
+import com.mygdx.mongojocs.pingpoyo.GameCanvas;
 
 public class Launcher extends ApplicationAdapter {
 	/*SpriteBatch batch;
 	Texture img;*/
 
-	BeastMain game;
+	Game game;
 
 	class VirtualKey
 	{
@@ -70,8 +71,8 @@ public class Launcher extends ApplicationAdapter {
 				{
 					Vector3 touchPos = new Vector3();
 					touchPos.set(screenX, screenY, 0);
-					//game.gc.graphics.camera.unproject(touchPos);
-					game.gameCanvas.g.camera.unproject(touchPos);
+					game.gc.graphics.camera.unproject(touchPos);
+					//game.gameCanvas.g.camera.unproject(touchPos);
 
 					if(vkeys[i].inside((int)touchPos.x, 208 - (int)touchPos.y)) {
 						Display.theDisplay.canvas.keyPressed(vkeys[i].code);
@@ -93,9 +94,9 @@ public class Launcher extends ApplicationAdapter {
 
 		});
 
-		MIDlet.setAssetsFolder("numa");
-		game = new BeastMain();
-		game.startApp();
+		MIDlet.setAssetsFolder("pingpoyo");
+		game = new Game();
+		//game.startApp();
 		game.runInit();
 	}
 

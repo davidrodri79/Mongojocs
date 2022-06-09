@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.HashMap;
@@ -26,9 +27,11 @@ public class Font {
     int style;
     int size;
 
+    GlyphLayout layout;
+
     Font()
     {
-
+        layout = new GlyphLayout();
     }
 
     public static Font getFont(int face, int style, int size)
@@ -49,10 +52,27 @@ public class Font {
 
     public int stringWidth(String s)
     {
-        return (s.length() * pixelWidths[size] * 2)/3;
+        String hash = face+"-"+ style+"-"+size;
+        BitmapFont fnt;
+
+        if(Graphics.bitmapFonts.containsKey(hash))
+        {
+            fnt = Graphics.bitmapFonts.get(hash);
+        }
+        else
+        {
+            fnt = Graphics.fontGenerate(face, style, size, Color.WHITE);
+        }
+
+        layout.setText( fnt, s);
+        return (int)layout.width;
+
     }
 
     public int charWidth(char c) {
-        return pixelWidths[size];
+
+        char array[]={c};
+        return stringWidth(new String(array));
+
     }
 }

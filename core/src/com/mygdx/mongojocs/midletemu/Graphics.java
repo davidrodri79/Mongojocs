@@ -56,6 +56,29 @@ public class Graphics {
     public void setColor(int r, int g, int b) {
         currentColor = new Color(r/255.f, g/255.f, b/255.f, 1);
     }
+
+    public static BitmapFont fontGenerate(int face, int style, int size, Color color)
+    {
+        String hash = face+"-"+ style+"-"+size+"-"+color;
+        String hashNoColor = face+"-"+ style+"-"+size;
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("8bitOperatorPlus-Bold.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        params.minFilter = Texture.TextureFilter.Nearest;
+        params.magFilter = Texture.TextureFilter.Nearest;
+        params.size = Font.pixelWidths[size];
+        params.borderWidth = 0;
+        //params.borderColor = Color.BLACK;
+        params.color = color;
+        params.characters = fontChars;
+        BitmapFont f = generator.generateFont(params); // font size 12 pixels
+        generator.dispose();
+
+        bitmapFonts.put(hash,f);
+        bitmapFonts.put(hashNoColor, f);
+
+        return f;
+    }
     
     public void drawString(String str, int x, int y, int flags) {
 
@@ -69,19 +92,8 @@ public class Graphics {
         }
         else
         {
-            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("8bitOperatorPlus-Bold.ttf"));
-            FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            params.minFilter = Texture.TextureFilter.Nearest;
-            params.magFilter = Texture.TextureFilter.Nearest;
-            params.size = Font.pixelWidths[currentFont.size];
-            params.borderWidth = 0;
-            //params.borderColor = Color.BLACK;
-            params.color = currentColor;
-            params.characters = fontChars;
-            f = generator.generateFont(params); // font size 12 pixels
-            generator.dispose();
+            f = fontGenerate(currentFont.face, currentFont.style, currentFont.size, currentColor);
 
-            bitmapFonts.put(hash,f);
         }
 
         if((flags & HCENTER) != 0)
@@ -97,9 +109,9 @@ public class Graphics {
     public void setClip(int destX, int destY, int sizeX, int sizeY) {
 
         allClipped = false;
-        if(destX < 0) destX = 0;
+        if(destX < 0) { sizeX += destX; destX = 0; }
         if(destX >= 176) destX = 175;
-        if(destY < 0) destY = 0;
+        if(destY < 0) { sizeY+= destY; destY = 0; }
         if(destY >= 208) destY = 207;
         if(destX + sizeX >= 176) sizeX = 176 - destX;
         if(destY + sizeY >= 208) sizeY = 208 - destY;
