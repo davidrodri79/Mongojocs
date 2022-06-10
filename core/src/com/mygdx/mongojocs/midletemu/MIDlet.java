@@ -1,5 +1,7 @@
 package com.mygdx.mongojocs.midletemu;
 
+import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
+
 public class MIDlet {
 
     public static String assetsFolder = "";
@@ -17,6 +19,11 @@ public class MIDlet {
 
     public void notifyDestroyed()
     {
+        if(Display.theDisplay.canvas.graphics.scissorsSet)
+        {
+            ScissorStack.popScissors();
+            Display.theDisplay.canvas.graphics.scissorsSet = false;
+        }
         appClosed = true;
     }
 

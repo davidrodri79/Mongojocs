@@ -136,6 +136,9 @@ public void runTick()
 		if (GameSleep<1) {GameSleep=1;}
 		try	{Thread.sleep(GameSleep);} catch(Exception e) {}
 	}
+
+	if(gameExit)
+		runEnd();
 }
 
 public void runEnd()

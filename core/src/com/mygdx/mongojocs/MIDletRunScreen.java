@@ -1,7 +1,9 @@
 package com.mygdx.mongojocs;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.mongojocs.midletemu.Canvas;
@@ -83,6 +85,23 @@ public class MIDletRunScreen implements Screen {
                 }
                 return true;
             }
+
+            @Override
+            public boolean keyDown(int keycode)
+            {
+                if(keycode == Input.Keys.RIGHT)
+                    Display.theDisplay.canvas.keyPressed(Canvas.KEY_NUM6);
+                return true;
+            }
+
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                if(keycode == Input.Keys.RIGHT)
+                    Display.theDisplay.canvas.keyReleased(Canvas.KEY_NUM6);
+                return true;
+            }
+
 
         });
 
