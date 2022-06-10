@@ -160,7 +160,7 @@ public class QBlastCanvas extends FullCanvas
 		but1=(keycode==Canvas.KEY_NUM5 || keycode==-7 /*|| getGameAction(keycode)==FIRE*/);
 		but2=(keycode==Canvas.KEY_NUM1 /*|| keycode==KEY_NUM7*/);
 		but3=(keycode==Canvas.KEY_NUM3 /*|| keycode==KEY_NUM9*/);
-		but4=(keycode==Canvas.KEY_NUM0 /*|| keycode==-6*/);
+		but4=(keycode==Canvas.KEY_NUM0 || keycode==-6);
 		//}
 							
 		anybut=but1 || but2 || but3 || but4;

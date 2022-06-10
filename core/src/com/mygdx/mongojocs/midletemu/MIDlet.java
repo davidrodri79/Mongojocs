@@ -20,6 +20,11 @@ public class MIDlet {
         appClosed = true;
     }
 
+    public void startApp()
+    {
+
+    }
+
     public void run()
     {
 

@@ -35,6 +35,8 @@ public class DirectGraphics {
 
         int u = 0, v = 1, u2 = 1, v2 = 0;
 
+
+
         if((flags & FLIP_HORIZONTAL) != 0)
         {
             u = 1; u2 = 0;

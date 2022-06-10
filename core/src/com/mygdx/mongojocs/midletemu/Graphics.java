@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
+import org.graalvm.compiler.replacements.Log;
+
 import java.util.HashMap;
 
 public class Graphics {
@@ -109,6 +111,7 @@ public class Graphics {
     public void setClip(int destX, int destY, int sizeX, int sizeY) {
 
         allClipped = false;
+        int finaly = fromImage == null ? 208 - destY - sizeY : destY;
         if(destX < 0) { sizeX += destX; destX = 0; }
         if(destX >= 176) destX = 175;
         if(destY < 0) { sizeY+= destY; destY = 0; }
@@ -120,7 +123,7 @@ public class Graphics {
 
         if(scissorsSet) { ScissorStack.popScissors(); scissorsSet = false; }
         Rectangle scissors = new Rectangle();
-        Rectangle clipBounds = new Rectangle(destX,208 - destY - sizeY, sizeX, sizeY);
+        Rectangle clipBounds = new Rectangle(destX,finaly, sizeX, sizeY);
         ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
         if (ScissorStack.pushScissors(scissors)) {
             scissorsSet = true;
@@ -138,12 +141,16 @@ public class Graphics {
     {
         if(allClipped) return;
 
+        int finaly = fromImage == null ?
+                208 - y - img.getHeight() :
+                fromImage.getHeight() - y - img.getHeight();
+
         if(fromImage != null)
             fromImage.fbo.begin();
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(img.texture, x, 208 - y - img.getHeight());
+        batch.draw(img.texture, x, finaly);
         batch.end();
 
         if(fromImage != null)
@@ -154,16 +161,18 @@ public class Graphics {
     {
         if(allClipped) return;
 
+        int finaly = fromImage == null ? 208 - y - h: y;
+
         if(fromImage != null)
             fromImage.fbo.begin();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.rect(x, 208 - y - h, w, 1);
-        shapeRenderer.rect(x, 208 - y - h, 1, h);
-        shapeRenderer.rect(x, 208 - y, w, 1);
-        shapeRenderer.rect(x + w - 1, 208 - y - h, 1, h);
+        shapeRenderer.rect(x, finaly, w, 1);
+        shapeRenderer.rect(x, finaly, 1, h);
+        shapeRenderer.rect(x, finaly + h, w, 1);
+        shapeRenderer.rect(x + w - 1, finaly, 1, h);
         shapeRenderer.end();
 
         if(fromImage != null)
@@ -174,13 +183,15 @@ public class Graphics {
 
         if(allClipped) return;
 
+        int finaly = fromImage == null ? 208 - y - h: fromImage.getHeight() - y - h;
+
         if(fromImage != null)
             fromImage.fbo.begin();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.rect(x, 208 - y - h, w, h);
+        shapeRenderer.rect(x, finaly, w, h);
         shapeRenderer.end();
 
         if(fromImage != null)

@@ -94,7 +94,7 @@ public class MIDletRunScreen implements Screen {
             e.printStackTrace();
         }
 
-        //game.startApp();
+        game.startApp();
         game.runInit();
     }
 
