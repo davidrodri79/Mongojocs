@@ -433,8 +433,8 @@ class CerberusCanvas extends FullCanvas
 			show_sprite_noclip(g,Bars,77,21,13,10,25+(Trig.sin(game.cnt<<3)>>8),158,false); 
 			show_sprite_noclip(g,Bars,63,21,13,10,CANVX-48-(Trig.sin(game.cnt<<3)>>8),158,false); 							
 			//REMOVE
-				g.setClip(0,0,CANVX,CANVY);
-				g.drawImage(Sky,0,0, 20);
+			//	g.setClip(0,0,CANVX,CANVY);
+			//	g.drawImage(Sky,0,0, 20);
 
 			break;
 			

@@ -181,6 +181,7 @@ class UltranausCanvas extends FullCanvas
 			
 			if(game.cnt>=44 && game.cnt<120){						
 				p=game.cnt-44;
+				g.setClip(0,0,CANVX,CANVY);
 				g.drawImage(City,0,0,20);				
 				g.setColor(0,0,0);
 				g.fillRect(0,0,CANVX,50);								
@@ -193,6 +194,7 @@ class UltranausCanvas extends FullCanvas
 			
 			if(game.cnt>=120 && game.cnt<200){						
 				p=game.cnt-120;
+				g.setClip(0,0,CANVX,CANVY);
 				g.drawImage(City,0,0,20);				
 				g.setColor(0,0,0);
 				g.fillRect(0,0,CANVX,50);								
@@ -259,6 +261,10 @@ class UltranausCanvas extends FullCanvas
 					g.drawImage(Wallpaper,0,CANVY-(p-80)*2-104,20);										
 				}				
 			}
+
+			// REMOVE
+				//g.setClip(0,0,CANVX,CANVY);
+				//g.drawImage(City,-176,0,20);
 													
 			break;
 			

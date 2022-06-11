@@ -4,6 +4,7 @@ public class FullCanvas extends Canvas {
 
     public Graphics graphics;
 
+
     public FullCanvas()
     {
         graphics = new Graphics();
@@ -39,11 +40,11 @@ public class FullCanvas extends Canvas {
 
     public int getWidth()
     {
-        return 176;
+        return Display.width;
     }
 
     public int getHeight()
     {
-        return 208;
+        return Display.height;
     }
 }

@@ -39,10 +39,10 @@ public class Graphics {
     public Graphics()
     {
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 176, 208);
+        camera.setToOrtho(false, Display.width, Display.height);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        clipx=0; clipy=0; clipw=176; cliph=208;
+        clipx=0; clipy=0; clipw=Display.width; cliph=Display.height;
     }
 
     public void setFont(Font f) {
@@ -106,33 +106,41 @@ public class Graphics {
         }
 
         batch.begin();
-        f.draw(batch, str, x, 208 - y - currentFont.getHeight()/4 );
+        f.draw(batch, str, x, Display.height - y - currentFont.getHeight()/4 );
         batch.end();
+    }
+
+    public static void emptyScissors()
+    {
+        while (scissorsSet > 0) {
+            ScissorStack.popScissors();
+            scissorsSet--;
+        }
     }
 
     public void setClip(int destX, int destY, int sizeX, int sizeY) {
 
         allClipped = false;
 
+        int maxx = fromImage == null ? Display.width : fromImage.getWidth();
+        int maxy = fromImage == null ? Display.height : fromImage.getHeight();
+
         if(destX < 0) { sizeX += destX; destX = 0; }
-        if(destX >= 176) destX = 175;
+        if(destX >= maxx) destX = maxx;
         if(destY < 0) { sizeY+= destY; destY = 0; }
-        if(destY >= 208) destY = 207;
-        if(destX + sizeX >= 176) sizeX = 176 - destX;
-        if(destY + sizeY >= 208) sizeY = 208 - destY;
+        if(destY >= maxy) destY = maxy;
+        if(destX + sizeX >= maxx) sizeX = maxx - destX;
+        if(destY + sizeY >= maxy) sizeY = maxy - destY;
 
         clipx=destX; clipy=destY; clipw=sizeX; cliph=sizeY;
 
         if(sizeX <= 0) { allClipped = true; return;}
         if(sizeY <= 0) { allClipped = true; return;}
 
-        while (scissorsSet > 0) {
-            ScissorStack.popScissors();
-            scissorsSet--;
-        }
+        emptyScissors();
 
         if(fromImage==null) {
-            int finaly = 208 - destY - sizeY;
+            int finaly = maxy - destY - sizeY;
 
             Rectangle scissors = new Rectangle();
             Rectangle clipBounds;// = new Rectangle(destX,finaly, sizeX, sizeY);
@@ -156,7 +164,7 @@ public class Graphics {
 
         if(fromImage==null) {
 
-            int finaly = 208 - y - img.getHeight();
+            int finaly = Display.height - y - img.getHeight();
 
             batch.setProjectionMatrix(camera.combined);
             batch.begin();
@@ -214,7 +222,7 @@ public class Graphics {
     {
         if(allClipped) return;
 
-        int finaly = fromImage == null ? 208 - y - h: y;
+        int finaly = fromImage == null ? Display.height - y - h: y;
 
         if(fromImage != null)
             fromImage.fbo.begin();
@@ -236,7 +244,7 @@ public class Graphics {
 
         if(allClipped) return;
 
-        int finaly = fromImage == null ? 208 - y - h: y;
+        int finaly = fromImage == null ? Display.height - y - h: y;
 
         if(fromImage != null)
             fromImage.fbo.begin();
@@ -261,7 +269,7 @@ public class Graphics {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.ellipse(cx, 208 - cy, rx, ry);
+        shapeRenderer.ellipse(cx, Display.height - cy, rx, ry);
         shapeRenderer.end();
 
         if(fromImage != null)
@@ -285,7 +293,7 @@ public class Graphics {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.line(x1,208 - y1,x2,208 - y2);
+        shapeRenderer.line(x1,Display.height - y1,x2,Display.height - y2);
         shapeRenderer.end();
 
         if(fromImage != null)

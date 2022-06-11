@@ -367,6 +367,7 @@ public class UltranausMain extends MIDlet //implements Runnable, CommandListener
 			break;
 			
 			case WAIT :
+				commandAction(new Command(Text.done,1,1), null);
 			break;
 			
 			case NEW_RECORD_OK :

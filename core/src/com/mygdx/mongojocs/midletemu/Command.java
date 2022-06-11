@@ -4,11 +4,13 @@ public class Command {
     public static final int OK = 1;
     public static final int SCREEN = 1;
 
+    String label;
 
     public Command(String lab, int ok, int i) {
+        label = lab;
     }
 
     public String getLabel() {
-        return "";
+        return label;
     }
 }

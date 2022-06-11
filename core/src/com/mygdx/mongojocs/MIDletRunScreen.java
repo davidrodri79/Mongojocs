@@ -5,14 +5,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Display;
+import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 
 public class MIDletRunScreen implements Screen {
 
     Launcher launcher;
+    OrthographicCamera camera;
     MIDlet game;
 
     class VirtualKey
@@ -55,6 +62,9 @@ public class MIDletRunScreen implements Screen {
     MIDletRunScreen(Launcher launcher, Class midletClass)
     {
         this.launcher = launcher;
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 176, 208);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
 
@@ -105,6 +115,9 @@ public class MIDletRunScreen implements Screen {
 
         });
 
+
+        Display.setSize(176,208);
+
         try {
             game = (MIDlet) midletClass.newInstance();
         } catch (InstantiationException e) {
@@ -131,6 +144,30 @@ public class MIDletRunScreen implements Screen {
         }
         else
             game.runTick();
+
+        Graphics.emptyScissors();
+
+        // KEYBOARD LAYOUT
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        for(int i = 0; i<vkeys.length; i++)
+        {
+            VirtualKey vk = vkeys[i];
+            launcher.shapeRenderer.setProjectionMatrix(camera.combined);
+            launcher.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            launcher.shapeRenderer.setColor(new Color(1,1,1,0.25f));
+            launcher.shapeRenderer.rect(vk.x+4, 208 - vk.h - vk.y+4, vk.w-8, vk.h-8);
+            launcher.shapeRenderer.end();
+
+            if(vk == pressedKey) {
+                launcher.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                launcher.shapeRenderer.setColor(new Color(1, 1, 1, 0.25f));
+                launcher.shapeRenderer.rect(vk.x + 4, 208 - vk.h - vk.y + 4, vk.w - 8, vk.h - 8);
+                launcher.shapeRenderer.end();
+            }
+        }
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
     }
 
     @Override
