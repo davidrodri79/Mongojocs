@@ -37,6 +37,7 @@ public class Image {
         Graphics g = new Graphics();
 
         g.camera.setToOrtho(false, getWidth(), getHeight());
+        g.batch.setProjectionMatrix(g.camera.combined);
         g.fromImage = this;
 
         return g;

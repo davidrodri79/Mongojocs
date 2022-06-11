@@ -28,7 +28,7 @@ public class Graphics {
     public OrthographicCamera camera;
     Font currentFont;
     Color currentColor;
-    boolean scissorsSet = false;
+    static int scissorsSet = 0;
     boolean allClipped = false;
 
     static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
@@ -111,7 +111,7 @@ public class Graphics {
     public void setClip(int destX, int destY, int sizeX, int sizeY) {
 
         allClipped = false;
-        int finaly = fromImage == null ? 208 - destY - sizeY : destY;
+
         if(destX < 0) { sizeX += destX; destX = 0; }
         if(destX >= 176) destX = 175;
         if(destY < 0) { sizeY+= destY; destY = 0; }
@@ -121,16 +121,23 @@ public class Graphics {
         if(sizeX <= 0) { allClipped = true; return;}
         if(sizeY <= 0) { allClipped = true; return;}
 
-        if(scissorsSet) { ScissorStack.popScissors(); scissorsSet = false; }
+        int finaly = fromImage == null ? 208 - destY - sizeY : fromImage.getHeight() - destY - sizeY;
+
+        while(scissorsSet>0) { ScissorStack.popScissors(); scissorsSet--; }
         Rectangle scissors = new Rectangle();
-        Rectangle clipBounds = new Rectangle(destX,finaly, sizeX, sizeY);
+        Rectangle clipBounds;// = new Rectangle(destX,finaly, sizeX, sizeY);
+        if(fromImage != null)
+            clipBounds = new Rectangle(destX,0, sizeX, fromImage.getHeight());
+        else
+            clipBounds = new Rectangle(destX,finaly, sizeX, sizeY);
+
         ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
         if (ScissorStack.pushScissors(scissors)) {
-            scissorsSet = true;
+            scissorsSet++;
         }
         else
         {
-            scissorsSet = false;
+            scissorsSet--;
         }
     }
 

@@ -40,7 +40,8 @@ public class CatalogScreen implements Screen {
             new MongoGame("Cerberus Lair", "cerberus", com.mygdx.mongojocs.cerberus.CerberusMain.class),
             new MongoGame("Numa", "numa", com.mygdx.mongojocs.numa.BeastMain.class),
             new MongoGame("Ping Poyo", "pingpoyo", com.mygdx.mongojocs.pingpoyo.Game.class),
-            new MongoGame("QBlast Ironball", "qblast", com.mygdx.mongojocs.qblast.QBlastMain.class)
+            new MongoGame("QBlast Ironball", "qblast", com.mygdx.mongojocs.qblast.QBlastMain.class),
+            new MongoGame("Ultranaus", "ultranaus", com.mygdx.mongojocs.ultranaus.UltranausMain.class)
     };
 
     CatalogScreen(Launcher l)

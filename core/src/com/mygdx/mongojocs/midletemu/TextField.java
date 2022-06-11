@@ -12,4 +12,7 @@ public class TextField {
     public String getString() {
         return "";
     }
+
+    public void getChars(char[] ch) {
+    }
 }

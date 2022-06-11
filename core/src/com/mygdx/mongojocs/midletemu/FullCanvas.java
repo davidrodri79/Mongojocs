@@ -1,6 +1,6 @@
 package com.mygdx.mongojocs.midletemu;
 
-public class FullCanvas {
+public class FullCanvas extends Canvas {
 
     public Graphics graphics;
 

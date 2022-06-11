@@ -19,10 +19,10 @@ public class MIDlet {
 
     public void notifyDestroyed()
     {
-        if(Display.theDisplay.canvas.graphics.scissorsSet)
+        while(Graphics.scissorsSet>0)
         {
             ScissorStack.popScissors();
-            Display.theDisplay.canvas.graphics.scissorsSet = false;
+            Graphics.scissorsSet--;
         }
         appClosed = true;
     }

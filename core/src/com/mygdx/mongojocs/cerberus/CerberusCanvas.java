@@ -261,7 +261,7 @@ class CerberusCanvas extends FullCanvas
 
 			for(int i=0; i<CANVX; i+=32){
 					
-			//gg.setClip(i,0,32,64);
+			gg.setClip(i,0,32,64);
 			gg.drawImage(SwampMisc,i,0,20);
 		}	
 				
@@ -432,9 +432,9 @@ class CerberusCanvas extends FullCanvas
 			show_sprite_noclip(g,Bars,77,21,13,10,25+(Trig.sin(game.cnt<<3)>>8),158,false); 
 			show_sprite_noclip(g,Bars,63,21,13,10,CANVX-48-(Trig.sin(game.cnt<<3)>>8),158,false); 							
 			//REMOVE
-			/*	g.setClip(0,0,CANVX,CANVY);
+				g.setClip(0,0,CANVX,CANVY);
 				DirectGraphics dg = DirectUtils.getDirectGraphics(g);
-				dg.drawImage(Sky,0,0, 20, DirectGraphics.FLIP_VERTICAL);*/
+				dg.drawImage(Sky,0,0, 20, DirectGraphics.FLIP_VERTICAL);
 
 			break;
 			
