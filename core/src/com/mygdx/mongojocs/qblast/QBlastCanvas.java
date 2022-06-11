@@ -13,6 +13,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.mongojocs.midletemu.Canvas;
+import com.mygdx.mongojocs.midletemu.DeviceControl;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.FullCanvas;
 import com.mygdx.mongojocs.midletemu.Graphics;
@@ -431,13 +432,11 @@ public class QBlastCanvas extends FullCanvas
 			
 	public static void vibrate(int freq, int ti)
 	{
-		/*try{
+		try{
 			if(QBlastMain.vibr)
-			DeviceControl.startVibra(freq,(ti < 300 ? 300 : ti));	
+			DeviceControl.startVibra(freq,(ti < 300 ? 300 : ti));
 			
 		}catch (java.lang.Exception e) {}
-*/
-
 	}
 		
 	public void showSprite(Image im, int bx, int by, int sx, int sy, int px, int py, boolean inv)

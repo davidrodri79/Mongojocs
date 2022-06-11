@@ -8,6 +8,7 @@ package com.mygdx.mongojocs.numa;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
+import com.mygdx.mongojocs.midletemu.DeviceControl;
 import com.mygdx.mongojocs.midletemu.DirectUtils;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Command;
@@ -851,10 +852,10 @@ public class BeastCanvas
 			y = TRANSY+20-(game.world.sizeY*4)-(ScrollPosY/4);
 			//#endif
 
-			dg.drawImage(Bkg,-((ScrollPosX/4)%96),y,20, DirectGraphics.FLIP_VERTICAL);
-			dg.drawImage(Bkg,96-((ScrollPosX/4)%96),y,20, DirectGraphics.FLIP_VERTICAL);
-			dg.drawImage(Bkg,192-((ScrollPosX/4)%96),y,20, DirectGraphics.FLIP_VERTICAL);
-			dg.drawImage(Bkg,288-((ScrollPosX/4)%96),y,20, DirectGraphics.FLIP_VERTICAL);
+			g.drawImage(Bkg,-((ScrollPosX/4)%96),y,20);
+			g.drawImage(Bkg,96-((ScrollPosX/4)%96),y,20);
+			g.drawImage(Bkg,192-((ScrollPosX/4)%96),y,20);
+			g.drawImage(Bkg,288-((ScrollPosX/4)%96),y,20);
 						
 			int bi=ScrollPosX/24, bj=ScrollPosY/24;
 			
@@ -1087,11 +1088,11 @@ public class BeastCanvas
 	{
 		//#ifdef DEVICEVIBRA
 			//#ifdef NOKIAUI
-			/*try{
+			try{
 				if(game.vibr)
-				DeviceControl.startVibra(freq,Time);	
+				DeviceControl.startVibra(freq,Time);
 						
-			}catch (java.lang.Exception e) {}*/
+			}catch (java.lang.Exception e) {}
 			//#endif
 		//#endif			
 	}

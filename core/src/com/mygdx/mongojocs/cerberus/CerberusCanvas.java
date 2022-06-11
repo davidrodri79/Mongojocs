@@ -11,6 +11,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.mygdx.mongojocs.midletemu.Canvas;
+import com.mygdx.mongojocs.midletemu.DeviceControl;
 import com.mygdx.mongojocs.midletemu.DirectGraphics;
 import com.mygdx.mongojocs.midletemu.DirectUtils;
 import com.mygdx.mongojocs.midletemu.Font;
@@ -433,8 +434,7 @@ class CerberusCanvas extends FullCanvas
 			show_sprite_noclip(g,Bars,63,21,13,10,CANVX-48-(Trig.sin(game.cnt<<3)>>8),158,false); 							
 			//REMOVE
 				g.setClip(0,0,CANVX,CANVY);
-				DirectGraphics dg = DirectUtils.getDirectGraphics(g);
-				dg.drawImage(Sky,0,0, 20, DirectGraphics.FLIP_VERTICAL);
+				g.drawImage(Sky,0,0, 20);
 
 			break;
 			
@@ -767,11 +767,11 @@ class CerberusCanvas extends FullCanvas
 			
 	public static void vibrate(int freq, long time)
 	{
-		/*try{
+		try{
 			if(CerberusMain.vibr)
-			DeviceControl.startVibra(freq,time);	
+			DeviceControl.startVibra(freq,(int)time);
 			
-		}catch (java.lang.Exception e) {}*/
+		}catch (java.lang.Exception e) {}
 	}
 	
 	public void show_sprite(Graphics g, Image im, int bx, int by, int sx, int sy, int px, int py, boolean inv)
@@ -1596,11 +1596,10 @@ class CerberusCanvas extends FullCanvas
 	
 	public void show_sky(Graphics g, CerberusWorld w)
 	{
-		DirectGraphics dg = DirectUtils.getDirectGraphics(g);
 		g.setColor(128,0,0);
 		g.setClip(0,BEGINY,CANVX,SCREENY);	
 		for(int i=0; i<2; i++)
-			dg.drawImage(Sky,(175*i)-((w.bx/8)%175),BEGINY-(w.by/6),20, DirectGraphics.FLIP_VERTICAL);
+			g.drawImage(Sky,(175*i)-((w.bx/8)%175),BEGINY-(w.by/6),20);
 	}
 	
 	public void show_background(Graphics g, CerberusWorld w)

@@ -16,6 +16,7 @@ package com.mygdx.mongojocs.pingpoyo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.mygdx.mongojocs.midletemu.Canvas;
+import com.mygdx.mongojocs.midletemu.DeviceControl;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.FullCanvas;
 import com.mygdx.mongojocs.midletemu.Graphics;
@@ -742,13 +743,13 @@ public void soundTick()
 
 public void vibraInit(int Time)
 {
-	/*
+
 	try{
 		if(ga.gameVibra)
-		DeviceControl.startVibra(100,Time);	
+			DeviceControl.startVibra(100,Time);
 			
 	}catch (java.lang.Exception e) {}
-	*/
+
 }
 
 

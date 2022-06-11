@@ -14,7 +14,7 @@ public class RecordStore {
     public static RecordStore openRecordStore(String s, boolean b)
     {
         RecordStore rs = new RecordStore();
-        rs.file = new File(MIDlet.assetsFolder+s);
+        rs.file = new File(MIDlet.appFilesFolder+"/"+MIDlet.assetsFolder, s);
         if(rs.file.exists())
         {
             try
@@ -29,7 +29,7 @@ public class RecordStore {
             }
             catch(Exception e)
             {
-
+                e.printStackTrace();
             }
         }
         return rs;
@@ -71,8 +71,11 @@ public class RecordStore {
     void writeFile()
     {
         try {
-            if (!file.exists())
+            if (!file.exists()) {
+                File dirs = new File(MIDlet.appFilesFolder+"/"+MIDlet.assetsFolder);
+                dirs.mkdirs();
                 file.createNewFile();
+            }
 
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(data);

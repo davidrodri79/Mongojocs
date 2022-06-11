@@ -298,7 +298,7 @@ class UltranausCanvas extends FullCanvas
 			
 			case UltranausMain.CHOOSE_SHIP :
 			g.setClip(0,0,CANVX,CANVY);
-			dg.drawImage(Console,0,0,20, DirectGraphics.FLIP_VERTICAL);
+			g.drawImage(Console,0,0,20);
 			show_font_text(g,player_names[game.pl_ship],74,29,0,game.cnt/2);	
 			show_font_text(g,player_ages[game.pl_ship],69,37,0,game.cnt/2);	
 			show_font_text(g,player_teams[game.pl_ship],41,56,1,game.cnt/2);	
@@ -465,7 +465,7 @@ class UltranausCanvas extends FullCanvas
 			
 			case UltranausMain.CREDITS :
 			clear_display(g,0,0,0);
-			dg.drawImage(City,0,0,20, DirectGraphics.FLIP_VERTICAL);
+			g.drawImage(City,0,0,20);
 			
 			show_font_text_center(g,Text.ultranaus,20,1,99);							
 			show_font_text_center(g,Text.coded_by,60,0,99);							

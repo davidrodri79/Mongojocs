@@ -23,8 +23,13 @@ public class Launcher extends Game {
 	Texture img;*/
 	BitmapFont bitmapFont;
 	SpriteBatch batch;
+	static MyInterface myInterface;
 
-	
+	public Launcher(MyInterface myInt) {
+		myInterface = myInt;
+		MIDlet.setAppFilesFolder(myInterface.getAppFilesFolder().toString());
+	}
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();

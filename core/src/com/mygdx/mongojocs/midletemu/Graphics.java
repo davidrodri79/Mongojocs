@@ -169,9 +169,9 @@ public class Graphics {
             int w = img.texture.getWidth();
             int h = img.texture.getHeight();
             float u = 0;
-            float v = 1;
+            float v = 0;
             float u2 = 1;
-            float v2 = 0;
+            float v2 = 1;
 
             //Clipping
             if(x < clipx)
@@ -187,16 +187,16 @@ public class Graphics {
             if(y < clipy)
             {
                 int dy = clipy - y;
-                y += dy; h -= dy; v2+= (float)dy/img.texture.getHeight();
+                y += dy; h -= dy; v+= (float)dy/img.texture.getHeight();
             }
             if(y + h > clipy + cliph)
             {
                 int dy = (y + h) - (clipy + cliph);
-                h -= dy; v-= (float)dy/img.texture.getHeight();
+                h -= dy; v2-= (float)dy/img.texture.getHeight();
             }
 
 
-            int finaly = fromImage.getHeight() - y - h;
+            int finaly = y;
 
             fromImage.fbo.begin();
 
@@ -236,7 +236,7 @@ public class Graphics {
 
         if(allClipped) return;
 
-        int finaly = fromImage == null ? 208 - y - h: fromImage.getHeight() - y - h;
+        int finaly = fromImage == null ? 208 - y - h: y;
 
         if(fromImage != null)
             fromImage.fbo.begin();
