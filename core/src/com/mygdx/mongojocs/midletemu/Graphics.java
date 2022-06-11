@@ -30,6 +30,7 @@ public class Graphics {
     Color currentColor;
     static int scissorsSet = 0;
     boolean allClipped = false;
+    int clipx,clipy,clipw,cliph;
 
     static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
     public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'";
@@ -41,6 +42,7 @@ public class Graphics {
         camera.setToOrtho(false, 176, 208);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+        clipx=0; clipy=0; clipw=176; cliph=208;
     }
 
     public void setFont(Font f) {
@@ -118,26 +120,30 @@ public class Graphics {
         if(destY >= 208) destY = 207;
         if(destX + sizeX >= 176) sizeX = 176 - destX;
         if(destY + sizeY >= 208) sizeY = 208 - destY;
+
+        clipx=destX; clipy=destY; clipw=sizeX; cliph=sizeY;
+
         if(sizeX <= 0) { allClipped = true; return;}
         if(sizeY <= 0) { allClipped = true; return;}
 
-        int finaly = fromImage == null ? 208 - destY - sizeY : fromImage.getHeight() - destY - sizeY;
-
-        while(scissorsSet>0) { ScissorStack.popScissors(); scissorsSet--; }
-        Rectangle scissors = new Rectangle();
-        Rectangle clipBounds;// = new Rectangle(destX,finaly, sizeX, sizeY);
-        if(fromImage != null)
-            clipBounds = new Rectangle(destX,0, sizeX, fromImage.getHeight());
-        else
-            clipBounds = new Rectangle(destX,finaly, sizeX, sizeY);
-
-        ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
-        if (ScissorStack.pushScissors(scissors)) {
-            scissorsSet++;
-        }
-        else
-        {
+        while (scissorsSet > 0) {
+            ScissorStack.popScissors();
             scissorsSet--;
+        }
+
+        if(fromImage==null) {
+            int finaly = 208 - destY - sizeY;
+
+            Rectangle scissors = new Rectangle();
+            Rectangle clipBounds;// = new Rectangle(destX,finaly, sizeX, sizeY);
+            clipBounds = new Rectangle(destX, finaly, sizeX, sizeY);
+
+            ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
+            if (ScissorStack.pushScissors(scissors)) {
+                scissorsSet++;
+            } else {
+                scissorsSet--;
+            }
         }
     }
 
@@ -148,20 +154,60 @@ public class Graphics {
     {
         if(allClipped) return;
 
-        int finaly = fromImage == null ?
-                208 - y - img.getHeight() :
-                fromImage.getHeight() - y - img.getHeight();
+        if(fromImage==null) {
 
-        if(fromImage != null)
+            int finaly = 208 - y - img.getHeight();
+
+            batch.setProjectionMatrix(camera.combined);
+            batch.begin();
+            batch.draw(img.texture, x, finaly);
+            batch.end();
+        }
+        else
+        {
+
+            int w = img.texture.getWidth();
+            int h = img.texture.getHeight();
+            float u = 0;
+            float v = 1;
+            float u2 = 1;
+            float v2 = 0;
+
+            //Clipping
+            if(x < clipx)
+            {
+                int dx = clipx - x;
+                x += dx; w -= dx; u+= (float)dx/img.texture.getWidth();
+            }
+            if(x + w > clipx + clipw)
+            {
+                int dx = (x + w) - (clipx + clipw);
+                w -= dx; u2-= (float)dx/img.texture.getWidth();
+            }
+            if(y < clipy)
+            {
+                int dy = clipy - y;
+                y += dy; h -= dy; v2+= (float)dy/img.texture.getHeight();
+            }
+            if(y + h > clipy + cliph)
+            {
+                int dy = (y + h) - (clipy + cliph);
+                h -= dy; v-= (float)dy/img.texture.getHeight();
+            }
+
+
+            int finaly = fromImage.getHeight() - y - h;
+
             fromImage.fbo.begin();
 
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.draw(img.texture, x, finaly);
-        batch.end();
+            batch.setProjectionMatrix(camera.combined);
+            batch.begin();
+            batch.draw(img.texture, x, finaly, w, h, u, v, u2, v2 );
+            batch.end();
 
-        if(fromImage != null)
             fromImage.fbo.end();
+        }
+
     }
     
     public void drawRect(int x, int y, int w, int h)

@@ -7,6 +7,8 @@ package com.mygdx.mongojocs.ultranaus;
 
 import java.io.InputStream;
 
+import com.mygdx.mongojocs.midletemu.DirectGraphics;
+import com.mygdx.mongojocs.midletemu.DirectUtils;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.FullCanvas;
 import com.mygdx.mongojocs.midletemu.Graphics;
@@ -148,6 +150,7 @@ class UltranausCanvas extends FullCanvas
 		int x,y,sx,sy,ix,iy,p;
 		Image aux;
 		String s;
+		DirectGraphics dg= DirectUtils.getDirectGraphics(g);
 														
 		if(game.cnt>1)						
 		switch(game.state) {
@@ -295,7 +298,7 @@ class UltranausCanvas extends FullCanvas
 			
 			case UltranausMain.CHOOSE_SHIP :
 			g.setClip(0,0,CANVX,CANVY);
-			g.drawImage(Console,0,0,20);		
+			dg.drawImage(Console,0,0,20, DirectGraphics.FLIP_VERTICAL);
 			show_font_text(g,player_names[game.pl_ship],74,29,0,game.cnt/2);	
 			show_font_text(g,player_ages[game.pl_ship],69,37,0,game.cnt/2);	
 			show_font_text(g,player_teams[game.pl_ship],41,56,1,game.cnt/2);	
@@ -462,7 +465,7 @@ class UltranausCanvas extends FullCanvas
 			
 			case UltranausMain.CREDITS :
 			clear_display(g,0,0,0);
-			g.drawImage(City,0,0,20);
+			dg.drawImage(City,0,0,20, DirectGraphics.FLIP_VERTICAL);
 			
 			show_font_text_center(g,Text.ultranaus,20,1,99);							
 			show_font_text_center(g,Text.coded_by,60,0,99);							

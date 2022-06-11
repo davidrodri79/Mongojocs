@@ -265,7 +265,7 @@ class CerberusCanvas extends FullCanvas
 			gg.drawImage(SwampMisc,i,0,20);
 		}	
 				
-		//gg.setClip(0,22,175,SCREENY);
+		gg.setClip(0,22,175,SCREENY);
 		gg.drawImage(Clouds,0,22,20);
 				
 		int map_offset[]={1088,576,1032,632,810,588,400,448,448};
