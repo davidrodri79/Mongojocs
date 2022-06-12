@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import jdk.nashorn.internal.runtime.Context;
-
 public class RecordStore {
 
     File file;
@@ -35,6 +33,14 @@ public class RecordStore {
         return rs;
     }
 
+    public static void deleteRecordStore(String name) {
+    }
+
+    public static String[] listRecordStores() {
+        String list[] ={""};
+        return list;
+    }
+
     public int getNumRecords() {
         if(file.exists())
             return 1;
@@ -43,12 +49,13 @@ public class RecordStore {
         }
     }
 
-    public void addRecord(byte[] prefsData, int start, int length) {
+    public int addRecord(byte[] prefsData, int start, int length) {
         data = new byte[length];
         for(int i = 0; i < length; i++)
             data[i] = prefsData[start + i];
 
         writeFile();
+        return 0;
     }
 
     public void setRecord(int index, byte[] prefsData, int start, int length) {
@@ -84,5 +91,12 @@ public class RecordStore {
         {
             e.printStackTrace();
         }
+    }
+
+    public void deleteRecord(int fila) {
+    }
+
+    public int getRecordSize(int fila) {
+        return data.length;
     }
 }

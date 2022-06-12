@@ -278,7 +278,7 @@ public class Graphics {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.ellipse(cx, Display.height - cy, rx, ry);
+        shapeRenderer.ellipse(cx, Display.height - cy - ry, rx, ry);
         shapeRenderer.end();
 
         if(fromImage != null)
