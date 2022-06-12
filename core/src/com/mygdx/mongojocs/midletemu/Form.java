@@ -1,6 +1,6 @@
 package com.mygdx.mongojocs.midletemu;
 
-public class Form {
+public class Form extends Displayable {
     public Form(String title) {
     }
 
@@ -10,6 +10,6 @@ public class Form {
     public void addCommand(Command doneCommand) {
     }
 
-    public void setCommandListener(MIDlet m) {
+    public void setCommandListener(CommandListener m) {
     }
 }

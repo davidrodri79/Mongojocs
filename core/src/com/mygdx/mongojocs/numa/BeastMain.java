@@ -118,7 +118,7 @@ public class BeastMain extends MIDlet implements Runnable, CommandListener
 	public void commandAction (Command c, Displayable d)
 	{
 	 /*      String label = c.getLabel();
-	       if (label == Text.done ) {
+	       if (label == com.mygdx.mongojocs.bravewar.Text.done ) {
 	      		display.setCurrent(gameCanvas);
 	      		gameCanvas.ctrl.reset();
 	      		//set_state(NEW_RECORD_OK);	      	

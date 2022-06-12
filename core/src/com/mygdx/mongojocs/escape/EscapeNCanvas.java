@@ -325,8 +325,8 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 			g.drawString("2003", super.getWidth()/2, 410-cnt , Graphics.HCENTER | Graphics.TOP );			
 			g.setColor(255,255,255);
 			//g.setFont(fntb);				
-			g.drawString("David Rodr�guez", super.getWidth()/2, 250-cnt , Graphics.HCENTER | Graphics.TOP );																			
-			g.drawString("El�as Lozano", super.getWidth()/2, 330-cnt , Graphics.HCENTER | Graphics.TOP );																						
+			g.drawString("David Rodríguez", super.getWidth()/2, 250-cnt , Graphics.HCENTER | Graphics.TOP );
+			g.drawString("Elías Lozano", super.getWidth()/2, 330-cnt , Graphics.HCENTER | Graphics.TOP );
 			g.drawString("www.microjocs.com", super.getWidth()/2, 460-cnt , Graphics.HCENTER | Graphics.TOP );																			
 			g.drawString("Thanks for playing!", super.getWidth()/2, 510-cnt , Graphics.HCENTER | Graphics.TOP );			
 			break;
@@ -665,6 +665,7 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 			
 			case WAIT :
 			// Do nothing
+				set_state(NEW_RECORD_CONFIRM);
 			break;
 									
 			case NEW_RECORD_CONFIRM:

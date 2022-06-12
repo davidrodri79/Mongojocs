@@ -28,7 +28,7 @@ public class BeastWorld {
 
 	BeastWorld(int l)
 	{
-		//InputStream is = getClass().getResourceAsStream("/Map"+(l+1)+".map");		
+		//InputStream is = getClass().getResourceAsStream("/com.mygdx.mongojocs.bravewar.Map"+(l+1)+".map");
 					
 		level=l;  sizeX=levelXSizes[level]; sizeY=levelYSizes[level];
 								

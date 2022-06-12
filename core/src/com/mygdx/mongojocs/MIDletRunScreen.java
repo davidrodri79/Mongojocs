@@ -77,11 +77,11 @@ public class MIDletRunScreen implements Screen {
                 {
                     Vector3 touchPos = new Vector3();
                     touchPos.set(screenX, screenY, 0);
-                    Display.theDisplay.canvas.graphics.camera.unproject(touchPos);
+                    Canvas.theCanvas.graphics.camera.unproject(touchPos);
                     //game.gameCanvas.g.camera.unproject(touchPos);
 
                     if(vkeys[i].inside((int)touchPos.x, 208 - (int)touchPos.y)) {
-                        Display.theDisplay.canvas.keyPressed(vkeys[i].code);
+                        Canvas.theCanvas.keyPressed(vkeys[i].code);
                         pressedKey = vkeys[i];
                     }
                 }
@@ -92,7 +92,7 @@ public class MIDletRunScreen implements Screen {
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
                 if(pressedKey != null) {
-                    Display.theDisplay.canvas.keyReleased(pressedKey.code);
+                    Canvas.theCanvas.keyReleased(pressedKey.code);
                     pressedKey = null;
                 }
                 return true;
@@ -102,7 +102,7 @@ public class MIDletRunScreen implements Screen {
             public boolean keyDown(int keycode)
             {
                 if(keycode == Input.Keys.RIGHT)
-                    Display.theDisplay.canvas.keyPressed(Canvas.KEY_NUM6);
+                    Canvas.theCanvas.keyPressed(Canvas.KEY_NUM6);
                 return true;
             }
 
@@ -110,7 +110,7 @@ public class MIDletRunScreen implements Screen {
             public boolean keyUp(int keycode)
             {
                 if(keycode == Input.Keys.RIGHT)
-                    Display.theDisplay.canvas.keyReleased(Canvas.KEY_NUM6);
+                    Canvas.theCanvas.keyReleased(Canvas.KEY_NUM6);
                 return true;
             }
 

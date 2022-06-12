@@ -757,14 +757,14 @@ public void vibraInit(int Time)
 
 
 // **************************************************************************//
-// Inicio Clase GameCanvas
+// Inicio Clase com.mygdx.mongojocs.bravewar.GameCanvas
 // **************************************************************************//
 
 public void canvasInit() {}
 public void Draw(Graphics a) {}
 
 // **************************************************************************//
-// Final Clase GameCanvas
+// Final Clase com.mygdx.mongojocs.bravewar.GameCanvas
 // **************************************************************************//
 
 

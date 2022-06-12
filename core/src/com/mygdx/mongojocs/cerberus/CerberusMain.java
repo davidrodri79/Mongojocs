@@ -75,10 +75,10 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 						
 		// Form for the record name entry				
 						
-		/*Command doneCommand = new Command(Text.done, Command.OK, 1);
+		/*Command doneCommand = new Command(com.mygdx.mongojocs.bravewar.Text.done, Command.OK, 1);
 		
-		scoreForm = new Form(Text.new_record);
-        	scoreField = new TextField(Text.type_name, "",3,TextField.ANY);
+		scoreForm = new Form(com.mygdx.mongojocs.bravewar.Text.new_record);
+        	scoreField = new TextField(com.mygdx.mongojocs.bravewar.Text.type_name, "",3,TextField.ANY);
 		scoreField.setMaxSize(3);
         	scoreForm.append(scoreField);   
 		scoreForm.addCommand(doneCommand);
@@ -118,7 +118,7 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 	public void commandAction (Command c, Displayable d)
 	{
 	 /*      String label = c.getLabel();
-	       if (label == Text.done ) {
+	       if (label == com.mygdx.mongojocs.bravewar.Text.done ) {
 	      		display.setCurrent(pant);
 	      		pant.ctrl.reset();
 	      		//set_state(NEW_RECORD_OK);	      	

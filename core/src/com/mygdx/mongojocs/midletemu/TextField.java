@@ -2,6 +2,7 @@ package com.mygdx.mongojocs.midletemu;
 
 public class TextField {
     public static final int ANY = 1;
+    public static final int PASSWORD = 2;
 
     public TextField(String subtitle, String s, int numChars, int any) {
     }
@@ -19,5 +20,8 @@ public class TextField {
         {
             ch[i] = fake[i];
         }
+    }
+
+    public void setString(String s) {
     }
 }

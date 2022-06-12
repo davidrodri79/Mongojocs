@@ -117,7 +117,7 @@ public class GameCanvas extends BiosCanvas
 	}
 	
 	// **************************************************************************//
-	// Inicio Clase GameCanvas
+	// Inicio Clase com.mygdx.mongojocs.bravewar.GameCanvas
 	// **************************************************************************//
 	
 	// -*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -799,6 +799,6 @@ public void playDraw()
 
 
 // **************************************************************************//
-// Final Clase GameCanvas
+// Final Clase com.mygdx.mongojocs.bravewar.GameCanvas
 // **************************************************************************//
 };

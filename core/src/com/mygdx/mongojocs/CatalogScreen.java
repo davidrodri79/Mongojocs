@@ -37,6 +37,7 @@ public class CatalogScreen implements Screen {
 
     MongoGame catalog[]={
 
+            new MongoGame("BraveWar", "bravewar", com.mygdx.mongojocs.bravewar.GameMidletLogic.class),
             new MongoGame("Cerberus Lair", "cerberus", com.mygdx.mongojocs.cerberus.CerberusMain.class),
             new MongoGame("Escape", "escape", com.mygdx.mongojocs.escape.EscapeNMain.class),
             new MongoGame("Numa", "numa", com.mygdx.mongojocs.numa.BeastMain.class),

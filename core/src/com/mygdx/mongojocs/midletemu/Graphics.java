@@ -285,6 +285,23 @@ public class Graphics {
             fromImage.fbo.end();
     }
 
+    public void drawArc(int cx, int cy, int rx, int ry, int a0, int a1)
+    {
+        if(allClipped) return;
+
+        if(fromImage != null)
+            fromImage.fbo.begin();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(currentColor);
+        shapeRenderer.ellipse(cx, Display.height - cy, rx, ry);
+        shapeRenderer.end();
+
+        if(fromImage != null)
+            fromImage.fbo.end();
+    }
+
     public void fillRoundRect(int i, int i1, int i2, int i3, int i4, int i5) {
         fillRect(i,i1,i2,i3);
     }

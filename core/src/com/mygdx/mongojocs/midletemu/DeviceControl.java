@@ -9,4 +9,7 @@ public class DeviceControl {
     {
         Gdx.input.vibrate(time);
     }
+
+    public static void setLights(int i, int i1) {
+    }
 }
