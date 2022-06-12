@@ -15,6 +15,8 @@ import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.MIDlet;
+import com.mygdx.mongojocs.midletemu.Runnable;
+import com.mygdx.mongojocs.midletemu.Thread;
 
 public class MIDletRunScreen implements Screen {
 
@@ -117,6 +119,7 @@ public class MIDletRunScreen implements Screen {
 
 
         Display.setSize(176,208);
+        MIDlet.appClosed = false;
 
         try {
             game = (MIDlet) midletClass.newInstance();
@@ -127,7 +130,7 @@ public class MIDletRunScreen implements Screen {
         }
 
         game.startApp();
-        game.runInit();
+        Thread.currentRunning.runInit();
     }
 
     @Override
@@ -137,13 +140,13 @@ public class MIDletRunScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if(game.appClosed)
+        if(MIDlet.appClosed)
         {
             launcher.setScreen(new CatalogScreen(launcher));
             dispose();
         }
         else
-            game.runTick();
+            Thread.currentRunning.runTick();
 
         Graphics.emptyScissors();
 
@@ -192,6 +195,6 @@ public class MIDletRunScreen implements Screen {
 
     @Override
     public void dispose() {
-        game.runEnd();
+        Thread.currentRunning.runEnd();
     }
 }

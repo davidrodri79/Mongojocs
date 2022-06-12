@@ -298,8 +298,7 @@ class CerberusCanvas extends FullCanvas
 			case Canvas.KEY_NUM9 : ctrl.down=true; ctrl.right=true; break;
 			case Canvas.KEY_NUM0 : ctrl.but2=true; break;
 			case -6 :
-			//case Canvas.KEY_STAR :
-				ctrl.but3=true; break;
+			case Canvas.KEY_STAR : ctrl.but3=true; break;
 		}
 		
 		/*switch(getGameAction(keycode))

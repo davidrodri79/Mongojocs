@@ -5,12 +5,15 @@
 package com.mygdx.mongojocs.ultranaus;
 
 import com.mygdx.mongojocs.midletemu.Command;
+import com.mygdx.mongojocs.midletemu.CommandListener;
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.Displayable;
 import com.mygdx.mongojocs.midletemu.Form;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.RecordStore;
 import com.mygdx.mongojocs.midletemu.TextField;
+import com.mygdx.mongojocs.midletemu.Runnable;
+import com.mygdx.mongojocs.midletemu.Thread;
 
 import java.util.Random;
 import java.io.*;
@@ -18,7 +21,7 @@ import java.io.*;
 //import com.nokia.mid.ui.*;
 
 
-public class UltranausMain extends MIDlet //implements Runnable, CommandListener
+public class UltranausMain extends MIDlet implements Runnable, CommandListener
 {
 		
 	public static UltranausCanvas pant;
@@ -101,8 +104,8 @@ public class UltranausMain extends MIDlet //implements Runnable, CommandListener
 				
 		set_state(LOAD_INTRO);
 		
-		//thread=new Thread(this);
-		//thread.start();
+		thread=new Thread(this);
+		thread.start();
 				
 		System.gc();
 										
@@ -139,7 +142,6 @@ public class UltranausMain extends MIDlet //implements Runnable, CommandListener
 
 	public void runInit()
 	{
-
 	}
 
 	public void runTick()

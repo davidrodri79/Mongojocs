@@ -555,7 +555,7 @@ public class BeastCanvas
 			case Canvas.KEY_NUM3 : up=true; right=true; break;
 			case Canvas.KEY_NUM9 : down=true; right=true; break;
 			case Canvas.KEY_NUM0 : but2=true; break;
-			//TODO case Canvas.KEY_STAR : but3=true; break;
+			case Canvas.KEY_STAR : but3=true; break;
 													
 			//#ifdef NOKIAUI
 			case -7 : but1=true; break;

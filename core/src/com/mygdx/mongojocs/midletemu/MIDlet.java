@@ -7,7 +7,7 @@ public class MIDlet {
 
     public static String appFilesFolder = "";
     public static String assetsFolder = "";
-    public boolean appClosed = false;
+    public static boolean appClosed = false;
 
     public MIDlet()
     {
@@ -38,23 +38,10 @@ public class MIDlet {
 
     }
 
-    public void run()
+    protected void pauseApp()
     {
 
     }
 
-    public void runInit()
-    {
 
-    }
-
-    public void runTick()
-    {
-
-    }
-
-    public void runEnd()
-    {
-
-    }
 }

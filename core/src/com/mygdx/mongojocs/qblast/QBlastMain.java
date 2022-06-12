@@ -10,6 +10,8 @@ import com.mygdx.mongojocs.midletemu.Displayable;
 import com.mygdx.mongojocs.midletemu.Form;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.RecordStore;
+import com.mygdx.mongojocs.midletemu.Runnable;
+import com.mygdx.mongojocs.midletemu.Thread;
 import com.mygdx.mongojocs.midletemu.TextField;
 
 
@@ -18,7 +20,7 @@ import java.io.InputStream;
 import java.io.*;
 
 
-public class QBlastMain extends MIDlet
+public class QBlastMain extends MIDlet implements Runnable
 {
 		
 	public static QBlastCanvas gameCanvas;
@@ -82,8 +84,8 @@ public class QBlastMain extends MIDlet
 			
 		set_state(LOGO);
 		
-		//thread=new Thread(this);
-		//thread.start();
+		thread=new Thread(this);
+		thread.start();
 		
 		display.setCurrent(gameCanvas); doUpdate=true;
 				

@@ -18,9 +18,17 @@ import java.util.HashMap;
 
 public class Graphics {
 
-    public static final int TOP = 1;
-    public static final int LEFT = 2;
-    public static final int HCENTER = 3;
+    public static final int HCENTER = 1;
+    public static final int VCENTER = 2;
+    public static final int LEFT = 4;
+    public static final int RIGHT = 8;
+    public static final int TOP = 16;
+    public static final int BOTTOM = 32;
+    public static final int BASELINE = 64;
+
+    public static final int SOLID = 0;
+    public static final int DOTTED = 1;
+
 
     public Image fromImage = null;
     public SpriteBatch batch;
@@ -105,6 +113,7 @@ public class Graphics {
             x -= currentFont.stringWidth(str)/2;
         }
 
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         f.draw(batch, str, x, Display.height - y - currentFont.getHeight()/4 );
         batch.end();

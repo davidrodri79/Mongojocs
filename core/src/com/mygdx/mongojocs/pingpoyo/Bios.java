@@ -13,6 +13,7 @@ package com.mygdx.mongojocs.pingpoyo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.mongojocs.midletemu.Command;
+import com.mygdx.mongojocs.midletemu.CommandListener;
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.Displayable;
 import com.mygdx.mongojocs.midletemu.Font;
@@ -22,6 +23,9 @@ import com.mygdx.mongojocs.midletemu.Image;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.RecordStore;
 import com.mygdx.mongojocs.midletemu.TextField;
+import com.mygdx.mongojocs.midletemu.Runnable;
+import com.mygdx.mongojocs.midletemu.Thread;
+
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -35,11 +39,11 @@ import java.nio.charset.StandardCharsets;
 // ---------------------------------------------------------
 
 
-public class Bios extends MIDlet //implements Runnable, CommandListener
+public class Bios extends MIDlet implements Runnable, CommandListener
 {
 
 public GameCanvas gc;
-//Thread thread;
+Thread thread;
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // Contructor - Metodo que ARRANCA al ejecutar el MIDlet
@@ -55,8 +59,8 @@ public Bios()
 	
 	Display.getDisplay(this).setCurrent(gc);
 
-	//thread=new Thread(this); System.gc();
-	//thread.start();
+	thread=new Thread(this); System.gc();
+	thread.start();
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

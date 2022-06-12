@@ -98,8 +98,7 @@ class UltranausCanvas extends FullCanvas
 			case KEY_NUM9 : ctrl.down=true; ctrl.right=true; break;
 			case KEY_NUM0 : ctrl.but2=true; break;
 			case -6 :
-			//case KEY_STAR
-					ctrl.but3=true; break;
+			case KEY_STAR :	ctrl.but3=true; break;
 		}
 		
 		/*switch(getGameAction(keycode))
