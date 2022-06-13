@@ -24,6 +24,7 @@ public class Launcher extends Game {
 	Texture img;*/
 	BitmapFont bigFont;
 	BitmapFont smallFont;
+	BitmapFont keysFont;
 	SpriteBatch batch;
 	public ShapeRenderer shapeRenderer;
 	static MyInterface myInterface;
@@ -50,6 +51,10 @@ public class Launcher extends Game {
 		params.size = 18;
 		params.borderWidth = 1;
 		smallFont = generator.generateFont(params); // font size 12 pixels
+		params.size = 24;
+		params.borderWidth = 0;
+		params.color = new Color(1,1,1, 0.2f);
+		keysFont = generator.generateFont(params); // font size 12 pixels
 		generator.dispose();
 		//img = new Texture("badlogic.jpg");
 
