@@ -41,7 +41,7 @@ public class Graphics {
     int clipx,clipy,clipw,cliph;
 
     static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
-    public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'";
+    public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'\"";
 
 
     public Graphics()

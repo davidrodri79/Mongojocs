@@ -1004,7 +1004,7 @@ public void canvasDraw()
 {
 	if (canvasFillShow) { canvasFillShow=false; canvasFillDraw(canvasFillRGB); }
 
-	if (canvasImg!=null) { showImage(canvasImg); canvasImg=null; System.gc(); }
+	if (canvasImg!=null) { showImage(canvasImg); /*canvasImg=null; MONGOFIX*/ System.gc(); }
 
 	if (canvasTextShow) { canvasTextShow=false; canvasTextDraw(); }
 
@@ -1819,7 +1819,8 @@ public void playDraw()
 	int topColors[] = {RGB_GOLD,RGB_SILVER,RGB_BRONZE,RGB_NOTAVAILABLE};
 	int y, i, fitOptions, firstOption = 0;
 	
-	if(gameStatus != lastGameStatus) playShow = true;
+	//if(gameStatus != lastGameStatus)
+		playShow = true;
 		
 	switch(gameStatus){
 		
@@ -3346,9 +3347,11 @@ Thread thread;
 //#endif
 
 //#ifdef EXTRAPAKS
-static final String defaultPak[] = new String[] {"original","ice","mirror"};
-static final int defaultPakIds[] = new int[] {0,1,2};
+//static final String defaultPak[] = new String[] {"original","ice","mirror"};
+//static final int defaultPakIds[] = new int[] {0,1,2};
 //#else
+static final String defaultPak[] = new String[] {"original"};
+static final int defaultPakIds[] = new int[] {0};
 //#endif
 
 static final int inJarPacks = defaultPak.length;
@@ -3504,18 +3507,28 @@ public void runTick()
 	gameSleep = (mainSleep - (int)(System.currentTimeMillis() - gameMilis));
 	try	{Thread.sleep( gameSleep < 1? 1:gameSleep );} catch(Exception e) {}
 
+	if(gameExit) {
+		soundStop();
+
+		//biosDestroy();
+		savePrefs();
+		rmsDestroy();
+
+		ga.destroyApp(true);
+	}
+
 //	System.gc();
 }
 
 public void runEnd()
 {
-	soundStop();
+	/*soundStop();
 
 	//biosDestroy();
 	savePrefs();
 	rmsDestroy();
 
-	ga.destroyApp(true);
+	ga.destroyApp(true);*/
 }
 
 public void run()
@@ -3838,8 +3851,18 @@ public String[][] textosCreate(byte[] tex)
 	boolean subCampo = false;
 	boolean primerEnter = true;
 
+
+	// MONGOFIX ==========================================
+	char tex_char[] = new char[tex.length];
+	for(int i = 0; i < tex.length; i++)
+		if(tex[i] < 0)
+			tex_char[i]=(char)(tex[i]+256);
+		else
+			tex_char[i]=(char)tex[i];
+	//=================================================
+
 	int size = 0;
-	String textos = new String(tex);
+	String textos = new String(tex_char);
 
 	for (int i=0 ; i<textos.length() ; i++)
 	{
@@ -3910,6 +3933,15 @@ public String[][] textosCreate(byte[] tex)
 			}
 		}
 	}
+
+	// MONGOFIX ==========================================
+	/*char textos_char[] = new char[textos.length];
+	for(int i = 0; i < textos.length; i++)
+		if(textos[i] < 0)
+			textos_char[i]=(char)(textos[i]+256);
+		else
+			textos_char[i]=(char)textos[i];*/
+	//=================================================
 
 	String[][] strings = new String[size][];
 
@@ -4143,9 +4175,11 @@ long timeIniLogos;
 
 public boolean logosTick()
 {
+	canvasFillTask(rgbLogos[cntLogos]); //MONGOFIX
+
 	if ( (System.currentTimeMillis() - timeIniLogos) < timeLogos) {return false;}
 
-	if (cntLogos == numLogos) {return true;}
+	if (cntLogos == numLogos) {canvasImg = null; /*MONGOFIX*/ return true;}
 
 	canvasFillTask(rgbLogos[cntLogos]);
 
@@ -4510,6 +4544,7 @@ public boolean menuListTick(int movY, boolean fire)
 		}
 	}
 
+	menuListShow=true; //MONGOFIX
 
 	return false;
 }
@@ -4989,7 +5024,7 @@ public void gameTick()
 		//#endif
 		numLogos = 1;
 		cntLogos = 0;
-		rgbLogos = new int[] {0xffffff};
+		rgbLogos = new int[] {0xffffff, 0xffffff}; //MONGOFIX
 		timeLogos = 2000;
 	
 		timeIniLogos = System.currentTimeMillis() - timeLogos;
@@ -5372,10 +5407,10 @@ public void loadPrefs()
 			ostream.writeInt(0);					
 
 			//#ifndef STORETIMESONPREFS
-	    	ostream.flush();
-	    	ostream.close();
+	    	//ostream.flush();
+	    	//ostream.close();
 	    
-	    	prefsData = bstream.toByteArray();
+	    	//prefsData = bstream.toByteArray();
 	    	//#endif
 	    	
 	    	for(int i = 0; i < 20; i++)
@@ -5387,18 +5422,18 @@ public void loadPrefs()
 	    	}
 						
 			//#ifdef STORETIMESONPREFS
-			//for(int i = 0; i < 60; i++)
-			//	ostream.writeShort(topTimes[i/3][i%3]);
+			for(int i = 0; i < 60; i++)
+				ostream.writeShort(topTimes[i/3][i%3]);
 			//#else
-			for(int i = 0; i < defaultPak.length; i++)	    		    				    	
-	    		saveTopTimes(defaultPak[i]);
+			//for(int i = 0; i < defaultPak.length; i++)
+	    	//	saveTopTimes(defaultPak[i]);
 			//#endif
 			
 			//#ifdef STORETIMESONPREFS
-	    	/*ostream.flush();
+	    	ostream.flush();
 	    	ostream.close();
 	    
-	    	prefsData = bstream.toByteArray();*/
+	    	prefsData = bstream.toByteArray();
 	    	//#endif
 			
 								    	    		    
@@ -5430,10 +5465,10 @@ public void loadPrefs()
 		}
 		
 		//#ifdef STORETIMESONPREFS
-		/*topTimes = new short[20][3];
+		topTimes = new short[20][3];
 		
 		for(int i = 0; i < 60; i++)			
-			topTimes[i/3][i%3] = dis.readShort();*/
+			topTimes[i/3][i%3] = dis.readShort();
 		//#endif
 				
 												
@@ -5469,8 +5504,8 @@ public void savePrefs()
 		}
 		
 		//#ifdef STORETIMESONPREFS
-		/*for(int i = 0; i < 60; i++)
-			ostream.writeShort(topTimes[i/3][i%3]);*/
+		for(int i = 0; i < 60; i++)
+			ostream.writeShort(topTimes[i/3][i%3]);
 		//#endif
 								
 	    ostream.flush();
@@ -5761,8 +5796,8 @@ public void menuAction(int cmd)
 		//#ifndef NONETWORK
 		gameStatus = GAME_MENU_PACK_SELECT;		
 		//#else
-		if(dlPacks + inJarPacks == 1) gameStatus = GAME_LOADING_PACK;			
-		else gameStatus = GAME_MENU_PACK_SELECT;		
+		//if(dlPacks + inJarPacks == 1) gameStatus = GAME_LOADING_PACK;
+		//else gameStatus = GAME_MENU_PACK_SELECT;
 		//#endif
 		
 	break;
@@ -6344,9 +6379,9 @@ void loadTopTimes(String pack)
 {
 	
 	//#ifdef STORETIMESONPREFS
-	//loadPrefs();
+	loadPrefs();
 	//#else
-	byte buffer[] = rmsLoadFile(pack+".rec");
+	/*byte buffer[] = rmsLoadFile(pack+".rec");
 	
 	try
 	{
@@ -6365,7 +6400,7 @@ void loadTopTimes(String pack)
 			} 
 			
 											
-	}catch (Exception e){  }
+	}catch (Exception e){  }*/
 	//#endif
 }
 
@@ -6373,9 +6408,9 @@ void saveTopTimes(String pack)
 {
 	
 	//#ifdef STORETIMESONPREFS
-	//savePrefs();
+	savePrefs();
 	//#else
-	byte buffer[];
+	/*byte buffer[];
 		
 	try
 	{
@@ -6390,7 +6425,7 @@ void saveTopTimes(String pack)
 	    
 	    rmsSaveFile(pack+".rec",buffer);
 	    
-	}catch (Exception e){ }
+	}catch (Exception e){ }*/
 	//#endif
 }
 

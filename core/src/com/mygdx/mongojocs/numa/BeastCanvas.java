@@ -130,7 +130,7 @@ public class BeastCanvas
 		//TODO ListenerSET(this);
 		//#endif
 		
-		texts = textCreate(LoadFileCheckSize("/com.mygdx.mongojocs.bravewar.Text.txt"));
+		texts = textCreate(LoadFileCheckSize("/Text.txt"));
 													
 	}
 	

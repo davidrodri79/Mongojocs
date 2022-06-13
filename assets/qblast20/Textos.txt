@@ -17,50 +17,31 @@ En cada nivel se esconde una joya. Una recompensa te espera si las encuentras to
 
 Instrucciones
 
-Tecla A:<VI-TSM100>?
-Tecla de menú izquierda:<VI-TSM100>!
+Tecla de menú izquierda:
 Ir al menú o volver atrás
 
-Tecla B:<VI-TSM100>?
-Tecla de menú derecha:<VI-TSM100>!
+Tecla de menú derecha:
 Aceptar opción
 
-Pad izquierdo:<VI-TSM100>?
-Teclas 2,3 y pad izquierdo:<NK-3650>?
-Tecla 4:<NK-s30,SD-M570>?
-Teclas 4 y pad izquierdo:<VI-TSM100,NK-3650,NK-s30,SD-M570>!
+Teclas 4 y pad izquierdo:
 Mover a la izquierda
 
-Pad derecho:<VI-TSM100>?
-Teclas 8,9 y pad derecha:<NK-3650>?
-Tecla 6:<NK-s30,SD-M570>?
-Teclas 6 y pad derecha:<VI-TSM100,NK-3650,NK-s30,SD-M570>!
+Teclas 6 y pad derecha:
 Mover a la derecha
 
-Pad arriba:<VI-TSM100>?
-Pad arriba:<NK-3650>?
-Teclas 2 y pad arriba:<VI-TSM100,NK-3650>!
+Teclas 2 y pad arriba:
 Mover hacia arriba
 
-Pad abajo:<VI-TSM100>?
-Teclas 5,6 y pad abajo:<NK-3650>?
-Teclas 8 y pad abajo:<VI-TSM100,NK-3650>!
+Teclas 8 y pad abajo:
 Mover hacia abajo
 
-Botón pad:<VI-TSM100>?
-Teclas *,# y pad central:<NK-3650>?
-Tecla 5:<NK-s30,SD-P600,SD-M570>?
-Tecla 5 y botón del pad:<VI-TSM100,NK-3650,NK-s30,SD-P600,SD-M570>!
+Tecla 5 y botón del pad:
 Aceptar o poner bombas
 
-Tecla C:<VI-TSM100>?
-Teclas 1 y 4:<NK-3650>?
-Teclas 1 y 7:<VI-TSM100,NK-3650>!
+Teclas 1 y 7:
 Rotar cámara en sentido antihorario
 
-Tecla D:<VI-TSM100>?
-Teclas 7 y 0:<NK-3650>?
-Teclas 3 y 9:<VI-TSM100,NK-3650>!
+Teclas 3 y 9:
 Rotar cámara en sentido horario
 }
 {
@@ -73,9 +54,9 @@ David Rodríguez
 Gráficos:
 Elías Lozano
 
-Sonido:<VI-TSM100,SD-P600,SD-M570>!
-Jordi Gutiérrez<VI-TSM100,SD-P600,SD-M570>!
-<VI-TSM100,SD-P600,SD-M570>!
+Sonido:
+Jordi Gutiérrez
+
 Agradecimientos:
 Carlos Carrasco
 Manel Martori
@@ -106,8 +87,7 @@ nivel
 {¿Reintentar el nivel?|¿Seguro que deseas salir?|SÍ|NO}
 {Elige una serie|Originales}
 {Categoría Oro|Categoría Plata|Categoría Bronce|Oro|Plata|Bronce}
-{Pulsa cualquier tecla|Pulsa arriba o abajo para elegir|Pulsa izquierda o derecha para elegir|Izq. o der. elegir|Pulsa B}<VI-TSM100>?
-{Pulsa cualquier tecla|Pulsa 2 o 8 para elegir|Pulsa 4 o 6 para elegir|4 o 6 elegir|Pulsa OK}<VI-TSM100>!
+{Pulsa cualquier tecla|Pulsa 2 o 8 para elegir|Pulsa 4 o 6 para elegir|4 o 6 elegir|Pulsa OK}
 {Elige un nivel|(No dispon.)}
 {SIGUIENTE NIVEL|REPETIR ESTE NIVEL|Ver resultados}
 {TRUCOS|INVULNERABILIDAD|POTENCIA|TIEMPO EXTRA|PÚAS|MULTIBOMBA|VER OCULTOS|REDUCCIÓN|QUITAR ENEMIGOS}
