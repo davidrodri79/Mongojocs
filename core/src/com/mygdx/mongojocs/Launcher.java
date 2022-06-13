@@ -22,7 +22,8 @@ import com.mygdx.mongojocs.qblast.QBlastMain;
 public class Launcher extends Game {
 	/*SpriteBatch batch;
 	Texture img;*/
-	BitmapFont bitmapFont;
+	BitmapFont bigFont;
+	BitmapFont smallFont;
 	SpriteBatch batch;
 	public ShapeRenderer shapeRenderer;
 	static MyInterface myInterface;
@@ -41,11 +42,14 @@ public class Launcher extends Game {
 		FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		params.minFilter = Texture.TextureFilter.Nearest;
 		params.magFilter = Texture.TextureFilter.Nearest;
-		params.size = 42;
+		params.size = 28;
 		params.borderWidth = 2;
 		params.borderColor = Color.BLACK;
 		params.color = Color.WHITE;
-		bitmapFont = generator.generateFont(params); // font size 12 pixels
+		bigFont = generator.generateFont(params); // font size 12 pixels
+		params.size = 18;
+		params.borderWidth = 1;
+		smallFont = generator.generateFont(params); // font size 12 pixels
 		generator.dispose();
 		//img = new Texture("badlogic.jpg");
 
