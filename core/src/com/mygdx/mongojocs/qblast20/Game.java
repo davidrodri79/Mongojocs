@@ -77,7 +77,7 @@ public Game()                                                               // C
 
 public void startApp()
 {
-	//#ifdef com.mygdx.mongojocs.qblast20.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
 	Debug.println("--startApp()");
 	//#endif
 	
@@ -87,7 +87,7 @@ public void startApp()
 
 public void pauseApp() 
 {
-	//#ifdef com.mygdx.mongojocs.qblast20.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
 	Debug.println("--pauseApp()");
 	//#endif
 
@@ -241,7 +241,7 @@ public byte[] invokeServer(int gameID, int controllerID, int methodID, byte[] ar
 		// Only HTTP_OK (200) means the content is returned.
 		if (status != HttpConnection.HTTP_OK) {			
 			throw new IOException(
-				//#ifdef com.mygdx.mongojocs.qblast20.Debug
+				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
 				"Response status not OK [" + status + "]"
 				//#endif
 				);			

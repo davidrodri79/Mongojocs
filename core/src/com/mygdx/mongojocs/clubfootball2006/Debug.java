@@ -1,21 +1,20 @@
-package com.mygdx.mongojocs.qblast20;
+package com.mygdx.mongojocs.clubfootball2006;
 
 
 // -----------------------------------------------
 // Microjocs The Love Boat Project Rev.0 (1.3.2004)
 // ===============================================
-// Client com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug-Engine class
+// Client com.mygdx.mongojocs.clubfootball2006.Debug-Engine class
 // -----------------------------------------------
 
 
-//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
 
 
 //#ifdef J2ME
 //#endif
 
 //#ifdef DOJA
-//#endif
 
 
 import com.mygdx.mongojocs.midletemu.Font;
@@ -86,7 +85,7 @@ static synchronized public void println(String str)
 
 static synchronized public void debugDraw(GameCanvas gc, Graphics scr)
 {
-	scr.setColor(0);
+	gc.putColor(0);
 //#ifdef J2ME
 	scr.setClip (0,0, gc.canvasWidth, gc.canvasHeight );
 //#endif
@@ -96,7 +95,7 @@ static synchronized public void debugDraw(GameCanvas gc, Graphics scr)
 
 	int y = 0;
 
-	scr.setColor(0xffffff);
+	gc.putColor(0xffffff);
 	for (int i=0 ; i<cachedStr.length ; i++)
 	{
 		if (cachedStr[i] != null)
