@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class DirectGraphics {
 
-    public static final int FLIP_HORIZONTAL = 1;
-    public static final int FLIP_VERTICAL = 2;
+    public static final int FLIP_HORIZONTAL = 0x2000;
+    public static final int FLIP_VERTICAL = 0x4000;
     Graphics g;
 
     DirectGraphics(Graphics g)

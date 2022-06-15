@@ -59,13 +59,9 @@ Tecla 5 o botón central/tecla 'OK':
 Atacando: chutar o pasar el balón
 Defendiendo: quitar el balón
 
-En los partidos, usa las teclas 1,2,3,4,6,7,8,9 para moverte y la tecla 5 para chutar o realizar entradas. Accede al menú de pausa con la tecla de selección izquierda.<mo-c450,nk-s40, nk-s30>?
-En los partidos, usa las teclas 1,2,3,4,6,7,8,9 para moverte o la tecla de navegación. La tecla 5 y navegación central (tecla OK) para chutar o realizar entradas. Accede al menú de pausa con la tecla de selección izquierda.<pa-x60,se-z600,al-otx56>?
-En los partidos, usa las teclas 2, 3 o navegación izquierda para moverte hacia la izquierda; las teclas 8, 9 o navegación derecha para moverte hacia la derecha; 5, 6 o navegación abajo para moverte hacia abajo. Solo puedes usar navegación arriba para moverte en esa dirección. Usa las tecla 1, 0, 4 y 7 para desplazarte en diagonal. Para realizar el chute o la segada debes pulsar asterisco '*', almohadilla '#' o la tecla de navegación central. <nk-3650>?
 
 ---------
-Cuando te acerques a la portería rival aparecerá en pantalla una flecha en movimiento indicando la dirección que tomará tu disparo cuando lo efectúes. Recuerda que si mantienes pulsada la tecla de chutar/pasar el balón aumentarás la potencia y la altura del disparo/pase. Crea a los futuros Ronaldinhos con el menú de edición de jugadores. En él podrás modificar las características, tanto de juego como de aspecto, de cinco jugadores que tendrás disponibles en la plantilla de tu equipo. <mo-c450, nk-s40,nk-s30,pa-x60,se-z600,al-otx56,lg-l341i,mi-m341i,mi-m430i,mo-e378,ne-n410i,ne-n342i,ne-n411i,ne-n341i,sg-s500i,sm-sg341i,vi-tsm7i,vi-tsm30i,gr-g402i,gr-g600i,ne-n412i>!
-Cuando te acerques a la portería rival aparecerá en pantalla una flecha en movimiento indicando la dirección que tomará tu disparo cuando lo efectúes. <lg-l341i,mi-m341i,mi-m430i,mo-e378,ne-n410i,ne-n342i,ne-n411i,ne-n341i,sg-s500i,sm-sg341i,vi-tsm7i,vi-tsm30i,gr-g402i,gr-g600i,ne-n412i>?
+Cuando te acerques a la portería rival aparecerá en pantalla una flecha en movimiento indicando la dirección que tomará tu disparo cuando lo efectúes. Recuerda que si mantienes pulsada la tecla de chutar/pasar el balón aumentarás la potencia y la altura del disparo/pase. Crea a los futuros Ronaldinhos con el menú de edición de jugadores. En él podrás modificar las características, tanto de juego como de aspecto, de cinco jugadores que tendrás disponibles en la plantilla de tu equipo.
 
 Atento a la flecha que indica la dirección del pase o el remate a puerta. Prueba mantener el botón de chute para realizar un pase o tiro alto. <mo-c450,nk-s40,nk-s30,pa-x60,se-z600,al-otx56>?
 }

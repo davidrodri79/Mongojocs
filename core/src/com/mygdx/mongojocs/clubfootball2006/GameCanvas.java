@@ -31,6 +31,7 @@ package com.mygdx.mongojocs.clubfootball2006;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Runnable;
 import com.mygdx.mongojocs.midletemu.CommandListener;
@@ -620,6 +621,7 @@ public void paint (Graphics g)
         		}
 
         		if (biosStatus == BIOS_MENU && gameStatus == GAME_PLAY_TICK && menuListShow) {playShow = true;}
+        		playShow=true; //MONGOFIX
         		if (playShow) { playShow=false; playDraw(); }
 
         		menuListDraw(scr);
@@ -776,6 +778,14 @@ public void keyPressed(int keycode)
 //#elifdef SD
 //#elifdef SG
 //#elifdef NK
+		case -6:	// Nokia - Menu Izquierda
+			intKeyMenu = -1;
+			return;
+
+		case -7:	// Nokia - Menu Derecha
+			intKeyMenu = 1;
+			return;
+
 //#elifdef SE
 //#elifdef SI
 //#elifdef SH-902
@@ -1631,7 +1641,7 @@ public void menuListDraw(Graphics g)
 	//if (menuImg!=null) {canvasFillDraw(0); showImage(menuImg);}
 	//#endif
 	drawMenuBackground();
-	
+
 	
 
 //#ifdef J2ME
@@ -2073,8 +2083,17 @@ public String[][] textosCreate(byte[] tex)
 	boolean subCampo = false;
 	boolean primerEnter = true;
 
+	// MONGOFIX ==========================================
+	char tex_char[] = new char[tex.length];
+	for(int i = 0; i < tex.length; i++)
+		if(tex[i] < 0)
+			tex_char[i]=(char)(tex[i]+256);
+		else
+			tex_char[i]=(char)tex[i];
+	//=================================================
+
 	int size = 0;
-	String textos = new String(tex);
+	String textos = new String(tex_char);
 
 	for (int i=0 ; i<textos.length() ; i++)
 	{
@@ -7240,13 +7259,6 @@ void drawMenuBackground()
 			drawSampleShirt(canvasWidth/3,canvasHeight/3,AshirtsRGB[AhomeCostume ? 0 : 1]);
 			drawSampleShirt(2*canvasWidth/3,canvasHeight/3,BshirtsRGB[BhomeCostume ? 0 : 1]);
 			//#elifdef MEDIUMUI
-			//#ifndef NOSAMPLESHIRT
-			putColor(UI_DARK_RGB);
-			scr.fillRect(menuListX,canvasHeight/9 - 2, canvasWidth - menuListX*2, canvasHeight/5 + 4);
-			putColor(UI_PICTUREWINDOW_RGB);
-			scr.fillRect(menuListX + 2,canvasHeight/9, canvasWidth - menuListX*2 - 4, canvasHeight/5);
-			drawSampleShirt(canvasWidth/3,canvasHeight/5,AshirtsRGB[AhomeCostume ? 0 : 1]);
-			drawSampleShirt(2*canvasWidth/3,canvasHeight/5,BshirtsRGB[BhomeCostume ? 0 : 1]);
 			//#endif
 			//#elifdef SMALLUI
 			//#endif
@@ -9513,7 +9525,7 @@ public void initResources()
     
     //#ifdef J2ME
     byte inbuf[] = loadFile("/plant.png");        
-    imgTeam[0] = changePal(inbuf, AshirtsRGB[AhomeCostume ? 0 : 1]);        
+    imgTeam[0] = Image.createImage("/plant.png"); //MONGO changePal(inbuf, AshirtsRGB[AhomeCostume ? 0 : 1]);
     inbuf = null;   
     progressBarStep(20);
     //#else
@@ -9523,7 +9535,7 @@ public void initResources()
     //#ifdef J2ME
     inbuf = loadFile("/plant.png");
     
-    imgTeam[1] = changePal(inbuf, BshirtsRGB[BhomeCostume ? 0 : 1]);          
+    imgTeam[1] = Image.createImage("/plant.png"); //MONGO changePal(inbuf, BshirtsRGB[BhomeCostume ? 0 : 1]);
                         
     inbuf = null;   
     progressBarStep(20);
@@ -9630,7 +9642,7 @@ Image changePal(byte inbuf[], int shirtCol[]) {
     inbuf[i+3] = (byte)(crc&0x000000ff);
     
     
-    return  Image.createImage(20,20);//(inbuf,0,inbuf.length);
+    return  Image.createImage(inbuf,0,inbuf.length);
 }
 
 

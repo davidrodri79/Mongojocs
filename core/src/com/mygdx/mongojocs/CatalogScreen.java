@@ -21,8 +21,6 @@ public class CatalogScreen implements Screen {
 
     Launcher launcher;
     OrthographicCamera camera;
-    int selectedGame = 0;
-    int scrollY = 0;
     Vector3 lastTouch;
 
     class MongoGame
@@ -47,8 +45,8 @@ public class CatalogScreen implements Screen {
     MongoGame catalog[]={
 
             new MongoGame("3D QBlast 2.0", 2005, "Nokia series60", "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
-            new MongoGame("BraveWar", 2003, "Nokia series60","bravewar", com.mygdx.mongojocs.bravewar.GameMidletLogic.class),
-            new MongoGame("Club Football 2006", 2006, "Nokia series60","clubfootball2006", com.mygdx.mongojocs.clubfootball2006.Game.class),
+            //new MongoGame("BraveWar", 2003, "Nokia series60","bravewar", com.mygdx.mongojocs.bravewar.GameMidletLogic.class),
+            //new MongoGame("Club Football 2006", 2006, "Nokia series60","clubfootball2006", com.mygdx.mongojocs.clubfootball2006.Game.class),
             new MongoGame("Cerberus Lair", 2003, "Nokia series60","cerberus", com.mygdx.mongojocs.cerberus.CerberusMain.class),
             new MongoGame("Escape", 2003, "Nokia series60","escape", com.mygdx.mongojocs.escape.EscapeNMain.class),
             new MongoGame("Numa the beast", 2004, "Nokia series60","numa", com.mygdx.mongojocs.numa.BeastMain.class),
@@ -68,8 +66,7 @@ public class CatalogScreen implements Screen {
             catalog[i].icon = new Texture(catalog[i].assetsFolder+"/icon.png");
         }
 
-        scrollY = catalog.length * 200 - 800;
-        selectedGame = -1;
+        if(launcher.scrollY == -1) launcher.scrollY = catalog.length * 200 - 800;
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -86,21 +83,21 @@ public class CatalogScreen implements Screen {
 
                 for(int i = 0; i < catalog.length; i++)
                 {
-                    Rectangle r = new Rectangle(20, catalog.length*200-scrollY-i*200-200, 400, 200);
+                    Rectangle r = new Rectangle(20, catalog.length*200- launcher.scrollY-i*200-200, 400, 200);
                     if(r.contains(touchPos.x, touchPos.y))
                     {
                         int clicked = i;
 
-                        if(clicked == selectedGame)
+                        if(clicked == launcher.selectedGame)
                         {
-                            MIDlet.setAssetsFolder(catalog[selectedGame].assetsFolder);
+                            MIDlet.setAssetsFolder(catalog[launcher.selectedGame].assetsFolder);
 
-                            launcher.setScreen(new MIDletRunScreen(launcher, catalog[selectedGame].midletClass));
+                            launcher.setScreen(new MIDletRunScreen(launcher, catalog[launcher.selectedGame].midletClass));
                             dispose();
                         }
                         else
                         {
-                            selectedGame = clicked;
+                            launcher.selectedGame = clicked;
                         }
                     }
                 }
@@ -123,12 +120,12 @@ public class CatalogScreen implements Screen {
                 touchPos.set(screenX, screenY, 0);
                 camera.unproject(touchPos);
 
-                scrollY-=touchPos.y - lastTouch.y;
+                launcher.scrollY-=touchPos.y - lastTouch.y;
 
                 lastTouch = touchPos;
 
-                if(scrollY < 0) scrollY = 0;
-                if(scrollY >= catalog.length * 200 - 800) scrollY = catalog.length * 200 - 800 - 1;
+                if(launcher.scrollY < 0) launcher.scrollY = 0;
+                if(launcher.scrollY >= catalog.length * 200 - 800) launcher.scrollY = catalog.length * 200 - 800 - 1;
 
                 return super.touchDragged(screenX, screenY, pointer);
             }
@@ -153,16 +150,16 @@ public class CatalogScreen implements Screen {
 
             launcher.batch.begin();
             launcher.shapeRenderer.setProjectionMatrix(camera.combined);
-            launcher.shapeRenderer.setColor(i == selectedGame ? Color.GOLD : Color.NAVY);
+            launcher.shapeRenderer.setColor(i == launcher.selectedGame ? Color.GOLD : Color.NAVY);
             launcher.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            launcher.shapeRenderer.rect(20, catalog.length*200 - scrollY - i*200 - 200 + 20, 360, 160);
+            launcher.shapeRenderer.rect(20, catalog.length*200 - launcher.scrollY - i*200 - 200 + 20, 360, 160);
             launcher.shapeRenderer.end();
             launcher.batch.end();
             launcher.batch.begin();
-            launcher.batch.draw(catalog[i].icon, 40, catalog.length*200 - scrollY - i*200 - 200 + 40, 64, 64);
-            launcher.bigFont.draw(launcher.batch, catalog[i].name, 40, catalog.length*200 - scrollY - i*200 - 200  + 160);
-            launcher.smallFont.draw(launcher.batch, catalog[i].platform, 120, catalog.length*200 - scrollY - i*200 - 200  + 60);
-            launcher.smallFont.draw(launcher.batch, ""+catalog[i].year, 120, catalog.length*200 - scrollY - i*200 - 200  + 100);
+            launcher.batch.draw(catalog[i].icon, 40, catalog.length*200 - launcher.scrollY - i*200 - 200 + 40, 64, 64);
+            launcher.bigFont.draw(launcher.batch, catalog[i].name, 40, catalog.length*200 - launcher.scrollY - i*200 - 200  + 160);
+            launcher.smallFont.draw(launcher.batch, catalog[i].platform, 120, catalog.length*200 - launcher.scrollY - i*200 - 200  + 60);
+            launcher.smallFont.draw(launcher.batch, ""+catalog[i].year, 120, catalog.length*200 - launcher.scrollY - i*200 - 200  + 100);
             launcher.batch.end();
         }
 

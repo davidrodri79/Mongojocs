@@ -62,8 +62,6 @@ public class MIDletRunScreen implements Screen {
             new LayoutConf(0.0f, false)
     };
 
-    int currentLayout = 0;
-
     VirtualKey vkeys[] =
             {
                     new VirtualKey(176-35,5,30, 30, -1, "o"),
@@ -82,9 +80,9 @@ public class MIDletRunScreen implements Screen {
             };
     VirtualKey pressedKey = null;
 
-    MIDletRunScreen(Launcher launcher, Class midletClass)
+    MIDletRunScreen(Launcher l, Class midletClass)
     {
-        this.launcher = launcher;
+        this.launcher = l;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 176, 208);
@@ -104,7 +102,7 @@ public class MIDletRunScreen implements Screen {
                     if(vkeys[i].inside((int)touchPos.x, 208 - (int)touchPos.y)) {
                         if(vkeys[i].code == -1)
                         {
-                            currentLayout = (currentLayout+1)%layouts.length;
+                            launcher.currentLayout = (launcher.currentLayout+1)%layouts.length;
                         }
                         else {
                             Canvas.theCanvas.keyPressed(vkeys[i].code);
@@ -187,7 +185,7 @@ public class MIDletRunScreen implements Screen {
             int y = 208 - vk.y - vk.h - 4;
             int w = vk.w - 8;
             int h = vk.h - 8;
-            float alpha = vk.code == -1 ? 0.5f : (vk == pressedKey ? 0.25f : layouts[currentLayout].alpha);
+            float alpha = vk.code == -1 ? 0.5f : (vk == pressedKey ? 0.25f : layouts[launcher.currentLayout].alpha);
 
             Gdx.gl.glEnable(GL20.GL_BLEND);
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -215,7 +213,7 @@ public class MIDletRunScreen implements Screen {
             }
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
-            if(layouts[currentLayout].numbers || vk.code == -1) {
+            if(layouts[launcher.currentLayout].numbers || vk.code == -1) {
                 launcher.shapeRenderer.setColor(new Color(1,1,1,alpha));
                 launcher.batch.setProjectionMatrix(camera.combined);
                 launcher.batch.begin();

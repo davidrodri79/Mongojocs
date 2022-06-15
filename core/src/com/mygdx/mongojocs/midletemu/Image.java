@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 public class Image {
 
     public Texture texture;
@@ -29,6 +32,29 @@ public class Image {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         im.fbo.end();
 
+        return im;
+    }
+
+    public static Image createImage(byte[] inbuf, int start, int length)
+    {
+        File file = new File(MIDlet.appFilesFolder+"/PNGfrombytes.png");
+        try {
+            if (!file.exists()) {
+                File dirs = new File(MIDlet.appFilesFolder);
+                dirs.mkdirs();
+                file.createNewFile();
+            }
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(inbuf, start, length);
+            fos.close();
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        Image im = new Image();
+        im.texture = new Texture(file.toString());
         return im;
     }
 

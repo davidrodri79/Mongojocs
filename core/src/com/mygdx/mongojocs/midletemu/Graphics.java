@@ -293,7 +293,7 @@ public class Graphics {
             fromImage.fbo.begin();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(currentColor);
         shapeRenderer.ellipse(cx, Display.height - cy, rx, ry);
         shapeRenderer.end();

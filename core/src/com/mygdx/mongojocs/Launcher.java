@@ -28,6 +28,9 @@ public class Launcher extends Game {
 	SpriteBatch batch;
 	public ShapeRenderer shapeRenderer;
 	static MyInterface myInterface;
+	int selectedGame = -1;
+	int scrollY = -1;
+	int currentLayout = 0;
 
 	public Launcher(MyInterface myInt) {
 		myInterface = myInt;
