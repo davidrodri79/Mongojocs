@@ -4,6 +4,6 @@ public class Displayable {
 
     public boolean isShown()
     {
-        return Display.current == this;
+        return Display.currentDisplayable == this;
     }
 }

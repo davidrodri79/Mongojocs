@@ -63,7 +63,6 @@ Defendiendo: quitar el balón
 ---------
 Cuando te acerques a la portería rival aparecerá en pantalla una flecha en movimiento indicando la dirección que tomará tu disparo cuando lo efectúes. Recuerda que si mantienes pulsada la tecla de chutar/pasar el balón aumentarás la potencia y la altura del disparo/pase. Crea a los futuros Ronaldinhos con el menú de edición de jugadores. En él podrás modificar las características, tanto de juego como de aspecto, de cinco jugadores que tendrás disponibles en la plantilla de tu equipo.
 
-Atento a la flecha que indica la dirección del pase o el remate a puerta. Prueba mantener el botón de chute para realizar un pase o tiro alto. <mo-c450,nk-s40,nk-s30,pa-x60,se-z600,al-otx56>?
 }
 {
 Club Football 2006

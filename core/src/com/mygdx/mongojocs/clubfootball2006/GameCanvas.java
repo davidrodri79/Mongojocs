@@ -621,7 +621,7 @@ public void paint (Graphics g)
         		}
 
         		if (biosStatus == BIOS_MENU && gameStatus == GAME_PLAY_TICK && menuListShow) {playShow = true;}
-        		playShow=true; //MONGOFIX
+
         		if (playShow) { playShow=false; playDraw(); }
 
         		menuListDraw(scr);
@@ -7228,13 +7228,6 @@ void drawMenuBackground()
 			scr.fillRect(menuListX + 2,canvasHeight/5 + 4, menuListSizeX - 4,canvasHeight/5 - 8);
 			showTeamLogo(menuListX + menuListSizeX/2, canvasHeight/5 + canvasHeight/10, playerTeam);
 			//#elifdef MEDIUMUI
-			//#ifndef NOTEAMLOGOATSELECT
-				putColor(UI_DARK_RGB);
-				scr.fillRect(menuListX,canvasHeight/6 + 2, menuListSizeX,canvasHeight/5 - 4);
-				putColor(UI_PICTUREWINDOW_RGB);
-				scr.fillRect(menuListX + 2,canvasHeight/6 + 4, menuListSizeX - 4,canvasHeight/5 - 8);
-				showTeamIcon(menuListX + menuListSizeX/2, canvasHeight/6 + canvasHeight/10, playerTeam);
-			//#endif
 			//#elifdef SMALLUI
 			//#endif			
 		break;

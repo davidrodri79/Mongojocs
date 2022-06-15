@@ -1004,7 +1004,7 @@ public void canvasDraw()
 {
 	if (canvasFillShow) { canvasFillShow=false; canvasFillDraw(canvasFillRGB); }
 
-	if (canvasImg!=null) { showImage(canvasImg); /*canvasImg=null; MONGOFIX*/ System.gc(); }
+	if (canvasImg!=null) { showImage(canvasImg); canvasImg=null; System.gc(); }
 
 	if (canvasTextShow) { canvasTextShow=false; canvasTextDraw(); }
 
@@ -4175,7 +4175,6 @@ long timeIniLogos;
 
 public boolean logosTick()
 {
-	canvasFillTask(rgbLogos[cntLogos]); //MONGOFIX
 
 	if ( (System.currentTimeMillis() - timeIniLogos) < timeLogos) {return false;}
 
@@ -4544,7 +4543,6 @@ public boolean menuListTick(int movY, boolean fire)
 		}
 	}
 
-	menuListShow=true; //MONGOFIX
 
 	return false;
 }
@@ -5024,7 +5022,7 @@ public void gameTick()
 		//#endif
 		numLogos = 1;
 		cntLogos = 0;
-		rgbLogos = new int[] {0xffffff, 0xffffff}; //MONGOFIX
+		rgbLogos = new int[] {0xffffff};
 		timeLogos = 2000;
 	
 		timeIniLogos = System.currentTimeMillis() - timeLogos;

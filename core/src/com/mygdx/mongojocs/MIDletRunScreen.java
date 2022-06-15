@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Display;
+import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.Runnable;
@@ -173,7 +174,12 @@ public class MIDletRunScreen implements Screen {
         else
             Thread.currentRunning.runTick();
 
-        Graphics.emptyScissors();
+        //Graphics.emptyScissors();
+
+        launcher.batch.setProjectionMatrix(camera.combined);
+        launcher.batch.begin();
+        launcher.batch.draw(Display.screenBuffer, 0, 0, 176, 208, 0, 1, 1, 0);
+        launcher.batch.end();
 
         // KEYBOARD LAYOUT
 
@@ -246,6 +252,8 @@ public class MIDletRunScreen implements Screen {
 
     @Override
     public void dispose() {
+
         Thread.currentRunning.runEnd();
+        Graphics.bitmapFonts.clear();
     }
 }

@@ -311,7 +311,7 @@ public class GameCanvas extends BiosCanvas
 				break;
 				
 				case Game.SHOW_TIP :
-				//if(ga.cnt<5) MONGOFIX
+				if(ga.cnt<5)
 					showGameAction();
 					boxedTip(ga.gameText[31][ga.tipRequest + (ga.gameKeyconf ? 0 : 10)]);
 				break;
@@ -330,8 +330,7 @@ public class GameCanvas extends BiosCanvas
 				ga.updateScore=true;
 				showGameAction();
 				break;
-			}		
-			doRepaintMenu = true; //MONGOFIX==========
+			}
 		}
 		
 	}
