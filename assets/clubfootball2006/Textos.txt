@@ -107,7 +107,7 @@ Joaquín Hurtado
 Responsable Calidad de Proyecto:
 Xavi Espejo
 
-Testing & Debug:
+Testing & com.mygdx.mongojocs.sanfermines2006.Debug:
 Albert Sans
 Arnau Castellví
 Artur Rubio

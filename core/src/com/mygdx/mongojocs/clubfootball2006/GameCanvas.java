@@ -56,7 +56,7 @@ import java.util.Random;
 
 // ---------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// MIDlet - Game Canvas - Bios
+// MIDlet - com.mygdx.mongojocs.sanfermines2006.Game Canvas - Bios
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // ---------------------------------------------------------
 
@@ -179,7 +179,7 @@ public void runInit()
 		biosCreate();
 	}catch(Exception e){
 
-		//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+		//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("Fallo en inicializacion");
 		Debug.println(e.toString());
 		//#endif
@@ -235,7 +235,7 @@ public void runTick()
 				if (gameForceRefresh) {
 
 					gameForceRefresh = false;
-					//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+					//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 					Debug.println ("biosRefresh()");
 					Debug.println ("biosStatus="+biosStatus);
 					//#endif
@@ -337,7 +337,7 @@ public void runTick()
 
 			} catch (Exception e)
 			{
-				//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 				Debug.println("*** Exception Logica ***");
 				Debug.println("biosStatus:"+biosStatus);
 				Debug.println("gameStatus:"+gameStatus);
@@ -376,7 +376,7 @@ public void run()
 		biosCreate();
 	}catch(Exception e){
 		
-		//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+		//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("Fallo en inicializacion");
 		Debug.println(e.toString());
 		//#endif
@@ -429,7 +429,7 @@ public void run()
 				if (gameForceRefresh) {
 					
 					gameForceRefresh = false; 
-					//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+					//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 					Debug.println ("biosRefresh()");
 					Debug.println ("biosStatus="+biosStatus);
 					//#endif
@@ -531,7 +531,7 @@ public void run()
 
 			} catch (Exception e)
 			{
-			//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+			//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 				Debug.println("*** Exception Logica ***");
 				Debug.println("biosStatus:"+biosStatus);
 				Debug.println("gameStatus:"+gameStatus);
@@ -629,7 +629,7 @@ public void paint (Graphics g)
 				
 			} catch (Exception e)
 			{
-			//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+			//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 				Debug.println("*** Exception Grafica ***");
 				Debug.println("biosStatus:"+biosStatus);
 				Debug.println("gameStatus:"+gameStatus);
@@ -646,7 +646,7 @@ public void paint (Graphics g)
 //#ifdef DOJA
 //#endif
 	
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 			if (Debug.enabled) {Debug.debugDraw(this, scr);}
 //#endif
 			
@@ -905,9 +905,9 @@ public void biosCreate()
 	menuListFontHeight = menuListFont.getHeight();
 	
 // --------------------------------
-// Inicializamos com.mygdx.mongojocs.clubfootball2006.Debug Engine
+// Inicializamos com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug Engine
 // ================================
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.debugCreate(this);
 //#endif
 // ================================
@@ -945,7 +945,7 @@ public void biosCreate()
     //canvasImg = loadImage("/loading"); gameDraw();
     //#endif
 	
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("Creaci�n de textos...");
 	//#endif
 
@@ -965,7 +965,7 @@ public void biosCreate()
 	//#endif
 	
 		
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("Personalizando datos de UI...");
 	//#endif
 	
@@ -1001,13 +1001,13 @@ public void biosCreate()
 	headLineTeam = (byte)Integer.valueOf(tempStr[0][0]).intValue();
 	domHeadLineTeam = (byte)Integer.valueOf(tempStr[0][1]).intValue();
 
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
-	Debug.println("Game create...");
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+	Debug.println("com.mygdx.mongojocs.sanfermines2006.Game create...");
 	//#endif
 
 	gameCreate();
 	
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("Carga banderas...");
 	//#endif
 	
@@ -1048,7 +1048,7 @@ public void biosCreate()
 public void biosTick()
 {
 
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	if (keyMisc == 11 && lastKeyMisc == 0) {Debug.enabled = !Debug.enabled; if (!Debug.enabled) {gameForceRefresh=true;}}
 //#endif
 
@@ -1125,9 +1125,9 @@ public void biosTick()
 
 /*public void biosRefresh()
 {
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
-	com.mygdx.mongojocs.clubfootball2006.Debug.println ("biosRefresh()");
-	com.mygdx.mongojocs.clubfootball2006.Debug.println ("biosStatus="+biosStatus);
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+	com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug.println ("biosRefresh()");
+	com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug.println ("biosStatus="+biosStatus);
 //#endif
 
 	switch (biosStatus)
@@ -2465,14 +2465,14 @@ public byte[] loadFile(String Nombre)
 	}
 	catch(Exception exception)
 	{
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
-	Debug.println("loadFile: "+Nombre+" <File not found>");
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+	com.mygdx.mongojocs.sanfermines2006.Debug.println("loadFile: "+Nombre+" <File not found>");
 	//#endif
 	return null;
 	}
 	
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
-	Debug.println("loadFile: "+Nombre+" <"+buffer.length+">");
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+	com.mygdx.mongojocs.sanfermines2006.Debug.println("loadFile: "+Nombre+" <"+buffer.length+">");
 	//#endif
 	
 	System.gc();
@@ -2566,13 +2566,13 @@ public Image loadImage(String FileName)
 		Img = Image.createImage(FileName);
 	} catch (Exception e)
 	{
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("loadImage: "+FileName+" <File not found>");
 		return null;
 	//#endif
 	}
 
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("loadImage: "+FileName);
 //#endif
 
@@ -3730,7 +3730,7 @@ public void canvasFillDraw(int RGB)
 				}
 				catch(Exception e)
 				{
-				//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 					Debug.println(e.toString());
 				//#endif
 
@@ -3758,7 +3758,7 @@ public void canvasFillDraw(int RGB)
 				}
 				catch (Exception e)
 				{
-				//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 					Debug.println(e.toString());
 				//#endif
 				}
@@ -3781,7 +3781,7 @@ public void canvasFillDraw(int RGB)
 				}
 				catch(Exception e)
 				{
-				//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 					Debug.println(e.toString());
 				//#endif
 					return;
@@ -4246,7 +4246,7 @@ static final int rmsCachedFiles = 8;
 
 public int rmsCreate(int store)
 {
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("rmsCreate("+store+")");
 //#endif
 
@@ -4274,7 +4274,7 @@ public int rmsCreate(int store)
 
 	if (rmsBoot == null || rmsBoot[0] != 'r' || rmsBoot[1] != 'm')
 	{
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("rmsFormat("+store+")");
 	//#endif
 
@@ -4349,7 +4349,7 @@ public int rmsCreate(int store)
 	
 		rmsUpdateFat(0, 0, null, (short)0);
 	
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("rmsFormated: "+rmsStoreSize);
 	//#endif
 	}
@@ -4384,7 +4384,7 @@ public int rmsCreate(int store)
 		rmsStoreUsed += rmsFileInfo[i];
 	}
 
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("rmsCreated:");
 	Debug.println("-Free: "+(rmsStoreSize-rmsStoreUsed));
 	Debug.println("-Used: "+rmsStoreUsed);
@@ -4415,7 +4415,7 @@ public boolean rmsSaveFile(String fileName, byte[] data)
 {
 	if ( data.length > rmsAvailable(fileName) )
 	{
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("rmsSaveFile: "+fileName+" <rms disk full>");
 	//#endif
 		return true;
@@ -4423,7 +4423,7 @@ public boolean rmsSaveFile(String fileName, byte[] data)
 
 	rmsDeleteFile(fileName);
 
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("rmsSaveFile: "+fileName+" <"+data.length+"bytes>");
 //#endif
 
@@ -4462,13 +4462,13 @@ public byte[] rmsLoadFile(String fileName)
 
 	if (found == -1)
 	{
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("rmsLoadFile: "+fileName+" <File not found>");
 	//#endif
 		return null;
 	}
 
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("rmsLoadFile: "+fileName+" <"+rmsFileInfo[found]+"bytes>");
 //#endif
 
@@ -4489,13 +4489,13 @@ public boolean rmsDeleteFile(String fileName)
 
 	if (found == -1)
 	{
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		Debug.println("rmsDeleteFile: "+fileName+" <File not found>");
 	//#endif
 		return true;
 	}
 
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("rmsDeleteFile: "+fileName);
 //#endif
 
@@ -4532,7 +4532,7 @@ public boolean rmsDeleteFile(String fileName)
 
 public String[] rmsGetDir()
 {
-//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("rmsGetDir:"); for (int i=0 ; i<rmsFiles ; i++) {Debug.println(rmsFileName[i]+" <"+rmsFileInfo[i]+"bytes>");}
 //#endif
 	String[] tmpStr = new String[rmsFiles];
@@ -5341,7 +5341,7 @@ public void menuAction(int cmd)
 		menuInit(MENU_RESTART_CONFIRM);		
 	break;
 
-	case MENU_ACTION_EXIT_GAME:	// Exit Game
+	case MENU_ACTION_EXIT_GAME:	// Exit com.mygdx.mongojocs.sanfermines2006.Game
 
 		listenerInit(SOFTKEY_NONE, SOFTKEY_NONE);
 		gameExit = true;
@@ -5712,7 +5712,7 @@ public void popupAction(int action)
 
 
 // ************************************************************************** //
-// Inicio Clase Game
+// Inicio Clase com.mygdx.mongojocs.sanfermines2006.Game
 // ************************************************************************** //
 
 
@@ -6014,7 +6014,7 @@ public void gameCreate()
 // Cargamos Preferencias
 // ================================
 
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("Loading prefs...");
 	//#endif
 	
@@ -6039,7 +6039,7 @@ public void gameCreate()
 // ================================
 //#ifndef PLAYER_NONE
 	
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("Loading sound...");
 	//#endif
 
@@ -6083,7 +6083,7 @@ public void gameCreate()
 	//#ifdef FORCESTARTUPREPAINT
 	//#endif
 		
-	//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("Formation info...");
 	//#endif
 
@@ -6721,7 +6721,7 @@ public void gameTick()
 		case 2:	// Una vida menos y regresamos al inicio del nivel
 		break;
 
-		case 3:	// Producir Game Over*/
+		case 3:	// Producir com.mygdx.mongojocs.sanfermines2006.Game Over*/
 
 			//playDestroy();		    
             
@@ -8193,8 +8193,8 @@ public void preoffside(int _tid)
 	kickPlayer = theTeam2[specialId[_tid][2]];
 	ax = ball.fx;
 	ay = ball.fy;
-	//GameCanvas.setTeamsState(FREE);
-	//GameCanvas.humanSoccerPlayer = null;
+	//com.mygdx.mongojocs.sanfermines2006.GameCanvas.setTeamsState(FREE);
+	//com.mygdx.mongojocs.sanfermines2006.GameCanvas.humanSoccerPlayer = null;
 	wait = 20;    
 	humanSoccerPlayer = null;
 }*/
@@ -9858,7 +9858,7 @@ void make_crc_table()
 			
 			current = 0;
 			
-			// com.mygdx.mongojocs.clubfootball2006.Debug
+			// com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 			/*
 			for(int i = 0; i < 2*(teamsNumber - 1); i++){
 			

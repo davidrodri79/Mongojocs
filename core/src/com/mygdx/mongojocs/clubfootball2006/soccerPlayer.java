@@ -115,11 +115,11 @@ class soccerPlayer// extends unit
 
 
 /////////////////////////////////////////////////////////////////////////////	
-// soccerPlayer soccerPlayer(GameCanvas _gc, int _id, ball _ball)
+// soccerPlayer soccerPlayer(com.mygdx.mongojocs.sanfermines2006.GameCanvas _gc, int _id, ball _ball)
 /////////////////////////////////////////////////////////////////////////////		
 public soccerPlayer(GameCanvas _gc, int _id)
 {	
-//public unit(int _width, int _height, GameCanvas _gc)
+//public unit(int _width, int _height, com.mygdx.mongojocs.sanfermines2006.GameCanvas _gc)
 //{
     /*width = BODYWIDTH;
     height = BODYHEIGHT;
@@ -268,7 +268,7 @@ public int status()
     result += factor;
          
     //FACTOR RANDOM
-    //factor = GameCanvas.rnd.nextInt()%300;
+    //factor = com.mygdx.mongojocs.sanfermines2006.GameCanvas.rnd.nextInt()%300;
     //result += factor;
                   
     return result;                 
@@ -499,7 +499,7 @@ public void update()
                 
                 //ball.theOwner = this;
                 if (distanceToGoal() < GROUNDHEIGHT/4)
-                    ball.headKick(GameCanvas.pointer, relativeY(GROUNDHEIGHT), (playerKick*90) + (256*10));                    
+                    ball.headKick(com.mygdx.mongojocs.sanfermines2006.GameCanvas.pointer, relativeY(GROUNDHEIGHT), (playerKick*90) + (256*10));
                 else 
                     ball.headKick(closestPlayer.x, closestPlayer.y, 256*100);                    //512+gc.distance(closestPlayer, this)*12
                     //kick(closestPlayer, 812+gc.distance(closestPlayer, this)*12, 0, false);
@@ -507,7 +507,7 @@ public void update()
                 //state = WAIT;
                 //wait = 20;
                 //waitReason = W_HEADKICK;
-                direction = lookAt(GameCanvas.pointer, relativeY(GROUNDHEIGHT));        
+                direction = lookAt(com.mygdx.mongojocs.sanfermines2006.GameCanvas.pointer, relativeY(GROUNDHEIGHT));
                 break;
             }
             if (h == 0) state = FREE;
@@ -601,7 +601,7 @@ public void update()
                     ty = GameCanvas.HGROUNDHEIGHT + (team == GameCanvas.teamDown?hheight:-hheight);
                     if (id == GameCanvas.specialId[team][1]) tx = GameCanvas.HGROUNDWIDTH;
                     if (id == GameCanvas.specialId[team][0] && 
-                    //Math.abs(tx - GameCanvas.HGROUNDWIDTH) < width) 
+                    //Math.abs(tx - com.mygdx.mongojocs.sanfermines2006.GameCanvas.HGROUNDWIDTH) < width)
                     tx <= GameCanvas.HGROUNDWIDTH+width)
                     tx += width*2;                                
                 }
@@ -610,7 +610,7 @@ public void update()
                 if (y > ty+2) sy = -BASERUNSPEED*3;
                 if (y < ty-2) sy = BASERUNSPEED*3;        
                 //normalize();
-                /*if (GameCanvas.teamGoal == team && (GameCanvas.nfc>>2)%4 == id%4) 
+                /*if (com.mygdx.mongojocs.sanfermines2006.GameCanvas.teamGoal == team && (com.mygdx.mongojocs.sanfermines2006.GameCanvas.nfc>>2)%4 == id%4)
                 {
                     sx = sx>>2;
                     sy = sy>>2;
@@ -660,7 +660,7 @@ public void update()
                     	{ball.theOwner = null;ball.takeBall(this);}
                 //}
             }
-        	//if (ball.y > GameCanvas.GROUNDHEIGHT-GameCanvas.AREAHEIGHT && ball.theOwner != null) fault((soccerPlayer)ball.theOwner);
+        	//if (ball.y > com.mygdx.mongojocs.sanfermines2006.GameCanvas.GROUNDHEIGHT-com.mygdx.mongojocs.sanfermines2006.GameCanvas.AREAHEIGHT && ball.theOwner != null) fault((soccerPlayer)ball.theOwner);
             if (ball.theOwner == this) ball.setPosition(x-(cos((direction+2)*32)>>8),y-(sin((direction+2)*32)>>8));                 
             state = STEAL;
             if (--wait <= 0)
@@ -797,7 +797,7 @@ public void update()
         case KICKBALL:         
             //System.out.println("CPU kickball");
             ball.theOwner = this;    	
-            //GameCanvas.humanSoccerPlayer = null;            
+            //com.mygdx.mongojocs.sanfermines2006.GameCanvas.humanSoccerPlayer = null;
             GameCanvas.strikeTeam = myTeam;
             freeKick = true;                                        
             GameCanvas.freeKick = true;
@@ -805,7 +805,7 @@ public void update()
             fy = ball.fy - sin(angleShot);            
             direction = lookAt(ball.x, ball.y);            
             ball.sx = 0; ball.sy = 0;
-            ///GameCanvas.humanSoccerPlayer = null;
+            ///com.mygdx.mongojocs.sanfermines2006.GameCanvas.humanSoccerPlayer = null;
             if (--wait < 0)
             {
                 //#ifndef NOHEIGHT                
@@ -813,7 +813,7 @@ public void update()
                 //#else
                 //#endif
                 GameCanvas.freeKick = false;
-                //GameCanvas.kickPlayer = null;
+                //com.mygdx.mongojocs.sanfermines2006.GameCanvas.kickPlayer = null;
                 freeKick = false;
             }
             break;
@@ -905,7 +905,7 @@ public void manualUpdate(int keyX, int keyY, boolean keyFire)
  	else if (GameCanvas.keyPresTime != 0) 
  	{
  		keyShot = true;
- 		//if (System.currentTimeMillis() - GameCanvas.keyPresTime > 500) keyShotTwo = true;
+ 		//if (System.currentTimeMillis() - com.mygdx.mongojocs.sanfermines2006.GameCanvas.keyPresTime > 500) keyShotTwo = true;
         if (GameCanvas.nfc - GameCanvas.keyPresTime >= 6) keyShotTwo = true;
  		else keyShotOne = true;
  		GameCanvas.keyPresTime = 0; 		
@@ -1099,7 +1099,7 @@ public void manualUpdate(int keyX, int keyY, boolean keyFire)
         
         case KICKBALL:    
             ball.theOwner = this;    	
-            //GameCanvas.humanSoccerPlayer = this;            
+            //com.mygdx.mongojocs.sanfermines2006.GameCanvas.humanSoccerPlayer = this;
             GameCanvas.strikeTeam = myTeam;
             freeKick = true;
             int fac = 3;
@@ -1591,7 +1591,7 @@ public void update(soccerPlayer _ball)
     if (h <= 0) {h = 0; gravityVel = 0;}
     //#endif
    	   
-    //if (team == GameCanvas.TEAMB) System.out.println("ST: "+state);
+    //if (team == com.mygdx.mongojocs.sanfermines2006.GameCanvas.TEAMB) System.out.println("ST: "+state);
    	switch(state)
    	{
 		case FREE:    
@@ -1609,9 +1609,9 @@ public void update(soccerPlayer _ball)
              	direction = lookAt(ball.x, ball.y);             
             }                    
             
-            //if (relativeY(ball.y) < GameCanvas.AREAHEIGHT) System.out.println("true);
+            //if (relativeY(ball.y) < com.mygdx.mongojocs.sanfermines2006.GameCanvas.AREAHEIGHT) System.out.println("true);
             		 
-            //if (relativeY(y) < gc.areaHeight-BODYRADIUS && Math.abs(y-ball.y) < GROUNDHEIGHT/6 && Math.abs(HGROUNDWIDTH-x) <= GameCanvas.AREAWIDTH/2 && gc.distance(this, ball) <= INFLUENCE)
+            //if (relativeY(y) < gc.areaHeight-BODYRADIUS && Math.abs(y-ball.y) < GROUNDHEIGHT/6 && Math.abs(HGROUNDWIDTH-x) <= com.mygdx.mongojocs.sanfermines2006.GameCanvas.AREAWIDTH/2 && gc.distance(this, ball) <= INFLUENCE)
             if (relativeY(ball.y) < GameCanvas.AREAHEIGHT && 
             		 ball.x >= HGROUNDWIDTH - GameCanvas.AREAWIDTH/2 &&
                      ball.x <= HGROUNDWIDTH + GameCanvas.AREAWIDTH/2 &&
@@ -1648,7 +1648,7 @@ public void update(soccerPlayer _ball)
                     GameCanvas.freeKick
         		    )
         		   //Math.abs(HGROUNDWIDTH-x) > INFLUENCE || 
-        		   //Math.abs(HGROUNDWIDTH-ball.x) > GameCanvas.AREAWIDTH/2) 
+        		   //Math.abs(HGROUNDWIDTH-ball.x) > com.mygdx.mongojocs.sanfermines2006.GameCanvas.AREAWIDTH/2)
         		   
         		   state = FREE;
         		//System.out.println("follow");
@@ -1784,7 +1784,7 @@ public void update(soccerPlayer _ball)
     y = fy>>8;                            
     if (currentState != state) timing = 0;
     
-    //if (team == GameCanvas.TEAMA) System.out.println("PORA:"+state);  
+    //if (team == com.mygdx.mongojocs.sanfermines2006.GameCanvas.TEAMA) System.out.println("PORA:"+state);
     //else System.out.println("PORB:"+state);
     //NEW
     if (state != FREE && state != WAIT && state != OUT && state != OWNBALL && state != KICKBALL && state != PREPENALTY)
@@ -2023,7 +2023,7 @@ public void animation()
         //#endif DOJA
     }    
     //#ifndef DOJA
-    /*else if (state == PREMATCH && GameCanvas.teamGoal == team && !formed &&  (GameCanvas.nfc>>2)%4 == id%4) 
+    /*else if (state == PREMATCH && com.mygdx.mongojocs.sanfermines2006.GameCanvas.teamGoal == team && !formed &&  (com.mygdx.mongojocs.sanfermines2006.GameCanvas.nfc>>2)%4 == id%4)
     {
         animFrame = 2;
         //#ifdef LATERALVIEW

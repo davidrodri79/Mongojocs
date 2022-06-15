@@ -16,7 +16,7 @@ public class Game extends Bios
 {
 
 // **************************************************************************//
-// Inicio Clase Game
+// Inicio Clase com.mygdx.mongojocs.sanfermines2006.Game
 // **************************************************************************//
 
 // -------------------------------------------
@@ -535,7 +535,7 @@ public void gameTick()
 		case 2:	// Una vida menos
 		break;
 
-		case 3:	// Producir Game Over
+		case 3:	// Producir com.mygdx.mongojocs.sanfermines2006.Game Over
 			playDestroy();
 			gameStatus = GAME_MENU_GAMEOVER;
 		break;
@@ -777,7 +777,7 @@ public void menuAction(int cmd)
 		setState(LOAD_MENU_MAIN);				
 	break;
 
-	case 9:	// Exit Game
+	case 9:	// Exit com.mygdx.mongojocs.sanfermines2006.Game
 		gameExit = true;
 	break;	
 
@@ -995,6 +995,6 @@ public boolean playTick()
 
 
 // **************************************************************************//
-// Final Clase Game
+// Final Clase com.mygdx.mongojocs.sanfermines2006.Game
 // **************************************************************************//
 };

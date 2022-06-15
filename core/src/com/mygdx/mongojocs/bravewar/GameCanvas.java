@@ -2551,7 +2551,7 @@ public class GameCanvas extends FullCanvas
 		return Bufer;
 	} 	
 			
-} // end com.mygdx.mongojocs.bravewar.GameCanvas
+} // end com.mygdx.mongojocs.bravewar.com.mygdx.mongojocs.sanfermines2006.GameCanvas
 
 
 

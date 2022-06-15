@@ -29,7 +29,7 @@ import com.mygdx.mongojocs.midletemu.MIDlet;
 
 // ---------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// MIDlet - Game Canvas - Bios
+// MIDlet - com.mygdx.mongojocs.sanfermines2006.Game Canvas - Bios
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // ---------------------------------------------------------
 
@@ -757,14 +757,14 @@ public void vibraInit(int Time)
 
 
 // **************************************************************************//
-// Inicio Clase com.mygdx.mongojocs.bravewar.GameCanvas
+// Inicio Clase com.mygdx.mongojocs.bravewar.com.mygdx.mongojocs.sanfermines2006.GameCanvas
 // **************************************************************************//
 
 public void canvasInit() {}
 public void Draw(Graphics a) {}
 
 // **************************************************************************//
-// Final Clase com.mygdx.mongojocs.bravewar.GameCanvas
+// Final Clase com.mygdx.mongojocs.bravewar.com.mygdx.mongojocs.sanfermines2006.GameCanvas
 // **************************************************************************//
 
 

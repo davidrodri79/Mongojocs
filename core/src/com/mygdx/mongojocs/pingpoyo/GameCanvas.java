@@ -117,7 +117,7 @@ public class GameCanvas extends BiosCanvas
 	}
 	
 	// **************************************************************************//
-	// Inicio Clase com.mygdx.mongojocs.bravewar.GameCanvas
+	// Inicio Clase com.mygdx.mongojocs.bravewar.com.mygdx.mongojocs.sanfermines2006.GameCanvas
 	// **************************************************************************//
 	
 	// -*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -455,7 +455,7 @@ public class GameCanvas extends BiosCanvas
 		g.setColor(0,0,0);		
 		g.drawRect(canvasWidth-50,56,42,6);
 		
-		//if(ga.updateScore || ga.gameMode == Game.TUTORIAL_MODE){
+		//if(ga.updateScore || ga.gameMode == com.mygdx.mongojocs.sanfermines2006.Game.TUTORIAL_MODE){
 			//g.setClip(0,0,176,41);
 			//g.drawImage(peopleImg,0,0,20);
 			
@@ -798,6 +798,6 @@ public void playDraw()
 
 
 // **************************************************************************//
-// Final Clase com.mygdx.mongojocs.bravewar.GameCanvas
+// Final Clase com.mygdx.mongojocs.bravewar.com.mygdx.mongojocs.sanfermines2006.GameCanvas
 // **************************************************************************//
 };

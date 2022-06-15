@@ -36,12 +36,12 @@ import java.io.*;
 
 // ---------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// MIDlet - Game 
+// MIDlet - com.mygdx.mongojocs.sanfermines2006.Game
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // ---------------------------------------------------------
 
 //#ifdef J2ME
-public class Game extends MIDlet        // Clase Bios integrada en la Game
+public class Game extends MIDlet        // Clase Bios integrada en la com.mygdx.mongojocs.sanfermines2006.Game
 	//#ifndef NONETWORK
 	 implements Runnable, CommandListener
 	//#endif
@@ -57,7 +57,7 @@ static GameCanvas gc;
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
-public Game()                                                               // Clase Bios integrada en la Game
+public Game()                                                               // Clase Bios integrada en la com.mygdx.mongojocs.sanfermines2006.Game
 {		
 		
 	System.gc();
@@ -77,7 +77,7 @@ public Game()                                                               // C
 
 public void startApp()
 {
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("--startApp()");
 	//#endif
 	
@@ -87,7 +87,7 @@ public void startApp()
 
 public void pauseApp() 
 {
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("--pauseApp()");
 	//#endif
 
@@ -225,7 +225,7 @@ public byte[] invokeServer(int gameID, int controllerID, int methodID, byte[] ar
 		dos.writeInt(gameID);
 		dos.writeInt(controllerID);
 		dos.writeInt(methodID);
-		dos.writeLong(GameCanvas.userID);
+		dos.writeLong(com.mygdx.mongojocs.sanfermines2006.GameCanvas.userID);
 		dos.write(args);
 		
 		dos.flush();
@@ -241,7 +241,7 @@ public byte[] invokeServer(int gameID, int controllerID, int methodID, byte[] ar
 		// Only HTTP_OK (200) means the content is returned.
 		if (status != HttpConnection.HTTP_OK) {			
 			throw new IOException(
-				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 				"Response status not OK [" + status + "]"
 				//#endif
 				);			
@@ -369,7 +369,7 @@ public void run()
 
 // ------------------------------------------------------------------------------------------------------------------------
 // **************************************************************************//
-// Final Clase Game
+// Final Clase com.mygdx.mongojocs.sanfermines2006.Game
 // **************************************************************************//
 
 //#ifdef DOJA

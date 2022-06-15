@@ -4,11 +4,11 @@ package com.mygdx.mongojocs.qblast20;
 // -----------------------------------------------
 // Microjocs The Love Boat Project Rev.0 (1.3.2004)
 // ===============================================
-// Client com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug-Engine class
+// Client com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug-Engine class
 // -----------------------------------------------
 
 
-//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 
 
 //#ifdef J2ME

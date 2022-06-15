@@ -42,7 +42,7 @@ import java.util.Random;
 
 // ---------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// MIDlet - Game Canvas - Bios
+// MIDlet - com.mygdx.mongojocs.sanfermines2006.Game Canvas - Bios
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // ---------------------------------------------------------
 
@@ -140,7 +140,7 @@ Graphics scr;
 
 public void paint (Graphics g)
 {       
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	long millis = System.currentTimeMillis();
 	//#endif
 	
@@ -160,7 +160,7 @@ public void paint (Graphics g)
 				canvasDraw();
 			} catch (Exception e) {
 				
-				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 				System.out.println("*** Exception en la parte Grafica ***"); e.printStackTrace();
 				//#endif
 			}
@@ -169,7 +169,7 @@ public void paint (Graphics g)
 		//#ifdef DOJA
 		//#endif
 		
-		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
  		if (Debug.enabled) {Debug.debugDraw(this, scr);}
 		//#endif
 		
@@ -177,8 +177,8 @@ public void paint (Graphics g)
 		}
 	}
 	
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
-	//com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug.println("Repaint:"+(System.currentTimeMillis() - millis));
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+	//com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug.println("Repaint:"+(System.currentTimeMillis() - millis));
 	//#endif
 		
 }
@@ -404,7 +404,7 @@ public void keyReleased(int keycode)
 
 public void showNotify()
 {	
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("--showNotify()");
 	//#endif
 	
@@ -415,7 +415,7 @@ public void showNotify()
 
 public void hideNotify()
 {
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.println("--hideNotify()");
 	//#endif
 	
@@ -559,7 +559,7 @@ public Image loadImage(String FileName)
 	try	{
 		Img = Image.createImage(FileName);
 	} catch (Exception e) {
-		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		System.out.println("Error leyendo PNG: "+FileName);
 		//#endif
 	}	
@@ -1133,7 +1133,7 @@ public void canvasDraw()
 				}
 				catch(Exception e)
 				{
-				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 					Debug.println(e.toString());
 				//#endif
 
@@ -1158,7 +1158,7 @@ public void canvasDraw()
 				}
 				catch (Exception e)
 				{
-				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 					Debug.println(e.toString());
 				//#endif
 				}
@@ -1329,7 +1329,7 @@ public void commandAction (Command c, Displayable d)
 
 
 // **************************************************************************//
-// Inicio Clase GameCanvas
+// Inicio Clase com.mygdx.mongojocs.sanfermines2006.GameCanvas
 // **************************************************************************//
 
 // -*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -2007,7 +2007,7 @@ public void playDraw()
 	case GAME_PLAY+3 :		
 	if((menuType == -1)|| menuListShow){
 							
-		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 		long debugMilis;
 	
 		debugMilis = System.currentTimeMillis();
@@ -2028,8 +2028,8 @@ public void playDraw()
 		//#elifdef DOJA
 		//#endif						
 		
-		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
-		//com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug.println("Render:"+(System.currentTimeMillis() - debugMilis)+" ms");
+		//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+		//com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug.println("Render:"+(System.currentTimeMillis() - debugMilis)+" ms");
 		//#endif	
 	
 	}
@@ -3335,11 +3335,11 @@ public void PutSprite(Image Img,  int X, int Y,  int CuadSize, int Frame, byte[]
 	}*/
 
 // **************************************************************************//
-// Final Clase GameCanvas
+// Final Clase com.mygdx.mongojocs.sanfermines2006.GameCanvas
 // **************************************************************************//
 
 
- // Game 8<===============================================================================
+ // com.mygdx.mongojocs.sanfermines2006.Game 8<===============================================================================
  
  
  //#ifdef J2ME
@@ -3391,9 +3391,9 @@ public void runInit()
 	//#endif
 
 	// --------------------------------
-	// Inicializamos com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug Engine
+	// Inicializamos com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug Engine
 	// ================================
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	Debug.debugCreate(this);
 	//#endif
 	// ================================
@@ -3498,7 +3498,7 @@ public void runTick()
 
 			soundTick();
 		} catch (Exception e) {
-			//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+			//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 			System.out.println("*** Exception en la parte L�gica ***"); e.printStackTrace();
 			//#endif
 		}
@@ -3543,9 +3543,9 @@ public void run()
 	//#endif
 	
 	// --------------------------------
-	// Inicializamos com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug Engine
+	// Inicializamos com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug Engine
 	// ================================
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
  	Debug.debugCreate(this);
 	//#endif
 	// ================================
@@ -3650,7 +3650,7 @@ public void run()
 												
 				soundTick();
 			} catch (Exception e) {
-				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+				//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 				System.out.println("*** Exception en la parte L�gica ***"); e.printStackTrace();
 				//#endif
 			}
@@ -4065,8 +4065,8 @@ public void biosInit()
 public void biosTick()
 {
 	
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
- 	if (keyMisc == 11 && lastKeyMisc == 0) {Debug.enabled = !Debug.enabled; /*if (!com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug.enabled) {gameForceRefresh=true;}*/}
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+ 	if (keyMisc == 11 && lastKeyMisc == 0) {Debug.enabled = !Debug.enabled; /*if (!com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug.enabled) {gameForceRefresh=true;}*/}
 	//#endif
 	
 	switch (biosStatus)
@@ -4902,7 +4902,7 @@ public byte[] updatePrefs(byte[] bufer)
 
 
 // **************************************************************************//
-// Inicio Clase Game
+// Inicio Clase com.mygdx.mongojocs.sanfermines2006.Game
 // **************************************************************************//
 
 // -------------------------------------------
@@ -5193,7 +5193,7 @@ public void gameTick()
 //		case 2:	// Una vida menos
 //		break;
 
-		case 3:	// Producir Game Over			
+		case 3:	// Producir com.mygdx.mongojocs.sanfermines2006.Game Over
 			gameStatus = GAME_TIME_OVER;
 		break;
 		}
@@ -5837,7 +5837,7 @@ public void menuAction(int cmd)
 		gameStatus = GAME_MENU_LEVEL_SELECT;
 	break;
 
-	case MENU_ACTION_EXIT_GAME:	// Exit Game
+	case MENU_ACTION_EXIT_GAME:	// Exit com.mygdx.mongojocs.sanfermines2006.Game
 
 		//listenerInit(gameText[TEXT_SOFTKEYS][1],gameText[TEXT_SOFTKEYS][4]);	// " "," "
 		gameExit = true;
@@ -6106,7 +6106,7 @@ public boolean playTick()
 		
 	if (playExit!=0) {return true;}
 	
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 	long debugMilis = System.currentTimeMillis();
 	//#endif
 									
@@ -6281,8 +6281,8 @@ public boolean playTick()
 	if (timeTicks % 13 == 0  || (timeTicks <= 30*13 && timeTicks % 13 == 7)) menuBarShow = true;
 	//#endif
 	
-	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug
-	//com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug.println("Update:"+(System.currentTimeMillis() - debugMilis)+"ms");
+	//#ifdef com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
+	//com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug.println("Update:"+(System.currentTimeMillis() - debugMilis)+"ms");
 	//#endif
 		
 	return false;
@@ -7660,7 +7660,7 @@ public void networkCommand(int controller, int command, int expectedResponse)
 			Debug.println("Uploading times...");
 			Debug.println("Pack Id :"+(currentPack < inJarPacks ? defaultPakIds[currentPack] : dlPacksIds[currentPack - inJarPacks]));
 			//for(int i = 0; i < 20; i++)
-				//	com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.Debug.println("Level "+i+", time "+(topTimes[i][1] > 2 ? packTimes[i][2] : topTimes[i][0]));
+				//	com.mygdx.mongojocs.qblast20.com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug.println("Level "+i+", time "+(topTimes[i][1] > 2 ? packTimes[i][2] : topTimes[i][0]));
 			
 			//#endif
 			break;

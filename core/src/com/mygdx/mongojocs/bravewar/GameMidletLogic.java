@@ -3185,7 +3185,7 @@ MT_BATTLE_RESULT
 	}
 	
 	
-	////////////////////// Game lobby msgs
+	////////////////////// com.mygdx.mongojocs.sanfermines2006.Game lobby msgs
 
 	void sendGameLobbyQuit ()
 	{

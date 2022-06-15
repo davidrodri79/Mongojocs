@@ -31,14 +31,14 @@ import java.io.InputStream;
 
 // ---------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// MIDlet - Game 
+// MIDlet - com.mygdx.mongojocs.sanfermines2006.Game
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // ---------------------------------------------------------
 
 //#ifdef J2ME
 public class Game extends MIDlet
 	 //#ifndef NOEDITABLENAMES	
-	 implements CommandListener    // Clase Bios integrada en la Game
+	 implements CommandListener    // Clase Bios integrada en la com.mygdx.mongojocs.sanfermines2006.Game
 	 //#endif
 //#elifdef DOJA
 //#endif
@@ -49,7 +49,7 @@ GameCanvas gc;
 // Contructor - Metodo que ARRANCA al ejecutar el MIDlet
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-public Game()                                                               // Clase Bios integrada en la Game
+public Game()                                                               // Clase Bios integrada en la com.mygdx.mongojocs.sanfermines2006.Game
 {
 	System.gc();	
 	gc = new GameCanvas(this);
@@ -176,6 +176,6 @@ public void inputDialogNotify(String s)
 
 // ------------------------------------------------------------------------------------------------------------------------
 // **************************************************************************//
-// Final Clase Game
+// Final Clase com.mygdx.mongojocs.sanfermines2006.Game
 // **************************************************************************//
 };

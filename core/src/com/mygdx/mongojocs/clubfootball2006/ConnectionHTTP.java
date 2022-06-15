@@ -50,7 +50,7 @@ public class ConnectionHTTP extends Thread
 			result = post(data);
 		} catch (Exception e)
 		{
-		//#ifdef com.mygdx.mongojocs.clubfootball2006.Debug
+		//#ifdef com.mygdx.mongojocs.clubfootball2006.com.mygdx.mongojocs.sanfermines2006.Debug
 			Debug.println("HTTP_Error:");
 			Debug.println(e.toString());
 			e.printStackTrace();

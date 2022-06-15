@@ -8,6 +8,7 @@ public class DirectGraphics {
 
     public static final int FLIP_HORIZONTAL = 0x2000;
     public static final int FLIP_VERTICAL = 0x4000;
+    public static final int TYPE_INT_8888_ARGB = 1;
     Graphics g;
 
     DirectGraphics(Graphics g)
@@ -101,5 +102,8 @@ public class DirectGraphics {
         else
             Display.fbo.end();
 
+    }
+
+    public void drawPixels(int[] temp, boolean b, int i, int width, int x, int i1, int width1, int i2, int i3, int typeInt8888Argb) {
     }
 }
