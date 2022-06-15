@@ -6,13 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
-
-import org.graalvm.compiler.replacements.Log;
 
 import java.util.HashMap;
 
@@ -131,14 +126,6 @@ public class Graphics {
             fromImage.fbo.end();
     }
 
-    /*public static void emptyScissors()
-    {
-        while (scissorsSet > 0) {
-            ScissorStack.popScissors();
-            scissorsSet--;
-        }
-    }*/
-
     public void setClip(int destX, int destY, int sizeX, int sizeY) {
 
         allClipped = false;
@@ -158,22 +145,6 @@ public class Graphics {
         if(sizeX <= 0) { allClipped = true; return;}
         if(sizeY <= 0) { allClipped = true; return;}
 
-        /*emptyScissors();
-
-        if(fromImage==null) {
-            int finaly = maxy - destY - sizeY;
-
-            Rectangle scissors = new Rectangle();
-            Rectangle clipBounds;// = new Rectangle(destX,finaly, sizeX, sizeY);
-            clipBounds = new Rectangle(destX, finaly, sizeX, sizeY);
-
-            ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
-            if (ScissorStack.pushScissors(scissors)) {
-                scissorsSet++;
-            } else {
-                scissorsSet--;
-            }
-        }*/
     }
 
     public void clipRect(int i, int i1, int sizeX, int sizeY) {
@@ -183,16 +154,6 @@ public class Graphics {
     {
         if(allClipped) return;
 
-        /*if(fromImage==null) {
-
-            int finaly = Display.height - y - img.getHeight();
-
-            batch.setProjectionMatrix(camera.combined);
-            batch.begin();
-            batch.draw(img.texture, x, finaly);
-            batch.end();
-        }
-        else*/
         {
 
             int w = img.texture.getWidth();
@@ -249,9 +210,6 @@ public class Graphics {
     {
         if(allClipped) return;
 
-        int finaly = /*fromImage == null ? Display.height - y - h:*/ y;
-
-
         if(fromImage == null)
             Display.fbo.begin();
         else
@@ -276,7 +234,7 @@ public class Graphics {
 
         if(allClipped) return;
 
-        int finaly = /*fromImage == null ? Display.height - y - h:*/ y;
+        int finaly = y;
 
         if(fromImage == null)
             Display.fbo.begin();
@@ -356,7 +314,7 @@ public class Graphics {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.rectLine(x1,y1,x2,y2,1);
+        shapeRenderer.rectLine(x1+1,y1+1,x2+1,y2+1,1);
         shapeRenderer.end();
 
         if(fromImage == null)
