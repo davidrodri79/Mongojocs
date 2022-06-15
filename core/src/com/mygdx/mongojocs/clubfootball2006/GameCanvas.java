@@ -355,17 +355,18 @@ public void runTick()
 		//System.gc();
 
 	}
+
+	if(gameExit) {
+		soundStop();
+//biosDestroy();
+		savePrefs();
+//gameDestroy();
+		ga.destroyApp(true);
+	}
 }
 
 public void runEnd()
 {
-	soundStop();
-
-	//biosDestroy();
-	savePrefs();
-	//gameDestroy();
-
-	ga.destroyApp(true);
 }
 
 public void run()

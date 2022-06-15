@@ -32,7 +32,6 @@ Mover hacia arriba
 Teclas 8 o navegación abajo:
 Mover hacia abajo
 
-Usa la tecla de navegación para desplazarte por los menús. Utiliza la tecla de selección derecha para aceptar una opción y la tecla de selección izquierda para volver atrás. <mo-c450,nk-s40,nk-s30,pa-x60,se-z600,al-otx56,nk-3650,vi-tsm7i,vi-tsm30i>?
 
 ---------
 Controles en juego:
