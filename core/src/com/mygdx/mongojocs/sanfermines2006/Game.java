@@ -123,6 +123,21 @@ public void destroyApp (boolean b)
 	//#endif
 	}
 
+	public void runInit()
+	{
+		gc.connectRun();
+	}
+
+	public void runTick()
+	{
+
+	}
+
+	public void runEnd()
+	{
+
+	}
+
 
 // <=- <=- <=- <=- <=-
 

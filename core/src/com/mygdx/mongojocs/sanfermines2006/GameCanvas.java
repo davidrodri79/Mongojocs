@@ -34,14 +34,23 @@ package com.mygdx.mongojocs.sanfermines2006;
 
 
 //#ifdef J2ME
+	import com.badlogic.gdx.Gdx;
+	import com.badlogic.gdx.audio.Music;
+	import com.badlogic.gdx.audio.Sound;
+	import com.badlogic.gdx.files.FileHandle;
 	import com.mygdx.mongojocs.midletemu.Canvas;
+	import com.mygdx.mongojocs.midletemu.DeviceControl;
 	import com.mygdx.mongojocs.midletemu.DirectGraphics;
 	import com.mygdx.mongojocs.midletemu.DirectUtils;
+	import com.mygdx.mongojocs.midletemu.Display;
 	import com.mygdx.mongojocs.midletemu.Font;
 	import com.mygdx.mongojocs.midletemu.FullCanvas;
 	import com.mygdx.mongojocs.midletemu.Graphics;
 	import com.mygdx.mongojocs.midletemu.Image;
+	import com.mygdx.mongojocs.midletemu.MIDlet;
 	import com.mygdx.mongojocs.midletemu.RecordStore;
+	import com.mygdx.mongojocs.midletemu.Runnable;
+	import com.mygdx.mongojocs.midletemu.Thread;
 
 	import java.io.*;
 import java.io.InputStream;
@@ -81,7 +90,7 @@ import java.io.InputStream;
 
 Game ga;
 
-static GameCanvas gc;
+public static GameCanvas gc;
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //  Constructor
@@ -183,7 +192,6 @@ static Graphics scr;		// Contiene siempre el objeto 'Graphics' con el que podemo
 // run - Thread que creamos para arrancar el MIDlet
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //#ifdef FIX_NO_REPAINT_SCREEN
-	int countNextRepaint=0;
 //#endif
 public void run()
 {
@@ -222,6 +230,53 @@ public void run()
 //#elifdef DOJA
 //#endif
 }
+
+public void runInit()
+{
+	//#ifdef DEBUG_PC_USED_MEM
+	System.gc(); System.out.println("run(): "+(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+	//#ifdef DEBUG
+	System.gc();  Debug.println("run(): "+(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+	//#endif
+//#endif
+
+	System.gc();
+	biosCreate();	// Inicializamos MIDlet, antes de llegar al bucle principal
+	System.gc();
+
+	gameStarted = true;
+
+//#ifdef DEBUG_PC_USED_MEM
+	System.gc(); System.out.println("while(): "+(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+	//#ifdef DEBUG
+	System.gc();  Debug.println("while(): "+(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+	//#endif
+//#endif
+}
+
+public void runTick()
+{
+	// Empieza el bucle principal:
+	//while (!gameExit)
+	{
+		biosLoop();
+	}
+
+// Hemos salido del bucle principal, paramos el sonido, guardamos prefs y salimos del MIDlet
+	if(gameExit) {
+		soundStop();
+		savePrefs();
+
+//#ifdef J2ME
+		ga.notifyDestroyed();
+//#elifdef DOJA
+//#endif
+	}
+}
+
+public void runEnd()
+{
+}
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
@@ -231,6 +286,7 @@ public void run()
 
 boolean biosExit;
 
+/*
 public void biosWait()
 {
 //#if DEBUG && DEBUG_STACK
@@ -265,7 +321,42 @@ public void biosWait()
 	keyY    = intKeyY;
 	keyMisc = intKeyMisc;
 }
+*/
+	//MONGOFIX biosWait no bloqueante!!!!
+	boolean biosWaiting = false;
+	boolean biosWaitComplete = false;
 
+	public void biosWait()
+	{
+		Gdx.app.log("biosWait","Estamos en biosWait!!!!");
+		biosExit = false;
+		while (!biosExit)
+		{
+			biosLoop();
+		}
+		biosExit = false;
+	}
+
+	public void biosWaitInit()
+	{
+		biosWaiting = true;
+		biosExit = false;
+	}
+
+	public void biosWaitTick()
+	{
+		if(!biosExit) biosLoop();
+		else {
+			biosExit = false;
+			biosWaiting = false;
+			biosWaitComplete = true;
+		}
+	}
+
+	public void biosWaitEnd()
+	{
+		biosWaitComplete = false;
+	}
 // --------------------
 // bios Push
 // ====================
@@ -329,7 +420,8 @@ public void biosLoop()
 	// Truco para liberar pulsacion de las softkeys en mobiles que usan 'listener' pues no se notifica cuando se suelta la tecla.
 		if (limpiaKeyMenu) {limpiaKeyMenu=false; intKeyMenu = 0;}
 
-		try {
+		//try
+		{
 		//#ifdef DEBUG
 			Debug.spdStart(0);
 		//#endif
@@ -355,7 +447,7 @@ public void biosLoop()
 			else
 				soundTick();
 
-		} catch (Exception e)
+		}/* catch (Exception e)
 		{
 		//#ifdef DEBUG
 			Debug.println("** Excep Logic **");
@@ -367,7 +459,7 @@ public void biosLoop()
 			//#endif
 			e.printStackTrace();				
 		//#endif
-		}
+		}*/
 	}
 
 // Controlamos los 'milis' transcurridos y hacemnos la espera adecuada para que todas las iteraciones del bucle principal tarden lo mismo.
@@ -1835,8 +1927,19 @@ public String[][] textosCreate(byte[] tex)
 	boolean subCampo = false;
 	boolean primerEnter = true;
 
+
+		// MONGOFIX ==========================================
+		char tex_char[] = new char[tex.length];
+		for(int i = 0; i < tex.length; i++)
+			if(tex[i] < 0)
+				tex_char[i]=(char)(tex[i]+256);
+			else
+				tex_char[i]=(char)tex[i];
+		//=================================================
+
 	int size = 0;
-	String textos = new String(tex);
+	String textos = new String(tex_char);
+
 
 	for (int i=0 ; i<textos.length() ; i++)
 	{
@@ -2363,103 +2466,18 @@ public void arrowDraw(int rgb, int x, int y, int width, int height, int dir)
 
 public byte[] loadFile(String Nombre)
 {
-//#ifdef LOAD_FILE_CACHING
-	byte[] buferCached = loadFileGetCached(Nombre);
-	if ( buferCached != null ) {return buferCached;}
-//#endif
+	FileHandle file = Gdx.files.internal(MIDlet.assetsFolder+"/"+Nombre.substring(1));
+	byte[] bytes;
 
-	System.gc();
-	byte[] buffer = null;
-//#ifdef DOJA
-	buffer = ihdLoadFile(Nombre);
-	if (buffer != null)
-	{
-	//#ifdef DEBUG
-		Debug.println("loadFile: "+Nombre+" <"+buffer.length+">");
-	//#endif
-		return buffer;
-	}
-//#endif
-	InputStream is = getClass().getResourceAsStream(Nombre);
+	if(file.exists())
+		bytes = file.readBytes();
+	else
+		bytes = null;
 
-	buffer = new byte[1024];
-
-	try
-	{
-		int Size = 0;
-
-		while (true)
-		{
-			int Desp = is.read(buffer, 0, buffer.length);
-			if (Desp <= 0) {break;}
-			Size += Desp;
-		}
-
-		is = null; System.gc();
-
-		buffer = new byte[Size];
-
-		is = getClass().getResourceAsStream(Nombre);
-
-//		is.reset();
-
-		Size = is.read(buffer, 0, buffer.length);
-
-		while (Size < buffer.length) {Size += is.read(buffer, Size, buffer.length-Size);}
-
-		is.close();
-	}
-	catch(Exception exception)
-	{
-	//#ifdef DEBUG
-		Debug.println("loadFile: "+Nombre+" <File not found>");
-	//#endif
-		return null;
-	}
-
-//#ifdef DEBUG
-	Debug.println("loadFile: "+Nombre+" <"+buffer.length+">");
-//#endif
-
-	System.gc();
-
-//#ifdef LOAD_FILE_CACHING
-	loadFileSetCached(Nombre, buffer);
-//#endif
-
-	return buffer;
+	return bytes;
 }
 
 //#ifdef LOAD_FILE_CACHING
-int loadFileCached = 0;
-String[] loadFileNames = new String[64];
-byte[][] loadFileDatas = new byte[64][];
-
-public void loadFileSetCached(String filename, byte[] data)
-{
-	if (loadFileCached < loadFileNames.length)
-	{
-		loadFileNames[loadFileCached] = filename;
-		loadFileDatas[loadFileCached] = new byte[data.length];
-		System.arraycopy(data, 0, loadFileDatas[loadFileCached], 0, data.length);
-		loadFileCached++;
-	}
-}
-
-public byte[] loadFileGetCached(String filename)
-{
-	for (int i=0 ; i<loadFileCached ; i++)
-	{
-		if ( loadFileNames[i].equals(filename) )
-		{
-			byte[] bufer = new byte[loadFileDatas[i].length];
-			System.arraycopy(loadFileDatas[i], 0, bufer, 0, bufer.length);
-			return bufer;
-		}
-	}
-
-	return null;
-}
 //#endif
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -2523,8 +2541,8 @@ public Image loadImage(String FileName)
 // ---------------------------------------------------------
 
 public Image loadImage(String file, String palfile) {
-	Image img;
-	System.gc();
+	//Image img;
+	/*System.gc();
 	byte[] data = loadFile(file+".png");
 	if (palfile != null) {
 		byte[] pal = loadFile(palfile);
@@ -2551,57 +2569,14 @@ public Image loadImage(String file, String palfile) {
 	//#endif
 		return null;
 	}
-	return img;
+	return img;*/  //MONGOFIX
+	return loadImage(file);
 }
 
 
 // ---------------------------------------------------------
 //#elifdef DOJA
 // ---------------------------------------------------------
-
-public Image loadImage(String FileName)
-{
-	FileName += ".gif";
-
-	MediaImage mimage = null;
-
-	mimage = ihdLoadMediaImage(FileName);
-
-	if (mimage == null)
-	{
-		mimage = MediaManager.getImage("resource://"+FileName);
-	}
-
-	try {
-		mimage.use();
-	} catch (Exception ui)
-	{
-	//#ifdef DEBUG
-		Debug.println("loadImage: "+FileName+" <File not found>");
-	//#endif
-		return null;
-	}
-
-//#ifdef DEBUG
-	Debug.println("loadImage: "+FileName);
-//#endif
-
-	return mimage.getImage();
-}
-
-// ---------------------------------------------------------
-
-public Image loadImage(int Pos)
-{
-	MediaImage mimage = MediaManager.getImage("scratchpad:///0;pos="+Pos);
-
-	try {
-		mimage.use();
-	} catch (Exception e) {}
-
-	return mimage.getImage();
-}
-
 // ---------------------------------------------------------
 //#endif
 
@@ -2694,7 +2669,6 @@ public String[] textBreak(String texto, int width, Font f)
 //#ifdef J2ME
 			size += f.charWidth((char)dat);
 //#elifdef DOJA
-			size += f.stringWidth(texto.substring(pos-1,pos));
 //#endif
 	    }
 
@@ -2804,7 +2778,6 @@ public String textCut(String texto, int width, Font f)
 //#ifdef J2ME
 		size += f.charWidth((char)dat);
 //#elifdef DOJA
-		size += f.stringWidth(texto.substring(pos-1,pos));
 //#endif
     }
 
@@ -2852,7 +2825,6 @@ public byte[] textSized(String texto, Font f)
 	//#endif
 
 	//#ifdef DOJA
-		sizes[i] = (byte)f.stringWidth(texto.substring(i,i+1));
 	//#endif
 	}
 
@@ -2922,8 +2894,6 @@ public int textMaxSize(String[] str)
 	int canvasWidth = getWidth();
 	int canvasHeight = getHeight();
 //#elifdef DOJA
-	static final int canvasWidth = ${handset.canvasx};
-	static final int canvasHeight = ${handset.canvasy};
 //#endif
 
 Image canvasImg;
@@ -2978,181 +2948,7 @@ boolean canvasShow;
 //#ifdef J2ME
 
 	//#ifdef PLAYER_NONE
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: GENERICA - Rev.0 (28.11.2003)
-		// ===================
-		// *******************
-
-		int soundOld = -1;
-		int soundLoop;
-
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate() {}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop) {}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop() {}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick() {}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time) {}
-
 	//#elifdef PLAYER_OTA
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: Nokia OTA - Rev.0 (28.11.2003)
-		// ===================
-		// *******************
-
-		Sound[] soundTracks;
-		int soundOld = -1;
-		int soundLoop;
-
-		// -------------------
-		// Sound INI
-		// ===================
-
-		public void soundCreate(String[] sons)
-		{
-			try
-			{
-				soundTracks=new Sound[sons.length];
-
-				for (int i=0 ; i<sons.length ; i++)
-				{
-				soundTracks[i] = new Sound(toBinary(sons[i]), 1);
-				soundTracks[i].init(toBinary(sons[i]), 1);
-			//#ifndef NK-s60
-				soundTracks[i].setGain(255);						// Volumen, NO usar en: Nokia series 60
-			//#endif
-				}
-			}
-			catch (Exception e) {}
-		}
-
-
-		public byte[] toBinary(String s1)
-		{
-			byte abyte0[] = new byte[s1.length() / 2];
-			for(int j1 = 0; j1 < s1.length(); j1 += 2)
-			{
-				char c1 = s1.charAt(j1 + 1);
-				int i1;
-				if(c1 >= '0' && c1 <= '9')
-					i1 = c1 - 48;
-				else
-					i1 = (c1 - 65) + 10;
-					c1 = s1.charAt(j1);
-				if(c1 >= '0' && c1 <= '9')
-					i1 += (c1 - 48) * 16;
-				else
-					i1 += ((c1 - 65) + 10) * 16;
-					abyte0[j1 / 2] = (byte)i1;
-			}
-			return abyte0;
-		}
-
-		// -------------------
-		// Sound SET
-		// ===================
-
-		public void soundPlay(int Ary, int Loop)
-		{
-						
-			//#ifdef DEBUG
-			Debug.println("SoundPlay - Ary : "+Ary+", Loop : "+Loop);
-			//#endif
-			
-			soundLoop = Loop;
-
-			soundStop();
-			if (gameSound)
-			{
-				try
-				{
-					soundTracks[Ary].play(Loop == 0 ? 99 : Loop);
-				}
-				catch (Exception e) {}
-
-				soundOld=Ary;
-			}
-		}
-
-		// -------------------
-		// Sound RES
-		// ===================
-
-		public void soundStop()
-		{
-			//#ifdef DEBUG
-			Debug.println("SoundStop - soundOld : "+soundOld);
-			//#endif
-			
-			if (soundOld!=-1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop();
-				}
-				catch (Exception e) {}
-		
-				soundOld=-1;
-			}
-		}
-
-		// -------------------
-		// Sound RUN
-		// ===================
-
-		public void soundTick()
-		{
-		}
-
-		// -------------------
-		// Vibra SET
-		// ===================
-
-		public void vibraInit(int Time)
-		{
-			if (gameVibra)
-			{
-				try
-				{
-					DeviceControl.startVibra(32,Time);
-				}
-				catch (Exception e) {}
-			}
-		}
-
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MIDP20
 
 		// *******************
@@ -3163,7 +2959,7 @@ boolean canvasShow;
 		// ===================
 		// *******************
 
-		javax.microedition.media.Player[] soundTracks;
+		Music[] soundTracks;
 
 		int soundOld = -1;
 		int soundLoop;
@@ -3175,7 +2971,7 @@ boolean canvasShow;
 		
 		public void soundCreate(String[] sons)
 		{	
-			soundTracks = new javax.microedition.media.Player[sons.length];
+			soundTracks = new Music[sons.length];
 
 			for (int i=0 ; i<sons.length ; i++)
 			{
@@ -3183,20 +2979,11 @@ boolean canvasShow;
 			}
 		}
 
-		public javax.microedition.media.Player SoundCargar(String Nombre)
+		public Music SoundCargar(String Nombre)
 		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-				p.realize();
-				p.prefetch();
-			}
-			catch(Exception e) {e.printStackTrace();}
-		
-			return p;
+
+
+			return Gdx.audio.newMusic(Gdx.files.internal(MIDlet.assetsFolder+"/"+Nombre));
 		}
 		
 		// -------------------
@@ -3215,9 +3002,9 @@ boolean canvasShow;
 
 				try
 				{
-					soundTracks[Ary].setLoopCount(Loop);
-					VolumeControl vc = (VolumeControl) soundTracks[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					soundTracks[Ary].start();
+					soundTracks[Ary].setLooping(Loop==0);
+					//VolumeControl vc = (VolumeControl) soundTracks[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
+					soundTracks[Ary].play();
 				}
 				catch(Exception e)
 				{
@@ -3268,7 +3055,7 @@ boolean canvasShow;
 			{
 				try
 				{
-					soundTracks[soundForceRestart].start();
+					soundTracks[soundForceRestart].play();
 				}
 				catch(Exception e)
 				{
@@ -3293,7 +3080,7 @@ boolean canvasShow;
 			{
 				try
 				{
-					Display.getDisplay(ga).vibrate(Time);
+					DeviceControl.startVibra(100,Time);
 				}
 				catch (Exception e) {}
 			}
@@ -3304,1874 +3091,22 @@ boolean canvasShow;
 
 
 	//#elifdef PLAYER_MIDP20_CACHED
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: MIDP 2.0 - Rev.0 (28.11.2003)
-		// -------------------
-		// Version ESPECIAL: Motorola V300 - Rev.1 (6.5.2004)
-		// ===================
-		// *******************
-		
-		javax.microedition.media.Player[] soundTracks;
-		
-		int soundOld = -1;
-		int soundLoop;
-		int SoundCache = -1;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{	
-			soundTracks = new javax.microedition.media.Player[sons.length];
-
-			for (int i=0 ; i<sons.length ; i++)
-			{
-				soundTracks[i] = SoundCargar(sons[i]);
-			}
-		}
-		
-		public javax.microedition.media.Player SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-				p.realize();
-			}
-			catch(Exception e) {e.printStackTrace();}
-		
-			return p;
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-		
-			if (gameSound)
-			{
-				if (Loop<1) {Loop=-1;}
-
-				try
-				{
-					if (SoundCache != Ary)
-					{
-					if (SoundCache!=-1) {soundTracks[SoundCache].deallocate();}
-					soundTracks[Ary].prefetch();
-					SoundCache = Ary;
-					}
-		
-					soundTracks[Ary].setLoopCount(Loop);
-					VolumeControl vc = (VolumeControl) soundTracks[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-		
-					soundTracks[Ary].start();
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-
-				soundOld=Ary;
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop();
-					VolumeControl vc = (VolumeControl) soundTracks[soundOld].getControl("VolumeControl"); if (vc != null) {vc.setLevel(0);}
-				}
-				catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MIDP20_FORCED
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: MIDP 2.0 Forced - Rev.1 (21.1.2005)
-		// ===================
-		// *******************
-		
-		javax.microedition.media.Player[] soundTracks;
-		
-		int soundOld = -1;
-		int soundLoop;
-
-	//#ifdef SG-D410
-		long[] durations;
-		long lastTimePlayed = -1;
-	//#endif
-		
-		// -------------------
-		// Sound INI
-		// ===================
-
-		public void soundCreate(String[] sons)
-		{
-			soundTracks = new javax.microedition.media.Player[sons.length];
-
-		//#ifdef SG-D410
-			durations = new long[sons.length];
-		//#endif
-
-			for (int i=0 ; i<sons.length ; i++)
-			{
-				soundTracks[i] = SoundCargar(sons[i]);
-
-			//#ifdef SG-D410
-				try {
-					durations[i] = soundTracks[i].getDuration();
-				} catch (Exception e) {}
-			//#endif
-			}
-		}
-
-		public javax.microedition.media.Player SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-				p.realize();
-			}
-			catch(Exception e) {e.printStackTrace();}
-		
-			return p;
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-		
-			if (gameSound)
-			{
-				if (Loop<1) {Loop=-1;}
-
-				try
-				{
-					VolumeControl vc = (VolumeControl) soundTracks[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					soundTracks[Ary].setLoopCount(Loop);
-					soundTracks[Ary].prefetch();
-					soundTracks[Ary].start();
-				//#ifdef SG-D410
-					lastTimePlayed = System.currentTimeMillis();
-				//#endif
-					soundOld = Ary;
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-			}
-		}
-
-		// -------------------
-		// Sound RES
-		// ===================
-
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop();
-					soundTracks[soundOld].deallocate();
-				}
-				catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-		
-				soundOld = -1;
-			}
-		}
-
-		// -------------------
-		// Sound RUN
-		// ===================
-
-		public void soundTick()
-		{
-		//#ifdef SG-D410
-			if (soundOld != -1 && soundLoop == 0 && durations[soundOld] > 10)
-			{
-				if (System.currentTimeMillis() - lastTimePlayed > durations[soundOld])
-				{
-					int so = soundOld;
-					soundStop();
-					soundPlay(so, 0);
-				}
-			}
-		//#endif
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MIDP20_SIMPLE
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: MIDP 2.0 Simple - Rev.1 (21.1.2005)
-		// ===================
-		// *******************
-
-		javax.microedition.media.Player[] soundTracks;
-
-		int soundOld = -1;
-		int soundLoop;
-
-		// -------------------
-		// Sound INI
-		// ===================
-
-		public void soundCreate(String[] sons)
-		{	
-			soundTracks = new javax.microedition.media.Player[sons.length];
-
-			for (int i=0 ; i<sons.length ; i++)
-			{
-				soundTracks[i] = SoundCargar(sons[i]);
-			}
-		}
-
-		public javax.microedition.media.Player SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-			}
-			catch(Exception e) {e.printStackTrace();}
-
-			return p;
-		}
-
-		// -------------------
-		// Sound SET
-		// ===================
-
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-		
-			if (gameSound)
-			{
-				if (Loop<1) {Loop=-1;}
-
-				try
-				{
-					VolumeControl vc = (VolumeControl) soundTracks[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					soundTracks[Ary].setLoopCount(Loop);
-					soundTracks[Ary].start();
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-			
-				soundOld=Ary;
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop();
-				}
-				catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MIDP20_LOAD
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: MIDP 2.0 Load - Rev.1 (26.1.2005)
-		// ===================
-		// *******************
-		
-		javax.microedition.media.Player Sonido;
-
-		String[] soundTracks;
-
-		int soundOld = -1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{	
-			soundTracks = sons;
-		}
-
-		public javax.microedition.media.Player SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-			}
-			catch(Exception e)
-			{
-			//#ifdef DEBUG
-				Debug.println(e.toString());
-				e.printStackTrace();
-			//#endif
-			}
-		
-			return p;
-		}
-
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-		
-			if (gameSound)
-			{
-				if (Loop<1) {Loop=-1;}
-
-				try
-				{
-					Sonido = null;
-					Sonido = SoundCargar(soundTracks[Ary]);
-					Sonido.realize();
-					Sonido.prefetch();
-					VolumeControl vc = (VolumeControl) Sonido.getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					Sonido.setLoopCount(Loop);
-					Sonido.start();
-
-					soundOld=Ary;
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					Sonido.stop();
-					Sonido.deallocate();
-					Sonido.close();
-					Sonido = null;
-				}
-				catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-			//#ifdef MO-V9xx
-				if (Time < 200) {Time = 200;}
-		    //#endif
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MIDP20_LOAD_CACHED
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: MIDP 2.0 Load - Rev.1 (26.1.2005)
-		// ===================
-		// *******************
-		
-		javax.microedition.media.Player Sonido;
-
-		String[] soundTracks;
-
-		int soundOld = -1;
-		int sonidoCargado = -1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{	
-			soundTracks = sons;
-		}
-
-		public javax.microedition.media.Player SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-			}
-			catch(Exception e)
-			{
-			//#ifdef DEBUG
-				Debug.println(e.toString());
-				e.printStackTrace();
-			//#endif
-			}
-		
-			return p;
-		}
-
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-		
-			if (gameSound)
-			{
-				if (Loop<1) {Loop=-1;}
-
-				try
-				{
-					if (Ary!=sonidoCargado)
-					{
-						if (Sonido != null) {Sonido.deallocate();}
-						Sonido = null;
-					//System.gc();
-						Sonido = SoundCargar(soundTracks[Ary]);
-						Sonido.realize();
-						Sonido.prefetch();
-						sonidoCargado=Ary;
-					}
-					VolumeControl vc = (VolumeControl) Sonido.getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					Sonido.setLoopCount(Loop);
-					Sonido.start();
-
-					soundOld=Ary;
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					Sonido.stop();
-				}
-				catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MIDP20_LOAD_HEAP
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: MIDP 2.0 Load - Rev.1 (26.1.2005)
-		// ===================
-		// *******************
-		
-		javax.microedition.media.Player Sonido;
-
-		InputStream[] soundTracks;
-
-		int soundOld = -1;
-		int sonidoCargado = -1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{	
-			soundTracks = new InputStream[sons.length];
-			for (int i=0 ; i<soundTracks.length ; i++)
-			{
-				soundTracks[i] = getClass().getResourceAsStream(sons[i]);
-			}
-		}
-/*
-		public InputStream SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-			}
-			catch(Exception e)
-			{
-			//#ifdef DEBUG
-				com.mygdx.mongojocs.sanfermines2006.Debug.println(e.toString());
-				e.printStackTrace();
-			//#endif
-			}
-		
-			return p;
-		}
-*/
-
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-		
-			if (gameSound)
-			{
-				if (Loop<1) {Loop=-1;}
-
-				try
-				{
-					if (Ary!=sonidoCargado)
-					{
-						if (Sonido != null) 
-							Sonido.deallocate();
-						Sonido = null;
-						System.gc();
-						Sonido = Manager.createPlayer( soundTracks[Ary] , "audio/midi");
-						Sonido.realize();
-						Sonido.prefetch();
-						sonidoCargado=Ary;
-					}
-					VolumeControl vc = (VolumeControl) Sonido.getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					Sonido.setLoopCount(Loop);
-					Sonido.start();
-
-					soundOld=Ary;
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					Sonido.stop();
-				}
-				catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MIDP20_TICK
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: MIDP 2.0 - Rev.0 (28.11.2003)
-		// ===================
-		// *******************
-
-		javax.microedition.media.Player[] soundTracks;
-
-		int soundOld = -1;
-		int soundLoop = -1;
-		int soundNew = -1;
-
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{	
-			soundTracks = new javax.microedition.media.Player[sons.length];
-
-			for (int i=0 ; i<sons.length ; i++)
-			{
-				soundTracks[i] = SoundCargar(sons[i]);
-			}
-		}
-
-		public javax.microedition.media.Player SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-				p.realize();
-			}
-			catch(Exception e) {e.printStackTrace();}
-		
-			return p;
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-
-		public void soundPlay(int Ary, int Loop)
-		{
-			if (gameSound)
-			{
-				soundNew = Ary;
-				soundLoop = Loop;
-			}
-		}
-
-		// -------------------
-		// Sound RES
-		// ===================
-
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop();
-					soundTracks[soundOld].deallocate();
-				}
-				catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-		
-				soundOld = -1;
-			}
-		}
-
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-			if (soundNew != -1)
-			{
-				soundStop();
-	
-				try
-				{
-					soundTracks[soundNew].setLoopCount(soundLoop==0;-1:soundLoop);
-					VolumeControl vc = (VolumeControl) soundTracks[soundNew].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					soundTracks[soundNew].prefetch();
-					soundTracks[soundNew].start();
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-					return;
-				}
-
-				soundOld = soundNew;
-				soundNew = -1;
-			}
-
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MOTC450
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: Motorola C450 - Rev.0 (2.6.2004)
-		// ===================
-		// *******************
-		
-		BackgroundMusic[] soundTracks;
-		
-		int soundOld = -1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{
-			soundTracks = new BackgroundMusic[sons.length];
-		
-			for (int i=0 ; i<sons.length ; i++)
-			{
-				soundTracks[i] = SoundCargar(sons[i]);
-			}
-		}
-		
-		public BackgroundMusic SoundCargar(String Nombre)
-		{
-			BackgroundMusic p = null;
-		
-			try
-			{
-				p = BackgroundMusic.createBackgroundMusic(Nombre);
-			}
-			catch(Exception e) {e.printStackTrace();}
-		
-			return p;
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-
-			if (gameSound)
-			{
-				try
-				{
-					playBackgroundMusic(soundTracks[Ary], Loop==0);
-				}
-				catch(Exception e) {e.printStackTrace();}
-		
-				soundOld=Ary;
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					playBackgroundMusic(null, false);
-				}
-				catch (Exception e) {}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_SIEMENS_MIDI
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: Siemens MIDI - Rev.0 (28.11.2003)
-		// ===================
-		// *******************
-		
-		com.siemens.mp.media.Player[] soundTracks;
-		
-		int soundOld=-1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{
-			soundTracks = new com.siemens.mp.media.Player[sons.length];
-
-			for (int i=0 ; i<sons.length ; i++)
-			{
-				soundTracks[i] = SoundCargar(sons[i].substring(1, sons[i].length() ) );		// QUITAMOS el '/' del nombre del fichero midi
-			}
-		}
-		
-		
-		public com.siemens.mp.media.Player SoundCargar(String Nombre)
-		{
-		
-			com.siemens.mp.media.Player p = null;
-		
-			try
-			{
-				p = Manager.createPlayer( Nombre );
-				p.realize();
-				p.prefetch();
-				VolumeControl vc = (VolumeControl) p.getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-				p.setLoopCount(1);
-			}
-			catch(Exception e) {e.printStackTrace();}
-		
-			return p;
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-
-			if (gameSound)
-			{
-				if (Loop==0) {Loop--;}
-			
-				try
-				{
-					VolumeControl vc = (VolumeControl) soundTracks[Ary].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-					soundTracks[Ary].setLoopCount(Loop);
-					soundTracks[Ary].start();
-				}
-				catch(Exception e) {e.printStackTrace();}
-			
-				soundOld=Ary;
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld!=-1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop();
-				} 
-				catch(Exception e) {}
-		
-			soundOld=-1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-
-		public void vibraInit(int Time)
-		{
-			if (gameVibra)
-			{
-				try
-				{
-					Vibrator.triggerVibrator(Time);
-				}
-				catch (Exception e) {}
-			}
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_TSM6
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: TSM 6 - Rev.1 (6.5.2004)
-		// ===================
-		// *******************
-
-		AudioSound[] soundTracks;
-		
-		int soundOld = -1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{
-			soundTracks = new AudioSound[sons.length];
-		
-			for (int i=0 ; i<sons.length ; i++)
-			{
-				soundTracks[i] = SoundCargar(sons[i]);
-			}
-		}
-		
-		
-		public AudioSound SoundCargar(String Nombre)
-		{
-			AudioSound p = null;
-		
-			try
-			{
-				p = new AudioSound(3, Nombre);		// 3 = Type: MIDI
-				
-			}
-			catch(Exception e) {}
-		
-			return p;
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-		
-			if (gameSound)
-			{
-				if (Loop==0) {Loop = 255;}
-
-				try
-				{
-					soundTracks[Ary].play(Loop,5);		// Segundo Parametro es Volumen ( 0 a 5 )
-				}
-				catch(Exception e) {}
-		
-				soundOld=Ary;
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop(); 
-				}
-				catch (Exception e) {}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-			if (gameVibra)
-			{
-				try
-				{
-					PhoneDevice.vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		}
-		
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_SAMSUNG
-
-		// *******************
-		// -------------------
-		// Adaptacion: SAMSUNG - Rev.0 (07.1.2004)
-		// ===================
-		// *******************
-		
-		AudioClip[] soundTracks;
-		
-		int soundOld = -1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] str)
-		{
-			soundTracks = new AudioClip[str.length];
-		
-			for(int i=0 ; i<str.length ; i++)
-			{
-				try {
-		//			soundTracks[i] = new AudioClip(AudioClip.TYPE_MIDI, str[i]);	// NO funciona con MIDI U_U!
-					soundTracks[i] = new AudioClip(AudioClip.TYPE_MMF, str[i]);
-				} catch (Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-				}
-
-			}
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			soundStop();
-
-			if (gameSound)
-			{
-				try
-				{
-					soundTracks[Ary].play(Loop, 5);		// Segundo Parametro es Volumen ( 0 a 5 )
-				}
-				catch(Exception e)
-				{
-				//#ifdef DEBUG
-					Debug.println(e.toString());
-				//#endif
-					return;
-				}
-		
-				soundOld=Ary;
-			}
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					soundTracks[soundOld].stop(); 
-				}
-				catch (Exception e) {}
-		
-				soundOld = -1;
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick() {}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-				try
-				{
-					Vibration.start(Time/6, 3);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_MO-E1000
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: Motorola E1000 - Rev.0 (07.10.2004)
-		// ===================
-		// *******************
-		
-		javax.microedition.media.Player[] player;
-		
-		int soundOld = -1;
-		int soundLoop;
-		int playLast, track;
-		int SoundCache[] = new int[] {-1,-1,-1};
-		String[] soundNames;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons)
-		{	
-			player = new javax.microedition.media.Player[SoundCache.length];
-
-			soundNames = sons;
-		}
-
-		public javax.microedition.media.Player SoundCargar(String Nombre)
-		{
-			javax.microedition.media.Player p = null;
-		
-			try
-			{
-				InputStream is = getClass().getResourceAsStream(Nombre);
-				p = Manager.createPlayer( is , "audio/midi");
-				p.realize();
-				p.prefetch();
-			}
-			catch(Exception exception) {}
-		
-			return p;
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			if (Loop<1) {Loop=-1;}
-			
-			soundStop();
-
-			if (gameSound)
-			{
-				try
-				{
-					int play = -2;
-					for(int i=0 ; i<SoundCache.length ; i++)
-					{
-						if (SoundCache[i] == Ary) {play = i; break;}
-					}
-
-					if (play < 0)
-					{
-						if (SoundCache[track] != -1)
-						{
-							player[track].stop();
-							player[track].deallocate();
-							player[track].close();
-						}
-
-						player[track] = SoundCargar(soundNames[Ary]);
-						VolumeControl vc = (VolumeControl) player[track].getControl("VolumeControl"); if (vc != null) {vc.setLevel(${handset.volumen});}
-
-						SoundCache[track] = Ary;
-						play = track;
-						if (++track == SoundCache.length) {track = 0;}
-					}
-		
-					player[play].setLoopCount(Loop);
-					player[play].start();
-					playLast = play;
-				}
-				catch(Exception exception) {}
-
-				soundOld=Ary;
-			}
-		
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					player[playLast].stop();
-				}
-				catch (Exception e) {}
-
-//			try {Thread.sleep(250);} catch (Exception ex) {}
-
-				soundOld = -1;
-			}
-		}
-
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-		}
-
-		// -------------------
-		// Vibra SET
-		// ===================
-
-		public void vibraInit(int Time)
-		{
-		//#ifdef VIBRATION
-			if (gameVibra)
-			{
-			//#ifdef MO-V9xx
-				if (Time < 200) {Time = 200;}
-		    //#endif
-
-				try
-				{
-					Display.getDisplay(ga).vibrate(Time);
-				}
-				catch (Exception e) {}
-			}
-		//#endif
-		}
-
-		// <=- <=- <=- <=- <=-
-
-
 	//#elifdef PLAYER_SHARP
-
-		// *******************
-		// -------------------
-		// Sound - Engine - Rev.0 (28.11.2003)
-		// -------------------
-		// Adaptacion: VODAFONE SPF - Rev.0 (28.11.2003)
-		// ===================
-		// *******************
-		
-		static SoundTrack[] Pista;
-		static SoundPlayer sPlayer;
-		static Sound[] snd[];	
-		
-		static boolean Vibra_ON=false;
-		static long VibraTimeIni;
-		static int VibraTimeFin;
-		
-		int soundOld = -1;
-		int soundLoop;
-		
-		// -------------------
-		// Sound INI
-		// ===================
-		
-		public void soundCreate(String[] sons, int[] files)
-		{
-			try
-			{
-				sPlayer = SoundPlayer.getPlayer();
-		
-				Pista = new SoundTrack[sPlayer.getTrackCount()];
-		
-				for (int i=0 ; i<Pista.length ; i++)
-				{
-					Pista[i] = sPlayer.getTrack(i);
-					Pista[i].setVolume(127);
-				}
-		
-				snd = new Sound[sons.length][];
-		
-				for (int i=0 ; i<sons.length ; i++)
-				{
-					snd[i] = new Sound[files[i]];
-		
-					for (int t=0 ; t<files[i] ; t++)
-					{
-						snd[i][t] = new Sound(sons[i] + (t+1) +".spf");
-					}
-				}
-			}
-			catch (Exception e) {e.printStackTrace();}
-		}
-		
-		// -------------------
-		// Sound SET
-		// ===================
-		
-		public void soundPlay(int Ary, int Loop)
-		{
-			soundLoop = Loop;
-
-			Sound[] current=null;
-			
-			soundStop();
-				
-			current = ( Ary >= 0 && Ary < snd.length ? snd[Ary] : null);
-						
-			try
-			{			
-				if (gameSound && current != null)
-				{
-		
-					for(int i = 0; i< current.length; i++){
-		
-						if(i<Pista.length){
-		
-							Pista[i].setVolume(127);
-							Pista[i].setSound( current[i] );			
-							if(i != 0) Pista[i].setSubjectTo(Pista[0]);
-						}
-					}
-		
-					Pista[0].play((Loop < 1 ? 99 : Loop));
-		
-					soundOld = Ary;
-				}
-			}
-			catch (Exception e) { e.printStackTrace(); }
-		}
-		
-		// -------------------
-		// Sound RES
-		// ===================
-		
-		public void soundStop()
-		{
-			if (soundOld != -1)
-			{
-				try
-				{
-					for (int i = 0; i<Pista.length; i++)
-					{
-						if (Pista[i].getState() != SoundTrack.NO_DATA)
-						{
-							Pista[i].stop();
-							Pista[i].removeSound();
-						}		
-					}
-				}
-				catch (Exception e) { e.printStackTrace(); }
-			}
-		}
-		
-		// -------------------
-		// Sound RUN
-		// ===================
-		
-		public void soundTick()
-		{
-			if ( Vibra_ON && (System.currentTimeMillis() - VibraTimeIni) > VibraTimeFin)
-				{
-					Vibra_ON=false;
-					try {
-						com.vodafone.v10.system.device.DeviceControl.getDefaultDeviceControl().setDeviceActive(com.vodafone.v10.system.device.DeviceControl.VIBRATION, false);
-					} catch (Exception e) {}
-				} 
-		}
-		
-		// -------------------
-		// Vibra SET
-		// ===================
-		
-		public void vibraInit(int Time)
-		{
-			if (gameVibra)
-			{
-				VibraTimeIni = System.currentTimeMillis();
-				VibraTimeFin = Time;
-				Vibra_ON=true;
-				try {
-					com.vodafone.v10.system.device.DeviceControl.getDefaultDeviceControl().setDeviceActive(com.vodafone.v10.system.device.DeviceControl.VIBRATION, true);
-				} catch (Exception e) {}
-			}	
-		}
-	
-		// <=- <=- <=- <=- <=-
-
 	//#endif
 
 
 //#elifdef DOJA
-
-	// *******************
-	// -------------------
-	// Sound - Engine - Rev.0 (28.11.2003)
-	// -------------------
-	// Adaptacion: iMode - Rev.0 (28.11.2003)
-	// ===================
-	// *******************
-	
-	AudioPresenter SoundPlayer;
-	MediaSound[] soundTracks;
-	int soundOld = -1;
-	int soundLoop;
-	int soundRepeat;
-	
-	// -------------------
-	// Sound INI
-	// ===================
-	
-	public void soundCreate(String[] sons)
-	{
-		SoundPlayer = AudioPresenter.getAudioPresenter();
-	
-		soundTracks = new MediaSound[sons.length];
-	
-		for (int i=0 ; i<soundTracks.length ; i++) {soundTracks[i] = loadSound(sons[i]);}
-	
-		SoundPlayer.setMediaListener(this);
-	}
-	
-	
-	public MediaSound loadSound(String name)
-	{
-		MediaSound msound = ihdLoadSound(name);
-	
-		if (msound == null) {msound = MediaManager.getSound("resource://"+name);}
-	
-		try {
-			msound.use();
-		} catch (Exception e) {}
-	
-		return msound;
-	}
-	
-	// -------------------
-	// Sound SET
-	// ===================
-	
-	public void soundPlay(int Ary, int Loop)
-	{
-		soundLoop = Loop;
-
-		soundStop();
-	
-		if (gameSound)
-		{
-			try
-			{
-				SoundPlayer.setSound(soundTracks[Ary]);
-				SoundPlayer.play();
-				soundOld=Ary;
-				soundRepeat=Loop-1;
-			}
-			catch(Exception e) {}
-		}
-	}
-	
-	// -------------------
-	// Sound RES
-	// ===================
-	
-	public void soundStop()
-	{
-		if (soundOld != -1)
-		{
-			try
-			{
-				SoundPlayer.stop();
-				soundOld = -1;
-			}
-			catch(Exception e) {}
-		}
-	}
-	
-	// -------------------
-	// Sound RUN
-	// ===================
-	
-	public void soundTick()
-	{
-		if ( Vibra_ON && (System.currentTimeMillis() - VibraTimeIni) > VibraTimeFin)
-		{
-		Vibra_ON=false;
-			try {
-			PhoneSystem.setAttribute(PhoneSystem.DEV_VIBRATOR, PhoneSystem.ATTR_VIBRATOR_OFF);
-			} catch (Exception e) {}
-		}
-	}
-	
-	// -------------------
-	// Vibra SET
-	// ===================
-	
-	boolean Vibra_ON;
-	long VibraTimeIni;
-	int VibraTimeFin;
-	
-	public void vibraInit(int Time)
-	{
-	//#ifdef VIBRATION
-		if (gameVibra)
-		{
-			VibraTimeIni = System.currentTimeMillis();
-			VibraTimeFin = Time;
-			Vibra_ON=true;
-	
-			try
-			{
-				PhoneSystem.setAttribute(PhoneSystem.DEV_VIBRATOR, PhoneSystem.ATTR_VIBRATOR_ON);
-			}
-			catch (Exception e) {}
-		}
-    //#endif
-	}
-	
-	
-	// -------------------
-	// mediaAction para controlar Start, Stop, Complete y as� hacer loops
-	// ===================
-	
-	public void mediaAction(MediaPresenter mp, int type, int value)
-	{
-		if (soundOld!=-1 && mp == SoundPlayer && type == AudioPresenter.AUDIO_COMPLETE)
-		{
-			if (soundRepeat>0) {soundRepeat--;}
-	
-			if (soundRepeat!=0)
-			{
-				try {
-					SoundPlayer.play();
-				} catch(Exception e) {}
-			}
-		}
-	}
-	
-	// <=- <=- <=- <=- <=-
-
 //#endif
 
 // <=- <=- <=- <=- <=- Ant Sound Engine
@@ -5235,13 +3170,10 @@ boolean listenerShow;
 //#ifdef FULLSCREEN
 
 //#ifdef S30
-int listenerHeight = 1;
 //#elifdef S40
-int listenerHeight = 1;
 //#elifdef S60
 int listenerHeight = 2;
 //#elifdef S80
-int listenerHeight = 2;
 //#endif
 
 public void listenerInit(int idLeft, int idRight)
@@ -5271,8 +3203,6 @@ public void listenerDraw()
 		printDraw(gameText[TEXT_SOFTKEYS][listenerIdLeft], 1, 0, fontPenRGB, PRINT_LEFT|PRINT_BOTTOM);
 		printDraw(gameText[TEXT_SOFTKEYS][listenerIdRight], -1, 0, fontPenRGB, PRINT_RIGHT|PRINT_BOTTOM);
 	//#else
-		printDraw(gameText[TEXT_SOFTKEYS][listenerIdRight], 1, 0, fontPenRGB, PRINT_LEFT|PRINT_BOTTOM);
-		printDraw(gameText[TEXT_SOFTKEYS][listenerIdLeft], -1, 0, fontPenRGB, PRINT_RIGHT|PRINT_BOTTOM);
 	//#endif
 		//System.out.println(gameText[TEXT_SOFTKEYS][listenerIdRight]+"/"+gameText[TEXT_SOFTKEYS][listenerIdLeft]);
 	}
@@ -5283,114 +3213,9 @@ public void listenerDraw()
 }
 
 //#else
-
-int listenerHeight = 0;
-
-Command[] listenerCmd;
-
-// -------------------
-// listener Init
-// ===================
-
-public void listenerInit(int idLeft, int idRight)
-{
-	if (listenerIdLeft != idLeft || listenerIdRight != idRight)
-	{
-		listenerIdLeft = idLeft;
-		listenerIdRight = idRight;
-
-		listenerShow = true;
-	}
-}
-
-public void listenerDraw()
-{
-	if (listenerShow)
-	{
-		listenerShow = false;
-
-		if (listenerCmd == null)
-		{
-			listenerCmd = new Command[2];
-		} else {
-			removeCommand(listenerCmd[1]);
-			removeCommand(listenerCmd[0]);
-		}
-	
-		listenerCmd[0] = new Command(gameText[TEXT_SOFTKEYS][listenerIdLeft], Command.SCREEN, 1);
-		listenerCmd[1] = new Command(gameText[TEXT_SOFTKEYS][listenerIdRight], Command.SCREEN, 1);
-	
-	//#ifndef LISTENER_SWAP
-		addCommand(listenerCmd[0]);
-		addCommand(listenerCmd[1]);
-	//#else
-		addCommand(listenerCmd[1]);
-		addCommand(listenerCmd[0]);
-	//#endif
-	
-		setCommandListener(this);
-	}
-}
-
-
-// -----------------------
-// Listener command Action
-// =======================
-
-public void commandAction (Command c, Displayable d)
-{
-	if (listenerCmd!=null)
-	{
-		if (c == listenerCmd[0])
-		{
-//#ifndef LISTENER_SWAP
-			intKeyMenu = -1;
-		} else {
-			intKeyMenu =  1;
-//#else
-			intKeyMenu =  1;
-		} else {
-			intKeyMenu = -1;
-//#endif
-		}
-
-		limpiaKeyMenu = true;
-		return;
-	}
-}
-
 //#endif
 
 //#elifdef DOJA
-
-int listenerHeight = 0;
-
-public void listenerInit(int idLeft, int idRight)
-{
-	if (listenerIdLeft != idLeft || listenerIdRight != idRight)
-	{
-		listenerIdLeft = idLeft;
-		listenerIdRight = idRight;
-
-		listenerShow = true;
-	}
-}
-
-public void listenerDraw()
-{
-	if (listenerShow)
-	{
-	//#ifndef LISTENER_SWAP
-		setSoftLabel(Frame.SOFT_KEY_1, listenerIdLeft>0?gameText[TEXT_SOFTKEYS][listenerIdLeft]:null);
-		setSoftLabel(Frame.SOFT_KEY_2, listenerIdRight>0?gameText[TEXT_SOFTKEYS][listenerIdRight]:null);
-	//#else
-		setSoftLabel(Frame.SOFT_KEY_1, listenerIdRight>0?gameText[TEXT_SOFTKEYS][listenerIdRight]:null);
-		setSoftLabel(Frame.SOFT_KEY_2, listenerIdLeft>0?gameText[TEXT_SOFTKEYS][listenerIdLeft]:null);
-	//#endif
-		listenerShow = false;
-	}
-}
-
 //#endif
 
 // <=- <=- <=- <=- <=-
@@ -5470,649 +3295,6 @@ public int[] convByte2Int(byte[] in)
 // ****************
 
 //#ifdef DOJA
-
-static final int HEAD_SIZE = 0x30;
-
-boolean ihdRunning;
-
-int[] filasIHD;
-String[] namesIHD;
-
-int datasBase;
-int ihdPrefsIndex;
-int ihdScratchPadUsed;
-
-// ----------------
-// ihd Create
-// ================
-
-public boolean ihdCreate(String filename)
-{
-	loadingProgBarTotal = 1;
-	loadingProgBarState = 0;
-
-	byte[] headIHD = ihdLoadSP(0, HEAD_SIZE);
-
-//	if (headIHD == null || headIHD[0]!='i' || headIHD[1]!='h' || headIHD[2]!='d')
-	if (headIHD == null || convAry2Int(headIHD,0) != 0x69686421) // Comparamos con "ihd!"
-	{
-		forceRenderTask(RENDER_LOADING_PROGBAR);
-
-		int retry = 3;
-		while (true)
-		{
-			if (retry-- ==0) {return true;}
-
-			headIHD = ihdDownload(filename + ".mfs");
-
-			if (headIHD == null || headIHD.length < 0x10) {continue;}
-
-			int checksum = headIHD[0x0D]; headIHD[0x0D] = 0;
-			if (checksum != ihdChecksum(headIHD) ) {continue;}	// Comprobamos Checksum
-
-			ihdSaveSP(0, headIHD);
-			break;
-		}
-	} else {
-		headIHD = ihdLoadSP(0, convAry2Int(headIHD, 0x14) );
-	}
-
-	if (headIHD[0x0F] != headIHD[0x0E])
-	{
-		forceRenderTask(RENDER_LOADING_PROGBAR);
-
-		loadingProgBarTotal += headIHD[0x0E];	// Agregamos numero de bloques para cargar en el Slider
-	
-		for (int i=-1 ; i<headIHD[0x0F] ; i++) {ihdNotify();}	// Subimos Slider (-1: para HEAD)
-	
-		int destAdr = headIHD.length + (headIHD[0x0F] * convAry2Int(headIHD, 0x2C));
-	
-		for (int i=headIHD[0x0F] ; i<headIHD[0x0E] ; i++)
-		{
-			int retry = 3;
-			while (true)
-			{
-				if (retry-- ==0) {return true;}
-	
-				byte[] bufer = ihdDownload(filename + i + ".mfs");
-	
-				if (bufer==null || headIHD.length==0 || headIHD[HEAD_SIZE+i] != ihdChecksum(bufer) ) {continue;}	// Comprobamos Checksum
-	
-				ihdSaveSP(destAdr, bufer);
-				destAdr += bufer.length;
-	
-				ihdSaveSP(0x0F, new byte[] {(byte)(i+1)} );
-	
-				break;
-			}
-	
-		ihdNotify();	// Se ha descargado un .ihd Ok (DATA)
-		}
-
-		loadingProgBarTotal=0;
-		forceRenderTask(RENDER_LOADING_PROGBAR);
-	}
-
-
-	ihdScratchPadUsed = convAry2Int(headIHD, 0x10);
-	int filas = convAry2Int(headIHD, 0x14);
-	int names = convAry2Int(headIHD, 0x18);
-	datasBase = convAry2Int(headIHD, 0x1C);
-	ihdPrefsIndex = convAry2Int(headIHD, 0x20);
-
-	filasIHD = convByte2Int( ihdLoadSP(filas, names-filas) );
-
-	byte[] namesTemp = ihdLoadSP(names, datasBase-names);
-
-	int pos = 0;
-	namesIHD = new String[ namesTemp[pos++]<<8 | (namesTemp[pos++]&0xff) ];
-
-	for (int i=0 ; i<namesIHD.length ; i++)
-	{
-		int size = namesTemp[pos++];
-		namesIHD[i] = new String( namesTemp, pos, size );
-		pos += size;
-	}
-
-	ihdRunning = true;
-
-	return false;
-}
-
-// ----------------
-// ihd Notify - Notificamos que se ha descargado un BLOQUE "Ok"
-// ================
-
-public void ihdNotify()
-{
-	loadingProgBarState++;
-	forceRenderTask(RENDER_LOADING_PROGBAR);
-}
-
-
-// ----------------
-// ihd LoadFile - Leemos el archivo solicitado, (null = Not Found)
-// ================
-
-public byte[] ihdLoadFile(String filename)
-{
-	int index = ihdFindFile(filename);
-
-	if (index < 0) {return null;}
-
-	int base = filasIHD[index++]>>10;
-
-//#ifdef IHD_UNPACK
-	return runByteLength_unPack(ihdLoadSP(base, (filasIHD[index]>>10)-base));
-//#elifdef IHD_EXPLODE
-	return explode(ihdLoadSP(base, (filasIHD[index]>>10)-base));
-//#else
-	return ihdLoadSP(base, (filasIHD[index]>>10)-base);
-//#endif
-}	
-
-
-// ----------------
-// ihd LoadMediaImage - Creamos MediaImage del archivo solicitado, (null = Not Found)
-// ================
-
-public MediaImage ihdLoadMediaImage(String filename)
-{
-	int index = ihdFindFile(filename);
-
-	if (index < 0) {return null;}
-
-	return MediaManager.getImage("scratchpad:///0;pos=" + (filasIHD[index]>>10) );
-}
-
-
-// ----------------
-// ihd LoadImage - Leemos la imagen solicitada, (null = Not Found)
-// ================
-
-public Image ihdLoadImage(String filename)
-{
-	int index = ihdFindFile(filename);
-
-	if (index < 0) {return null;}
-
-	MediaImage mimage = MediaManager.getImage("scratchpad:///0;pos=" + (filasIHD[index]>>10) );
-
-	try { mimage.use(); } catch (Exception e) {return null;}
-
-	return mimage.getImage();
-}
-
-
-// ----------------
-// ihd LoadMediaSound - Creamos MediaSound del archivo solicitado, (null = Not Found)
-// ================
-
-public MediaSound ihdLoadMediaSound(String filename)
-{
-	int index = ihdFindFile(filename);
-
-	if (index < 0) {return null;}
-
-	return MediaManager.getSound("scratchpad:///0;pos=" + (filasIHD[index]>>10) );
-}
-
-
-// ----------------
-// ihd LoadSound - Creamos MediaSound y leemos el archivo solicitado, (null = Not Found)
-// ================
-
-public MediaSound ihdLoadSound(String filename)
-{
-	int index = ihdFindFile(filename);
-
-	if (index < 0) {return null;}
-
-	MediaSound msound = MediaManager.getSound("scratchpad:///0;pos=" + (filasIHD[index]>>10) );
-
-	try { msound.use(); } catch (Exception e) {return null;}
-
-	return msound;
-}
-
-
-// ----------------
-// ihd FindFile - Buscamos index dentro de las filas (FAT) del nombre dado, (-1 = Not Found)
-// ================
-
-private int ihdFindFile(String filename)
-{
-	if (ihdRunning)
-	{
-		int ini = 0;
-		int fin = 0;
-		int nivelAct = 0;
-	
-		while (fin < filename.length())
-	ihdBucle:
-		{
-			while (filename.charAt(ini) == '/') {ini++;}
-			fin = ini;
-			while (fin < filename.length() && filename.charAt(fin) != '/') {fin++;}
-	
-			int numFilas = filasIHD[nivelAct++] & 0x3ff;
-		
-			for (int i=0 ; i<numFilas ; i++)
-			{
-				if (  namesIHD[filasIHD[nivelAct+i]&0x3ff].equals(filename.substring(ini,fin)) )
-				{
-					int inicio = (filasIHD[nivelAct+i]>>10);
-		
-					if (inicio < datasBase)	// Es una carpeta???
-					{
-						nivelAct = inicio;
-						ini = fin;
-						break ihdBucle;
-					}
-	
-					return nivelAct+i;
-				}
-			}
-			break;
-		}
-	}
-	return -1;
-}
-
-
-// ---------------
-// ihd Load Prefs
-// ===============
-
-public byte[] ihdLoadPrefs()
-{
-	int size = convAry2Int( ihdLoadSP(ihdPrefsIndex, 4), 0);
-	if (size <= 0) {return null;}
-	return ihdLoadSP(ihdPrefsIndex+4, size);
-}
-
-
-// ---------------
-// ihd Save Prefs
-// ===============
-
-public boolean ihdSavePrefs(byte[] bufer)
-{
-	byte[] temp = new byte[4];
-	convInt2Ary(temp, 0, bufer.length);
-	ihdSaveSP(ihdPrefsIndex, temp);
-	ihdSaveSP(ihdPrefsIndex+4, bufer);
-
-	return false;
-}
-
-
-// ---------------
-// ihd LoadSP
-// ===============
-
-public byte[] ihdLoadSP(int index, int size)
-{
-	byte[] bufer = new byte[size];
-
-	try {
-		InputStream in = Connector.openInputStream("scratchpad:///0;pos="+index);
-		in.read(bufer, 0, bufer.length);
-		in.close();
-	} catch (Exception e) {return null;}
-
-	return bufer;
-}
-
-
-// ---------------
-// ihd SaveSP
-// ===============
-
-public boolean ihdSaveSP(int index, byte[] bufer)
-{
-	try {
-		OutputStream out=Connector.openOutputStream("scratchpad:///0;pos="+index);
-		out.write(bufer, 0, bufer.length);
-		out.close();
-	} catch (Exception e) {return false;}
-
-	return true;
-}
-
-
-// ---------------
-// ihd Download
-// ===============
-
-public byte[] ihdDownload(String filename)
-{
-	byte[] dat = null;
-
-	int Retry = 3;
-	boolean FileOk = false;
-
-	if ( !filename.startsWith("http:") ) {filename = IApplication.getCurrentApp().getSourceURL() + filename;}
-
-	do {
-		HttpConnection conn = null;
-		try {
-			conn=(HttpConnection)(Connector.open(filename, Connector.READ));
-			conn.setRequestMethod(HttpConnection.GET);
-			conn.connect();
-
-			try {
-				InputStream in=conn.openInputStream();
-				dat = new byte[(int)conn.getLength()];
-				int size = 0; while (size < dat.length) {size += in.read(dat, size, dat.length-size);}
-				in.close();
-				FileOk = true;
-			} catch (Exception e) {}
-
-		} catch (Exception e) {}
-
-		try {
-			if (conn!=null) {conn.close(); conn=null;}
-		} catch (Exception e) {}
-
-		if (!FileOk && --Retry==0) {return null;}
-	}
-	while (!FileOk);
-
-	return dat;
-}
-
-
-// ---------------
-// ihd Checksum
-// ===============
-
-public byte ihdChecksum(byte[] bufer)
-{
-	int checksum = 0;
-	for (int i=0 ; i<bufer.length ; i++)
-	{
-		checksum += bufer[i];
-		checksum = (checksum^i) & 0xFF;
-	}
-	return (byte)(checksum & 0xFF);
-}
-
-//#endif
-
-// <=- <=- <=- <=- <=-
-
-
-
-
-
-
-//#ifdef IHD_UNPACK
-
-// **********************
-// ----------------------
-// Run Byte Length - Engine v1.0 - Rev.0 (21.8.2003)
-// 2003 (c) Juan Antonio Gomez
-// ======================
-// **********************
-
-// 0x00: LONG - "pAcK"
-// 0x04: WORD - File Size UnPacked.
-
-// ----------------------
-// Run Byte Length UnPack ( INPUT: Bufer Origen  /  OUTPUT: Bufer Destino] )
-// ======================
-
-public byte[] runByteLength_unPack(byte[] Orig)
-{
-	int Size, OrigPos = 6, DestPos = 0;
-
-	if (Orig == null || convAry2Int(Orig,0) != 0x7041634B)	// Comparamos con "pAcK"
-	{
-		return Orig;
-	}
-
-	byte[] Dest = new byte [ ((Orig[4]&0xff)<< 8) | Orig[5]&0xff ];
-
-	while (OrigPos < Orig.length)
-	{
-		Size = Orig[OrigPos++];
-
-		if (Size < 0)
-		{
-			Size = ~Size;
-			byte Data = Orig[OrigPos++];
-			while (Size-- > 0) {Dest[DestPos++] = Data;}
-		} else {
-			while (Size-- > 0) {Dest[DestPos++] = Orig[OrigPos++];}
-		}
-	}
-
-	return Dest;
-}
-
-// <=- <=- <=- <=- <=-
-
-//#endif
-
-
-
-
-
-
-//#ifdef IHD_EXPLODE
-
-// ****************
-// ----------------
-// Explode - Engine
-// ================
-// ****************
-
-static int A3;
-static byte D3;
-static byte[] data;
-
-// -----------------------------------------------
-// Explode decrunch routine. v1.0 - Rev.0 (24.4.2004)
-// Original Imploder / Exploder Authors:
-// Albert J. Brouwer
-// -----------------------------------------------
-// This JAVA support by Juan Antonio G�mez (007!)
-// -----------------------------------------------
-// IN: byte[] generated by File Imploder program of Amiga Computers
-// OUT: uncompresed data or "null" if error.
-// -----------------------------------------------
-
-public byte[] explode(byte[] dataIn)
-{
-	try
-	{
-
-	int D0 = 0;
-	int A4 = 0;
-
-// ID = "IMP!" = Imploder
-//x	if (dataIn == null || dataIn[0] != 'I' || dataIn[1] != 'M' || dataIn[2] != 'P' || dataIn[3] != '!')
-	if (convAry2Int(dataIn,0) != 0x494D5021)	// Comparamos con "IMP!"
-	{
-		return dataIn;
-	}
-
-// Tama�o del archivo Descomprimido
-
-	A4 = ( (dataIn[5]&0xff)<<16 | (dataIn[6]&0xff)<<8 | (dataIn[7]&0xff) );
-//x	A4 = convAry2Int(dataIn, 4);
-
-// Tama�o del archivo Comprimido (SOLO la parte esencial) (NO el .length del array)
-
-	A3 = ( (dataIn[9]&0xff)<<16 | (dataIn[10]&0xff)<<8 | (dataIn[11]&0xff) );
-//x	A3 = convAry2Int(dataIn, 8);
-
-// Copiamos Bufer de tama�o comprimido (IN) sobre bufer de tama�o Descomprimido (OUT)
-
-	data = new byte[A4]; for (int i=0 ; i<A3 ; i++) {data[i] = dataIn[i];}
-//x	data = new byte[A4]; System.arraycopy(dataIn, 0, data, 0, A3);
-
-// Arreglamos Cabezera del archivo comprimido
-
-	int A0 = (3*4);
-	int A2 = A3;
-	for (int i=0 ; i<3 ; i++)
-	{
-	data[--A0] = dataIn[A2+3];
-	data[--A0] = dataIn[A2+2];
-	data[--A0] = dataIn[A2+1];
-	data[--A0] = dataIn[A2+0];
-	A2 += 4;
-	}
-
-// Tama�o "literal" a copiar Inicialmente.
-
-	int D2 = ((dataIn[A2++]&0xff)<<24 | (dataIn[A2++]&0xff)<<16 | (dataIn[A2++]&0xff)<<8 | (dataIn[A2++]&0xff) );
-//x	int D2 = convAry2Int(dataIn, A2); A2+=4;
-
-// Skip para evitar oddAdress en MC68000 (Amiga 500)
-
-	if (dataIn[A2++] >= 0) {A3--;}		// Apa�o por limitaciones del MC68000
-
-// Cargamos primer grupo de bits de control.
-
-	D3 = dataIn[A2++];
-
-// Cargamos Bufer de datos personalizado a la compresion
-
-	byte[] FI_BUFER = new byte[0x1C];
-	for (int i=0 ; i<FI_BUFER.length; i++) {FI_BUFER[i] = dataIn[A2++];}
-//x	System.arraycopy(dataIn, A2, FI_BUFER, 0, 0x1C);
-
-// Destruimos bufer Origen.
-
-	dataIn = null;
-
-// Algoritmo Explode...
-
-	int D4 = 0;
-
-	while (true)
-	{
-		while (D2-- > 0) {data[--A4] = data[--A3];}
-
-		if (A4 <= 0)
-		{
-			byte[] dest = data;
-			data = null;
-			return dest;
-		}
-
-		if ( checkBit() )
-		{
-			if ( checkBit() )
-			{
-				if ( checkBit() )
-				{
-					D0 = 3;
-					if ( checkBit() )
-					{
-						if ( checkBit() )
-						{
-							D4 = data[--A3] & 0xFF;
-						} else {
-							D4 <<= 1; if ( checkBit() ) {D4++;}
-							D4 <<= 1; if ( checkBit() ) {D4++;}
-							D4 <<= 1; if ( checkBit() ) {D4++;}
-							D4 += 6;
-						}
-					} else {
-						D4 = 5;
-					}
-				} else {
-					D4 = 4;
-					D0 = 2;
-				}
-			} else {
-				D4 = 3;
-				D0 = 1;
-			}
-		} else {
-			D4 = 2;
-			D0 = 0;
-		}
-
-		int D5 = 0;
-		int D1 = D0;
-
-		if ( checkBit() )
-		{
-			if ( checkBit() )
-			{
-				D5 = new byte[] {6,10,10,18} [D0];
-				D0 += 8;
-			} else {
-				D5 = 2;
-				D0 += 4;
-			}
-		}
-
-		D0 = new byte[] {1,1,1,1,2,3,3,4,4,5,7,14} [D0];
-
-		D2 = 0; do {D2 <<= 1; if ( checkBit() ) {D2++;}} while (--D0 > 0);
-
-		D2 += D5;
-
-		A2 = A4 + 1;
-		D0 = D1;
-
-		if ( checkBit() )
-		{
-			D1 <<= 1;
-
-			if ( checkBit() )
-			{
-				A2 += ( (FI_BUFER[8 + D1]&0xff)<<8 | (FI_BUFER[9 + D1]&0xff) );
-				D0 += 8;
-			} else {
-				A2 += ( (FI_BUFER[0 + D1]&0xff)<<8 | (FI_BUFER[1 + D1]&0xff) );
-				D0 += 4;
-			}
-		}
-
-		D0 = FI_BUFER[0x10 + D0] & 0xFF;
-
-		D5 = 0; do {D5 <<= 1; if ( checkBit() ) {D5++;}} while (--D0 > 0);
-
-		A2 += D5;
-
-		do {data[--A4] = data[--A2];} while (--D4 > 0);
-	}
-
-	}
-	catch (Exception e)
-	{
-	//#ifdef DEBUG
-		Debug.println(e.toString());
-		e.printStackTrace();
-	//#endif
-		data = null;
-		return null;
-	}
-}
-
-// ----------------
-
-private boolean checkBit()
-{
-	int carry = D3;							// ADD.B D3,D3
-
-	if ( (D3 <<= 1) == 0 )					// BNE.s Skip
-	{
-		int carry2 = D3 = data[--A3];		// MOVE.B -(A3),D3
-		D3 <<= 1; if (carry < 0) {D3++;}	// ADDX.B D3,D3
-		carry = carry2;
-	}
-										// Skip:
-	return carry < 0;						// BCC.s Skip2
-}
-
 // <=- <=- <=- <=- <=-
 
 //#endif
@@ -6241,7 +3423,6 @@ public int rmsCreate(int store)
 //#ifdef J2ME
 	rmsBootIndex = 0;
 //#elifdef DOJA
-	rmsBootIndex = ihdScratchPadUsed;
 //#endif
 
 	rmsHDIndex = rmsBootIndex + 0x10;
@@ -6260,7 +3441,6 @@ public int rmsCreate(int store)
 		rmsBoot = null;
 	}
 //#elifdef DOJA
-	rmsBoot = ihdLoadSP(rmsBootIndex, 0x10);
 //#endif
 
 	if (rmsBoot == null || rmsBoot[0] != 'r' || rmsBoot[1] != 'm')
@@ -6332,17 +3512,6 @@ public int rmsCreate(int store)
 		maxSize -= rmsHDIndex;
 
 	//#elifdef DOJA
-
-	//#ifdef MI-M341i
-		int maxSize = (200*1024) - rmsHDIndex;		// BUG FIX de "available()" en Mitsubishi M341i
-    //#else
-		int maxSize = 0;
-		try {
-			InputStream in = Connector.openInputStream("scratchpad:///0;pos=" + rmsHDIndex);
-			maxSize = in.available();
-			in.close();
-		} catch (Exception e) {}
-    //#endif
 	//#endif
 
 		if (maxSize - 200 < 0)
@@ -6386,7 +3555,6 @@ public int rmsCreate(int store)
 //#ifdef J2ME
 	byte[] in = rmsLoadSegment(rmsHDIndex + rmsStoreSize - rmsFatSize, rmsFatSize);
 //#elifdef DOJA
-	byte[] in = ihdLoadSP(rmsHDIndex + rmsStoreSize - rmsFatSize, rmsFatSize);
 //#endif
 
 	DataInputStream dis = new DataInputStream(new ByteArrayInputStream(in));
@@ -6459,13 +3627,11 @@ public boolean rmsSaveFile(String fileName, byte[] data)
 //#ifdef J2ME
 	rmsSaveSegment(rmsBootIndex, rmsBoot);
 //#elifdef DOJA
-	ihdSaveSP(rmsBootIndex, rmsBoot);
 //#endif
 
 //#ifdef J2ME
 	rmsSaveSegment(rmsHDIndex + rmsStoreUsed, data);
 //#elifdef DOJA
-	ihdSaveSP(rmsHDIndex + rmsStoreUsed, data);
 //#endif
 
 	rmsStoreUsed += data.length;
@@ -6488,27 +3654,6 @@ public Image rmsLoadImage(String fileName)
 	return Image.createImage(data, 0, data.length);
 
 //#elifdef DOJA
-	int found = rmsFindFile(fileName);
-
-	if (found == -1)
-	{
-	//#ifdef DEBUG
-		Debug.println("rmsImageFile: "+fileName+" <File not found>");
-	//#endif
-		return null;
-	}
-
-//#ifdef DEBUG
-	Debug.println("rmsImageFile: "+fileName);
-//#endif
-
-	MediaImage mimage = MediaManager.getImage("scratchpad:///0;pos=" + (rmsHDIndex + rmsFileIndex) );
-
-	try {
-		mimage.use();
-	} catch (Exception e) {}
-
-	return mimage.getImage();
 //#endif
 }
 
@@ -6536,7 +3681,6 @@ public byte[] rmsLoadFile(String fileName)
 //#ifdef J2ME
 	return rmsLoadSegment(rmsHDIndex + rmsFileIndex, rmsFileInfo[found]);
 //#elifdef DOJA
-	return ihdLoadSP(rmsHDIndex + rmsFileIndex, rmsFileInfo[found]);
 //#endif
 }
 
@@ -6566,7 +3710,6 @@ public boolean rmsDeleteFile(String fileName)
 //#ifdef J2ME
 	rmsSaveSegment(rmsBootIndex, rmsBoot);
 //#elifdef DOJA
-	ihdSaveSP(rmsBootIndex, rmsBoot);
 //#endif
 
 	rmsStoreUsed -= rmsFileInfo[found];
@@ -6579,7 +3722,6 @@ public boolean rmsDeleteFile(String fileName)
 	//#ifdef J2ME
 		rmsSaveSegment(rmsHDIndex + indexNew, rmsLoadSegment(rmsHDIndex + indexOld, rmsFileInfo[i]) );
 	//#elifdef DOJA
-		ihdSaveSP(rmsHDIndex + indexNew, ihdLoadSP(rmsHDIndex + indexOld, rmsFileInfo[i]));
 	//#endif
 
 		indexNew += rmsFileInfo[i];
@@ -6681,8 +3823,6 @@ private boolean rmsUpdateFat(int suma, int pos, String newName, short newData)
 	rmsSaveSegment(rmsHDIndex + rmsStoreSize - rmsFatSize, fat);
 	rmsSaveSegment(rmsBootIndex, rmsBoot);
 //#elifdef DOJA
-	ihdSaveSP(rmsHDIndex + rmsStoreSize - rmsFatSize, fat);
-	ihdSaveSP(rmsBootIndex, rmsBoot);
 //#endif
 
 	if (suma > 0 && rmsFiles == rmsFileInfo.length) {rmsCreate(rmsStoreSize);}
@@ -6847,19 +3987,6 @@ private int rmsSetFila(int pack, int fila, byte[] data, boolean delete)
 
 
 //#else
-
-int maxSizePerCent, storePerCent;
-public byte[] rmsFileInfo;
-public void rmsCreate(int store) {}
-public void rmsDestroy() {}
-public boolean rmsSaveFile(String fileName, byte[] in) {return true;}
-public byte[] rmsLoadFile(String fileName) {return null;}
-public void rmsDeleteFile(String fileName) {}
-public String[] rmsGetDir() {return null;}
-public int rmsAvailable() {return 0;}
-public int rmsAvailable(String fileName) {return 0;}
-public Image rmsLoadImage(String str) {return null;}
-
 //#endif
 
 // <=- <=- <=- <=- <=-
@@ -6903,23 +4030,7 @@ static final int FORM_RGB_BOX_DISABLED = 0x7b948c;	// Color de la caja oscura
 // Constantes para gestionar los tama�os de los bordes y separaciones
 // ===============================================
 //#ifdef S30
-static final int FORM_SEPARATOR = 1;
-
-static final int FORM_MARC_WIDTH = 12;
-static final int FORM_MARC_HEIGHT = 12;
-static final int FORM_MARC_BORDER = 6;
-
-static final int FORM_LOGO_HEIGHT = 24;
-
 //#elifdef S40
-static final int FORM_SEPARATOR = 2;
-
-static final int FORM_MARC_WIDTH = 12;
-static final int FORM_MARC_HEIGHT = 12;
-static final int FORM_MARC_BORDER = 6;
-
-static final int FORM_LOGO_HEIGHT = 36;
-
 //#elifdef S60
 static final int FORM_SEPARATOR = 4;
 
@@ -6930,13 +4041,6 @@ static final int FORM_MARC_BORDER = 0;
 static final int FORM_LOGO_HEIGHT = 56;
 
 //#elifdef S80
-static final int FORM_SEPARATOR = 6;
-
-static final int FORM_MARC_WIDTH = 17;
-static final int FORM_MARC_HEIGHT = 17;
-static final int FORM_MARC_BORDER = 8;
-
-static final int FORM_LOGO_HEIGHT = 80;
 //#endif
 // ===============================================
 
@@ -6987,7 +4091,6 @@ byte[] formItemsCor;
 //#ifdef J2ME
 Image formItemsImg;
 //#elifdef DOJA
-Image[] formItemsImg;
 //#endif
 
 
@@ -7041,7 +4144,6 @@ public void formCreate()
 	//#ifdef J2ME
 		if (formItemsImg == null) {formItemsImg = loadImage("/formItems");}
 	//#elifdef DOJA
-		if (formItemsImg == null) {formItemsImg = loadImage("/formItems/", formItemsCor);}
 	//#endif
 }
 
@@ -7550,7 +4652,6 @@ public void formInit(int mode, int pos, int actionBack, int actionAcept)
 			spaces = (formResultStageSelect? 6:5);
 
 		//#ifdef BUILD_ONE_PLAYER
-			spaces--;
 		//#endif
 		break;
 
@@ -8878,16 +5979,10 @@ static final int POPUP_ACTION_EXIT = 1;		// Cerramos popup, salimos de biosWait 
 // Constantes que definen el tama�o de las esquinas redondeadas de los popup
 // ===============================================
 //#ifdef S30
-static final int POPUP_MARC_BORDER = 4;		// Pixels de separacion entre el marco y el area de pintado (alto y ancho)
-
 //#elifdef S40
-static final int POPUP_MARC_BORDER = 4;
-
 //#elifdef S60
 static final int POPUP_MARC_BORDER = 6;
-
 //#elifdef S80
-static final int POPUP_MARC_BORDER = 6;
 //#endif
 // ===============================================
 
@@ -9136,7 +6231,7 @@ public void popupInit(int actionCancel, int actionAcept, int leftSoftkey, int ri
 public void popupRelease()
 {
 //#if DEBUG && DEBUG_MENU
-	Debug.println("popupRelease("+popupType+")");
+	//Debug.println("popupRelease("+popupType+")");
 //#endif
 
 	popupShow = false;
@@ -9442,14 +6537,15 @@ int scrollBorderRGB = 0xff0000;
 	int scrollTilesBankWidth;
 	int scrollTileBankSize;
 //#elifdef DOJA
-	Image scrollTilesImg[];
 //#endif
 
 
-//#ifdef SCROLL_BUFFER_RENDER
-	Image scrollFondoImg;
-	Graphics scrollFondoGfx;
+///#ifdef SCROLL_BUFFER_RENDER
+Image scrollFondoImg;
+Graphics scrollFondoGfx;
 //#endif
+
+
 
 
 // -------------------
@@ -9473,7 +6569,6 @@ public void scrollCreate(int x, int y, int width, int height)
 //#ifdef J2ME
 public void scrollInit(byte[] map, byte[] comb, int width, int height, Image img, byte[] cor, int bankWidth, int bankHeight)
 //#elifdef DOJA
-public void scrollInit(byte[] map, byte[] comb, int width, int height, Image[] img)
 //#endif
 {
 
@@ -9484,14 +6579,13 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image[] i
 	scrollTilesBankWidth = bankWidth;
 	scrollTileBankSize = bankWidth * bankHeight;
 //#elifdef DOJA
-	scrollTilesImg = img;
 //#endif
 
 
 // Pillamos informacion del mapa
 	//comb[0] = numero total de tiles combinados
-	scrollTileCombFirst = comb[1] & 0xff;	// Numero de tile inicial para "tiles combinados"
-	scrollTileCombCapas = comb[2] & 0xff;	// Numero de capas de los tiles combinados
+	scrollTileCombFirst = comb[1] & 0xff;    // Numero de tile inicial para "tiles combinados"
+	scrollTileCombCapas = comb[2] & 0xff;    // Numero de capas de los tiles combinados
 
 // Anotamos variables del mapa, tama�o del mapa y tabla de tiles combinados
 	scrollFaseMap = map;
@@ -9506,8 +6600,6 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image[] i
 
 //#ifdef SCROLL_TILE_RENDER
 // Calculamos tama�o del scroll, para que sea multiplo al tama�o de los tiles
-	scrollWidth = scrollAreaWidth - (scrollAreaWidth % tileWidth);
-	scrollHeight = scrollAreaHeight - (scrollAreaHeight % tileHeight);
 //#else
 	scrollWidth = scrollAreaWidth;
 	scrollHeight = scrollAreaHeight;
@@ -9516,27 +6608,21 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image[] i
 
 // Calculamos tama�o del mapa usado como doble bufer y lo inicializamos
 //#ifdef SCROLL_FULL_RENDER
-	scrollFondoWidth = (scrollWidth / tileWidth) +2;
-	scrollFondoHeight = (scrollHeight / tileHeight) +2;
 //#elifdef SCROLL_TILE_RENDER
-	scrollFondoWidth = (scrollWidth / tileWidth);
-	scrollFondoHeight = (scrollHeight / tileHeight);
 //#elifdef SCROLL_BUFFER_RENDER
-	scrollFondoWidth = (scrollWidth / tileWidth) + ((scrollWidth % tileWidth==0)?1:2);
-	scrollFondoHeight = (scrollHeight / tileHeight) + ((scrollHeight % tileHeight==0)?1:2);
+	scrollFondoWidth = (scrollWidth / tileWidth) + ((scrollWidth % tileWidth == 0) ? 1 : 2);
+	scrollFondoHeight = (scrollHeight / tileHeight) + ((scrollHeight % tileHeight == 0) ? 1 : 2);
 //#endif
 
 
 // Controlamos si la fase es mas peque�a que el area de scroll horizontalmente
-	if (scrollFondoWidth > width)
-	{
+	if (scrollFondoWidth > width) {
 		scrollFondoWidth = width;
 		scrollWidth = width * tileWidth;
 	}
 
 // Controlamos si la fase es mas peque�a que el area de scroll verticalmente
-	if (scrollFondoHeight > height)
-	{
+	if (scrollFondoHeight > height) {
 		scrollFondoHeight = height;
 		scrollHeight = height * tileHeight;
 	}
@@ -9544,16 +6630,17 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image[] i
 //#ifndef SCROLL_FULL_RENDER
 // Inicializamos mapa del doble bufer
 	scrollFondoMap = new byte[scrollFondoWidth * scrollFondoHeight];
-	for (int i=0 ; i<scrollFondoMap.length ; i++) {scrollFondoMap[i]=-1;}
+	for (int i = 0; i < scrollFondoMap.length; i++) {
+		scrollFondoMap[i] = -1;
+	}
 //#endif
 
 
 // Calculamos tama�o de los bordes para scroll mas peque�os que el area de scroll o el modo TILE_RENDER
 	scrollBorderLeft = (scrollAreaWidth - scrollWidth) / 2;
 	scrollBorderRight = scrollAreaWidth - scrollWidth - scrollBorderLeft;
-	scrollBorderTop =   (scrollAreaHeight - scrollHeight) / 2;
+	scrollBorderTop = (scrollAreaHeight - scrollHeight) / 2;
 	scrollBorderBotton = scrollAreaHeight - scrollHeight - scrollBorderTop;
-
 
 
 // Calculamos tama�o del mapa interno para usar "semiscroll"
@@ -9568,15 +6655,13 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image[] i
 
 //#ifdef SCROLL_BUFFER_RENDER
 // Generamos imagen para doble bufer
-	if (scrollFondoImg == null)
-	{
-		scrollFondoImg = Image.createImage(scrollFondoWidth*tileWidth, scrollFondoHeight*tileHeight);
+	if (scrollFondoImg == null) {
+		scrollFondoImg = Image.createImage(scrollFondoWidth * tileWidth, scrollFondoHeight * tileHeight);
 		scrollFondoGfx = scrollFondoImg.getGraphics();
 	}
 //#endif
+
 }
-
-
 
 // -------------------
 // scroll Restore
@@ -9586,8 +6671,8 @@ public void scrollRestore()
 {
 //#ifdef SCROLL_BUFFER_RENDER
 	//#ifndef FIX_GC_GRAPHICS
-		scrollFondoImg = null;
-		scrollFondoGfx = null;
+	scrollFondoImg = null;
+	scrollFondoGfx = null;
 	//#endif
 //#endif
 
@@ -9596,7 +6681,6 @@ public void scrollRestore()
 //#ifdef J2ME
 	scrollTilesImg=null;
 //#elifdef DOJA
-	scrollTilesImg=null;
 //#endif
 
 }
@@ -9743,10 +6827,6 @@ public void scrollTick_CenterMaxSlow(int X, int Y)
 public void scrollUpdate()
 {
 //#ifdef SCROLL_TILE_RENDER
-	if (scrollFondoMap != null)
-	{
-		for (int i=0 ; i<scrollFondoMap.length ; i++) {scrollFondoMap[i] = -1;}
-	}
 //#endif
 }
 
@@ -9756,22 +6836,6 @@ public void scrollUpdate()
 public void scrollUpdate(int X, int Y, int SizeX, int SizeY)
 {
 //#ifdef SCROLL_TILE_RENDER
-	X -= scrollViewX;
-	Y -= scrollViewY;
-
-	SizeX = ((X+SizeX+(tileWidth-1))/tileWidth)-(X/=tileWidth);
-	SizeY = ((Y+SizeY+(tileHeight-1))/tileHeight)-(Y/=tileHeight);
-
-	for (int y=0 ; y<SizeY ; y++)
-	{
-		if ( Y+y >=0 && Y+y <scrollFondoHeight )
-		{
-			for (int x=0 ; x<SizeX ; x++)
-			{
-				if ( X+x >=0 && X+x <scrollFondoWidth ) {scrollFondoMap[((Y+y)*scrollFondoWidth)+X+x] = -1;}
-			}
-		}
-	}
 //#endif
 }
 
@@ -9785,54 +6849,54 @@ public void scrollUpdate(int X, int Y, int SizeX, int SizeY)
 // scroll Buffer Update
 // ===================
 
-public void scrollBufferUpdate()
-{
-	try
+	public void scrollBufferUpdate()
 	{
-		int FondoDir=0;
-		int CorX=scrollFaseX+(scrollFondoWidth-scrollFondoX);
-		int CorY=scrollFaseY+(scrollFondoHeight-scrollFondoY);
-
-		if (CorY< 0) {CorY+=scrollFaseHeight;}
-		if (CorY>=scrollFaseHeight) {CorY-=scrollFaseHeight;}
-
-		if (CorX< 0) {CorX+=scrollFaseWidth;}
-		if (CorX>=scrollFaseWidth) {CorX-=scrollFaseWidth;}
-
-
-		for (int y=0 ; y<scrollFondoHeight ; y++)
+		try
 		{
-		if (y==scrollFondoY) {if ((CorY-=scrollFondoHeight) < 0) {CorY+=scrollFaseHeight;}}
+			int FondoDir=0;
+			int CorX=scrollFaseX+(scrollFondoWidth-scrollFondoX);
+			int CorY=scrollFaseY+(scrollFondoHeight-scrollFondoY);
 
-			for (int x=0, x2=scrollFondoX, i=0 ; i<2; i++)
+			if (CorY< 0) {CorY+=scrollFaseHeight;}
+			if (CorY>=scrollFaseHeight) {CorY-=scrollFaseHeight;}
+
+			if (CorX< 0) {CorX+=scrollFaseWidth;}
+			if (CorX>=scrollFaseWidth) {CorX-=scrollFaseWidth;}
+
+
+			for (int y=0 ; y<scrollFondoHeight ; y++)
 			{
-				for (; x<x2 ; x++)
+				if (y==scrollFondoY) {if ((CorY-=scrollFondoHeight) < 0) {CorY+=scrollFaseHeight;}}
+
+				for (int x=0, x2=scrollFondoX, i=0 ; i<2; i++)
 				{
-					int faseIndex=(CorY*scrollFaseWidth)+CorX; if (++CorX >= scrollFaseWidth) {CorX-=scrollFaseWidth;}
-
-					if (faseIndex >= 0 && faseIndex < scrollFaseMap.length)
+					for (; x<x2 ; x++)
 					{
-						if (scrollFondoMap[FondoDir++] != scrollFaseMap[faseIndex])
+						int faseIndex=(CorY*scrollFaseWidth)+CorX; if (++CorX >= scrollFaseWidth) {CorX-=scrollFaseWidth;}
+
+						if (faseIndex >= 0 && faseIndex < scrollFaseMap.length)
 						{
-							int tileNum=scrollFaseMap[faseIndex] & 0xff;
-							scrollFondoMap[FondoDir-1] = (byte)tileNum;
-
-							tileNum--;
-
-				// ---------------------------------------------------------
-				// Renderizamos tile en J2ME
-				// =========================================================
-							scrollFondoGfx.setClip(x*tileWidth ,y*tileHeight,  tileWidth,tileHeight);
-
-if (tileNum < 0)
-{
-	scrollFondoGfx.setColor(0);
-	scrollFondoGfx.fillRect(x*tileWidth ,y*tileHeight,  tileWidth,tileHeight);
-	continue;
-}
-
-							if (tileNum+1 < scrollTileCombFirst)
+							if (scrollFondoMap[FondoDir++] != scrollFaseMap[faseIndex])
 							{
+								int tileNum=scrollFaseMap[faseIndex] & 0xff;
+								scrollFondoMap[FondoDir-1] = (byte)tileNum;
+
+								tileNum--;
+
+								// ---------------------------------------------------------
+								// Renderizamos tile en J2ME
+								// =========================================================
+								scrollFondoGfx.setClip(x*tileWidth ,y*tileHeight,  tileWidth,tileHeight);
+
+								if (tileNum < 0)
+								{
+									scrollFondoGfx.setColor(0);
+									scrollFondoGfx.fillRect(x*tileWidth ,y*tileHeight,  tileWidth,tileHeight);
+									continue;
+								}
+
+								if (tileNum+1 < scrollTileCombFirst)
+								{
 /*
 								if (tileNum < scrollTileBankSize)
 								{
@@ -9843,16 +6907,16 @@ if (tileNum < 0)
 								}
 */
 //								spriteDraw(scrollFondoGfx, scrollTilesImg, (x*tileWidth), (y*tileHeight), tileNum, scrollTilesCor);
-								tileNum*=6; int destX = scrollTilesCor[tileNum++] + (x*tileWidth); int destY = scrollTilesCor[tileNum++] + (y*tileHeight);
-								scrollFondoGfx.setClip(destX, destY, scrollTilesCor[tileNum++], scrollTilesCor[tileNum++]);
-								scrollFondoGfx.drawImage(scrollTilesImg, destX-(scrollTilesCor[tileNum++]+128), destY-(scrollTilesCor[tileNum]+128), 20);
-							} else {
+									tileNum*=6; int destX = scrollTilesCor[tileNum++] + (x*tileWidth); int destY = scrollTilesCor[tileNum++] + (y*tileHeight);
+									scrollFondoGfx.setClip(destX, destY, scrollTilesCor[tileNum++], scrollTilesCor[tileNum++]);
+									scrollFondoGfx.drawImage(scrollTilesImg, destX-(scrollTilesCor[tileNum++]+128), destY-(scrollTilesCor[tileNum]+128), 20);
+								} else {
 
-								int comTile = 3+((tileNum+1 - scrollTileCombFirst)*scrollTileCombCapas);
-								for (int z=0 ; z<scrollTileCombCapas ;z++)
-								{
-									tileNum = scrollTileComb[comTile++]-1;
-									if (tileNum < 0) {continue;}
+									int comTile = 3+((tileNum+1 - scrollTileCombFirst)*scrollTileCombCapas);
+									for (int z=0 ; z<scrollTileCombCapas ;z++)
+									{
+										tileNum = scrollTileComb[comTile++]-1;
+										if (tileNum < 0) {continue;}
 /*
 									if (tileNum < scrollTileBankSize)
 									{
@@ -9863,40 +6927,41 @@ if (tileNum < 0)
 									}
 */
 //									spriteDraw(scrollFondoGfx, scrollTilesImg, (x*tileWidth), (y*tileHeight), tileNum, scrollTilesCor);
-									tileNum*=6; int destX = scrollTilesCor[tileNum++] + (x*tileWidth); int destY = scrollTilesCor[tileNum++] + (y*tileHeight);
-									scrollFondoGfx.setClip(destX, destY, scrollTilesCor[tileNum++], scrollTilesCor[tileNum++]);
-									scrollFondoGfx.drawImage(scrollTilesImg, destX-(scrollTilesCor[tileNum++]+128), destY-(scrollTilesCor[tileNum]+128), 20);
+										tileNum*=6; int destX = scrollTilesCor[tileNum++] + (x*tileWidth); int destY = scrollTilesCor[tileNum++] + (y*tileHeight);
+										scrollFondoGfx.setClip(destX, destY, scrollTilesCor[tileNum++], scrollTilesCor[tileNum++]);
+										scrollFondoGfx.drawImage(scrollTilesImg, destX-(scrollTilesCor[tileNum++]+128), destY-(scrollTilesCor[tileNum]+128), 20);
+									}
 								}
-							}
-				// =========================================================
+								// =========================================================
 
+							}
+						} else {
+							FondoDir++;
 						}
-					} else {
-						FondoDir++;
+
 					}
 
-				}
-
-				if (i==0)
-				{
-					if ((CorX-=scrollFondoWidth) < 0) {CorX+=scrollFaseWidth;}
-					x2=scrollFondoWidth;
-				} else {
-					if (++CorY >= scrollFaseHeight) {CorY-=scrollFaseHeight;}
+					if (i==0)
+					{
+						if ((CorX-=scrollFondoWidth) < 0) {CorX+=scrollFaseWidth;}
+						x2=scrollFondoWidth;
+					} else {
+						if (++CorY >= scrollFaseHeight) {CorY-=scrollFaseHeight;}
+					}
 				}
 			}
-		}
 
-	} catch (Exception e)
-	{
-		scrollX=0;
-		scrollY=0;
-	//#ifdef com.mygdx.mongojocs.sanfermines2006.Debug
-		Debug.println("scrollUpdate FAIL");
-	//#endif
+		} catch (Exception e)
+		{
+			scrollX=0;
+			scrollY=0;
+			//#ifdef Debug
+			Debug.println("scrollUpdate FAIL");
+			//#endif
+		}
 	}
-}
 //#endif
+
 
 
 
@@ -9991,144 +7056,6 @@ public void scrollDraw(Graphics scr)
 
 
 //#else
-
-
-//	com.mygdx.mongojocs.sanfermines2006.GameCanvas.gc.fillDraw(0, 0,0, 200,200);
-
-//#ifdef FIX_TSM_DRAW_IMAGE
-	int tsmBugCnt = 0;
-//#endif
-
-	int faseMapSize = scrollFaseWidth * scrollFaseHeight;
-
-	int faseIndex2 = ((scrollY/tileWidth)*scrollFaseWidth) + (scrollX/tileWidth);
-
-//#ifdef SCROLL_FULL_RENDER
-	int ejeX = scrollViewX -(scrollX % tileWidth);
-	int ejeY = scrollViewY -(scrollY % tileHeight);
-//#elifdef SCROLL_TILE_RENDER
-	int ejeX = scrollViewX;
-	int ejeY = scrollViewY;
-//#endif
-
-	int FondoDir=0;
-
-	try {
-
-		for (int y=0 ; y<scrollFondoHeight ; y++)
-		{
-			int faseIndex = faseIndex2;
-			for (int x=0 ; x<scrollFondoWidth ; x++)
-			{
-				int tileNum = (scrollFaseMap[faseIndex++] & 0xFF);
-
-			//#ifdef SCROLL_TILE_RENDER
-				if ( tileNum != scrollFondoMap[FondoDir++] )
-				{
-					scrollFondoMap[FondoDir-1] = (byte) tileNum;
-			//#endif
-
-					tileNum--;
-
-				// ---------------------------------------------------------
-				// Renderizamos tile en J2ME
-				// =========================================================
-				//#ifdef J2ME
-					int pixX = ejeX+(x*tileWidth);
-					int pixY = ejeY+(y*tileHeight);
-
-					scr.setClip(scrollViewX,  scrollViewY, scrollWidth, scrollHeight);
-					scr.clipRect(pixX ,pixY,  tileWidth,tileHeight);
-
-					if (tileNum < 0)
-					{
-						scr.setColor(0);
-						scr.fillRect(pixX ,pixY,  tileWidth,tileHeight);
-						continue;
-					}
-
-					if (tileNum+1 < scrollTileCombFirst)
-					{
-						tileNum*=6; int destX = scrollTilesCor[tileNum++] + pixX; int destY = scrollTilesCor[tileNum++] + pixY;
-						scr.setClip(scrollViewX,  scrollViewY, scrollWidth, scrollHeight);
-						scr.clipRect(destX, destY, scrollTilesCor[tileNum++], scrollTilesCor[tileNum++]);
-						scr.drawImage(scrollTilesImg, destX-(scrollTilesCor[tileNum++]+128), destY-(scrollTilesCor[tileNum]+128), 20);
-					} else {
-
-						int comTile = 3+((tileNum+1 - scrollTileCombFirst)*scrollTileCombCapas);
-						for (int z=0 ; z<scrollTileCombCapas ;z++)
-						{
-							tileNum = scrollTileComb[comTile++]-1;
-							if (tileNum < 0) {continue;}
-							tileNum*=6; int destX = scrollTilesCor[tileNum++] + pixX; int destY = scrollTilesCor[tileNum++] + pixY;
-							scr.setClip(scrollViewX,  scrollViewY, scrollWidth, scrollHeight);
-							scr.clipRect(destX, destY, scrollTilesCor[tileNum++], scrollTilesCor[tileNum++]);
-							scr.drawImage(scrollTilesImg, destX-(scrollTilesCor[tileNum++]+128), destY-(scrollTilesCor[tileNum]+128), 20);
-						}
-					}
-				//#endif
-				// =========================================================
-
-
-
-				// ---------------------------------------------------------
-				// Renderizamos tile en DOJA
-				// =========================================================
-				//#ifdef DOJA
-					if (tileNum+1 < scrollTileCombFirst)	// Es tile NO es combiando???
-					{
-	//					try {
-							scr.drawImage(scrollTilesImg[tileNum], ejeX+(x*tileWidth), ejeY+(y*tileHeight));
-
-						//#ifdef FIX_TSM_DRAW_IMAGE
-							if ((++tsmBugCnt % 10) == 1)
-							{
-								scr.drawImage(scrollTilesImg[tileNum], ejeX+(x*tileWidth), ejeY+(y*tileHeight));
-								tsmBugCnt++;
-							}
-						//#endif
-
-	//					} catch (Exception e) {}
-					} else {
-						int comTile = (tileNum+1 - scrollTileCombFirst)*scrollTileCombCapas;
-						for (int z=0 ; z<scrollTileCombCapas ; z++)
-						{
-							tileNum = scrollTileComb[3+(comTile++)]-1;
-							if (tileNum < 0) {continue;}
-	
-	//						try {
-								scr.drawImage(scrollTilesImg[tileNum], ejeX+(x*tileWidth), ejeY+(y*tileHeight));
-
-							//#ifdef FIX_TSM_DRAW_IMAGE
-								if ((++tsmBugCnt % 10) == 1)
-								{
-									scr.drawImage(scrollTilesImg[tileNum], ejeX+(x*tileWidth), ejeY+(y*tileHeight));
-									tsmBugCnt++;
-								}
-							//#endif
-
-	//						} catch (Exception e) {}
-						}
-					}
-				//#endif
-				// =========================================================
-
-
-			//#ifdef SCROLL_TILE_RENDER
-				}
-			//#endif
-				if (faseIndex % scrollFaseWidth == 0) {faseIndex -= scrollFaseWidth;}
-			}
-			faseIndex2 += scrollFaseWidth; if (faseIndex2 >= faseMapSize) {faseIndex2 -= faseMapSize;}
-		}
-
-	} catch (Exception e)
-	{
-	//#ifdef com.mygdx.mongojocs.sanfermines2006.Debug
-		Debug.println("scrollDraw FAIL");
-	//#endif
-	}
-
 //#endif
 }
 
@@ -10184,17 +7111,6 @@ public void scrollSpriteDraw(Image img,  int x, int y,  int frame, byte[] cor)
 	scrollUpdate(destX, destY, sizeX, sizeY);
 }
 //#elifdef DOJA
-public void scrollSpriteDraw(Image[] img,  int x, int y,  int frame, byte[] cor)
-{
-	frame*=6;
-
-	int destX=cor[frame++] + x - scrollX + scrollViewX;
-	int destY=cor[frame++] + y - scrollY + scrollViewY;
-
-	scr.drawImage(img[(cor[frame+2]&0xff)], destX, destY);
-
-	scrollUpdate(destX, destY, cor[frame++], cor[frame]);
-}
 //#endif
 
 // <=- <=- <=- <=- <=-
@@ -10342,7 +7258,7 @@ public void connectRequest(int type)
 
 	connectCreate(gameText[TEXT_SERVER_URL][1], data);
 
-	new Thread(ga).start();
+	new Thread((Runnable) ga).start();
 }
 
 // -------------------
@@ -10726,7 +7642,7 @@ public void connectRun()
 public byte[] connectPost(byte[] data) throws IOException
 {
 	byte[] res = null;
-	HttpConnection c = null;
+	/*HttpConnection c = null;
 	OutputStream os = null;
 	InputStream is = null;
 	try {
@@ -10752,7 +7668,6 @@ public byte[] connectPost(byte[] data) throws IOException
 		os = null;
 
 	//#ifdef DOJA
-		c.connect();
 	//#endif
 		// Get the status code, causing the connection to be made
 		connectStatus = c.getResponseCode();
@@ -10763,7 +7678,6 @@ public byte[] connectPost(byte[] data) throws IOException
 		//#ifdef DEBUG
 			throw new IOException("Response status not OK [" + connectStatus + "]");
 		//#else
-			throw new IOException();
 		//#endif
 		}
 
@@ -10807,7 +7721,7 @@ public byte[] connectPost(byte[] data) throws IOException
 		}
 		
 		System.gc();
-	}
+	}*/
 	
 	return res;
 }
@@ -11003,7 +7917,7 @@ public void cacheCreate()
 
 	if (in == null || cacheReader(in))
 	{
-		byte[] bin = loadFile("/fichas.txt");
+		byte[] bin = null; //MONGOFIX loadFile("/fichas.txt");
 		if (bin != null)
 		{
 			String[][] str = textosCreate(bin);
@@ -11461,8 +8375,6 @@ public void gameCreate()
 // ================================
 	gameText = textosCreate( loadFile("/Textos.txt") );
 	//#ifdef LG-U8210
-		//Chapuporta al ataque: S�lo en este handset harcodeamos el string del abecedario para que coja la �
-		gameText[TEXT_ABECEDARIO][0]=" ABCDEFGHIJKLMN�OPQRSTUVWXYZ1234567890!-";
 	//#endif
 	
 
@@ -11521,38 +8433,8 @@ public void gameCreate()
 //#ifndef PLAYER_NONE
 
 	//#ifdef PLAYER_OTA
-
-		soundCreate( new String[] {
-			"024A3A7D8D85C985D1D5B1857CC58D85B985B004013D1EA2B1214499A10A19A10A289A48512728428A2342142712142B121423121423421423421422921423049CA10A288C48509C485127224286284286A8428722428A23121449A890A1A818A10A1A890A1C890A19A1AA19A10A19A10A1CA10A15890A19890A15815817A10A19A10A1AA10A1CA10A288D08509D0850AC48512668428668428A26921449CA10A288D08509C4850AC48508C48508D08508D08508A48508C12728428A23121427121449C890A18A10A1AA10A1C890A288C485126A24286A06284287284286A84286284285A842866242872842872842865A00",	// 0 - Musica de la caratula
-			"024A3A75A5B99D85B5957CC58D85B985B00401452055A4286AA65A42872A692428A25549C690A289549B4851272AA23424D49A890A1C81AA95690A1AA99690A1CA99A1A4A8955271A428A25526D21449CA9A890A1A890A1A690815690A1AA99690A1CA99A1A4A8955271A428A25526D21449CAA892126A242872A4286AA55A4286AA65A42872A692428A25549BA1C6289549B4851272A692A2552AD21425549A690A28954AB4850955269A428A25549C610A289549B0851272AA25121424C49A690A28954AB4850955269A428A2552AD21425549A690A289552718428A25526C21449CA9A48000",	// 1 - Musica durante el juego
-			"024A3A719D85B985C97CC58D85B985B004005928568718A2AC49C6156158A8AD127187185624285E8A248497612617A17810A17890A17410A1C619890A19890A19890A19890A19690828CD0850A94000",	// 2 - Musica de nivel completado
-			"024A3A400400131E518520458460836C3702E400",		// 3 - Sonido de "cogido por el toro"
-			"024A3A7D8DA1D5C1A5B985E9BD7CC58D85B98404005934B3903903703303102F02D02B029027025023051C81B81A8198188178168158148138128208C08C08C08C08C08C08C08C08C08C08C08C08C08C08C08C08C000",	// 4 - Chupinazo
-			"024A3A4004000B1C829029032800",		// 5 - Clin de SONIDO SI
-			});
-
 	//#elifdef PLAYER_SAMSUNG
-
-		soundCreate( new String[] {
-			"/caratula.mmf",	// 0 - Musica de la caratula
-			"/ingame.mmf",		// 1 - Musica durante el juego
-			"/ganar.mmf",		// 2 - Musica de nivel completado
-			"/perder.mmf",		// 3 - Sonido de "cogido por el toro"
-			"/chupinazo.mmf",	// 4 - Chupinazo
-			"/clin.mmf",		// 5 - Clin de SONIDO SI
-			});
-
 	//#elifdef PLAYER_SHARP
-
-		soundCreate( new String[] {
-			"/caratula",	// 0 - Musica de la caratula
-			"/ingame",		// 1 - Musica durante el juego
-			"/ganar",		// 2 - Musica de nivel completado
-			"/perder",		// 3 - Sonido de "cogido por el toro"
-			"/chupinazo",	// 4 - Chupinazo
-			"/clin",		// 5 - Clin de SONIDO SI
-			}, new int[] {4,4,4,4,2,1});
-
 	//#else
 
 		soundCreate( new String[] {
@@ -11588,8 +8470,6 @@ public void gameCreate()
 			fontImg = loadImage("/font");
 			fontSoftkeyImg = loadImage("/fontSoftkey");
 		//#elifdef DOJA
-			fontImg = loadImage("/font/", fontCor);
-			fontSoftkeyImg = loadImage("/fontSoftkey/", fontSoftkeyCor);
 		//#endif
 	//#endif
 // ================================
@@ -11637,6 +8517,13 @@ public void gameCreate()
 
 public void gameTick()
 {
+	//MONGOFIX
+	if(biosWaiting)
+	{
+		biosWaitTick();
+		return;
+	}
+
 	switch (gameStatus)
 	{
 // -------------------------------
@@ -11670,22 +8557,28 @@ public void gameTick()
 // ===============================
 	case GAME_MENU_START:			// Inicializamos recursos para menus y preguntamos si queremos juego con sonido
 
-		biosPauseEnabled = true;
+		if(!biosWaitComplete) {
+			biosPauseEnabled = true;
 
 //		menuCreate();
 
-		fillCanvasRGB = 0;
-		forceRenderTask(RENDER_FILL_CANVAS);
+			fillCanvasRGB = 0;
+			forceRenderTask(RENDER_FILL_CANVAS);
 
-	//#ifndef PLAYER_NONE
-		popupInitAsk(null, gameText[TEXT_GAME_WITH_SOUND], SOFTKEY_NO, SOFTKEY_YES);
-		biosWait();
-		gameSound = popupResult;
-		soundPlay(MUSIC_CLIN, 1);
-	//#endif
-		
-		listenerInit(SOFTKEY_NONE, SOFTKEY_NONE);
-		gameStatus++;
+			//#ifndef PLAYER_NONE
+			popupInitAsk(null, gameText[TEXT_GAME_WITH_SOUND], SOFTKEY_NO, SOFTKEY_YES);
+			biosWaitInit();
+		}
+		else
+		{
+			biosWaitEnd();
+			gameSound = popupResult;
+			soundPlay(MUSIC_CLIN, 1);
+			//#endif
+
+			listenerInit(SOFTKEY_NONE, SOFTKEY_NONE);
+			gameStatus++;
+		}
 	break;
 
 
@@ -11702,7 +8595,6 @@ public void gameTick()
 		//#ifndef HIDE_CONNECTIVITY
 			int rmsSize = rmsCreate(21 * 1024);
 		//#else
-			int rmsSize = rmsCreate(6 * 1024);
 		//#endif
 	// ================================
 
@@ -11721,64 +8613,57 @@ public void gameTick()
 
 
 	case GAME_MENU_MAIN:
+		if(!biosWaitComplete) {
+			menuInit(MENU_MAIN);
+			if (soundOld != MUSIC_MENU) {
+				soundPlay(MUSIC_MENU, 0);
 
-		menuInit(MENU_MAIN);
-		if (soundOld != MUSIC_MENU)
-		{
-			soundPlay(MUSIC_MENU, 0);
-			
-			//#ifdef FIX_SOUNDSTOP_OTA
-			
-			waitTime(100);			
-			soundStop();
-			waitTime(100);
-			soundPlay(MUSIC_MENU, 0);
-			
-			//#endif
-		}
-
-//#ifdef DEBUG_PC_USED_MEM
-	System.gc(); System.out.println("menu_Main: "+(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
-	//#ifdef DEBUG
-		System.gc();  Debug.println("menu_Main: "+(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
-	//#endif
-//#endif
-
-		playerSelectFlag = true;
-
-		gameStatus = GAME_PLAY;
-
-		if (nextLevelFlag)
-		{
-			nextLevelFlag = false;
-			playerSelectFlag = false;
-			menuRelease();
-			menuInit(MENU_STAGE_SELECT);
-			if (!menuAcept)
-			{
-				playerSelectFlag = true;
-				biosWait();
+				//#ifdef FIX_SOUNDSTOP_OTA
+				//#endif
 			}
-		} else {
-			biosWait();
-		}
 
+			//#ifdef DEBUG_PC_USED_MEM
+			System.gc();
+			System.out.println("menu_Main: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+			//#ifdef DEBUG
+			System.gc();
+			Debug.println("menu_Main: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+			//#endif
+			//#endif
 
+			playerSelectFlag = true;
+
+			gameStatus = GAME_PLAY;
+
+			if (nextLevelFlag) {
+				nextLevelFlag = false;
+				playerSelectFlag = false;
+				menuRelease();
+				menuInit(MENU_STAGE_SELECT);
+				if (!menuAcept) {
+					playerSelectFlag = true;
+					biosWaitInit();
+				}
+			} else {
+				biosWaitInit();
+			}
+		}else {
+			biosWaitEnd();
 //#ifdef DEBUG
-	System.out.println ("opppps!!!!!! hemos salido del biosWait principal");
+			System.out.println("opppps!!!!!! hemos salido del biosWait principal");
 //#endif
 
-		soundStop();
+			soundStop();
 
-	// mostramos "loading" dentro de menu para dar paso al juego
-		if (gameStatus == GAME_PLAY)
-		{
-			menuInit(MENU_LOADING);
-			forceRender();
-			menuRelease(true);
+			// mostramos "loading" dentro de menu para dar paso al juego
+			if (gameStatus == GAME_PLAY) {
+				menuInit(MENU_LOADING);
+				forceRender();
+				menuRelease(true);
+			}
+
+			menuDestroy();
 		}
-
-		menuDestroy();
 	break;
 
 
@@ -11922,6 +8807,8 @@ public void gameTick()
 
 	case GAME_PLAY_TICK:
 
+		if(!biosWaitComplete)
+		{
 	//#ifdef CHEATS
 		cheats();
 	//#endif
@@ -11935,9 +8822,7 @@ public void gameTick()
 			menuCreate(false);
 
 			menuInit(MENU_INGAME);
-			biosWait();
-
-			menuDestroy();
+			biosWaitInit();
 			break;
 		}
 
@@ -12021,6 +8906,91 @@ public void gameTick()
 		}
 
 		playExit=0;
+		}
+		else
+		{
+			biosWaitEnd();
+			menuDestroy();
+
+			// Si estamos en el Juego Tutorial, la softkey Izquierda es para saltar el tutorial
+			if (levelSelected == 0 && keyMenu == 1 && lastKeyMenu == 0)
+			{
+				playExit = 1;
+			}
+
+			// Procesamos un TICK del juego, si true: debemos parar el juego...
+			if (playExit == 0) {if (!playTick()) {break;}}
+
+			listenerInit(SOFTKEY_NONE, SOFTKEY_NONE);
+
+			soundStop();
+
+			// Desalojamos todos los recursos cargados en 'playInit()'
+			playRelease();
+
+			// Colocamos el ESTADO en 'GAME_PLAY_INIT'
+			gameStatus = GAME_PLAY_INIT;
+
+			switch (playExit)
+			{
+				case 1:	// Nivel Completado, pasamos al siguiente nivel
+
+					levelPlayed = levelSelected;
+
+					// Actualizamos rosas pilladas en este nivel
+					if (levelSelected > 0) {if (levelPoints[levelSelected - 1] < roseCount) {levelPoints[levelSelected - 1] = roseCount;}}
+
+					// Actualizamos hiscores sumando las rosas pilladas en todos los niveles
+					hiscore = 0; for (int i=0 ; i<levelPoints.length ; i++) {hiscore += levelPoints[i];}
+
+					updateRankingArrow = true;
+
+					// Destruimos todos los recursos cargados en 'playCreate()'
+					playDestroy();
+
+					// Si tenemos TODAS las letras, desbloqueamos torero
+					for (int i=0 ; i<8 ; i++)
+					{
+						if (ferminesItem[i] == 0) {break;}
+						//#ifndef BUILD_ONE_PLAYER
+						if (i==7) {muestraDesbloqueo = toreroLocked; toreroLocked = false;}
+						//#endif
+					}
+
+
+					// Si acabado de completar el nivel 8, activamos mostar popup de "felicidades"
+					muestraFelicidades = (currentLevel == levelSelected && currentLevel == 8);
+
+
+					// Si hemos jugado al ultimo nivel disponible, liberamos el siguiente
+					if (levelSelected == currentLevel)
+					{
+						if (currentLevel < 9) {currentLevel++; levelSelected++;}
+					}
+					else
+					if (levelSelected == 0)
+					{
+						levelSelected++;
+					}
+
+					gameStatus = GAME_MENU_RECUENTO;
+					break;
+
+				//case 2:	// Una vida menos y regresamos al inicio del nivel
+				//break;
+
+				case 3:	// Producir com.mygdx.mongojocs.sanfermines2006.Game Over
+
+					// Destruimos todos los recursos cargados en 'playCreate()'
+					playDestroy();
+
+					// Saltamos al ESTADO de 'GAME OVER'
+					gameStatus = GAME_MENU_GAMEOVER;
+					break;
+			}
+
+			playExit=0;
+		}
 	break;
 // ===============================
 	}
@@ -12191,9 +9161,7 @@ public void forceRenderDraw()
 		{
 
 		//#ifdef S80
-			int alto = 6, width = 140;
 		//#elifdef S40
-			int alto = 3, width = 86;
 		//#else
 			int alto = 4, width = 106;
 		//#endif
@@ -12209,17 +9177,6 @@ public void forceRenderDraw()
 			fillDraw(penRGB, x, y, size, alto);
 
 	    //#ifdef DOJA
-			if (loadingImg == null)
-			{
-				printInit_Font(biosGetFont());
-				printSetArea(0, 0, canvasWidth, canvasHeight);
-			//#ifdef ES
-				printDraw("Descargando datos...", 0, 0, 0xffffff, PRINT_HCENTER|PRINT_VCENTER|PRINT_BREAK);
-			//#else
-				Error: falta definir texto para este idioma
-			//#endif
-
-			}
 	    //#endif
 		}
 	break;
@@ -12338,17 +9295,14 @@ static final int MENU_ACTION_DEBUG_SUMA_25_ROSAS = 50010;
 // Variables del juego
 
 //#ifdef S40
-	static final int playerSelectCell = 56;
 //#elifdef S60
 	static final int playerSelectCell = 75;
 //#elifdef S80
-	static final int playerSelectCell = 100;
 //#endif
 	
 	//#ifdef J2ME 
 	Image playerSelectImg;
 	//#elifdef DOJA
-	Image playerSelectImg[];
 	//#endif
 
 
@@ -12368,16 +9322,6 @@ public void menuCreate(boolean fullRead)
 		if (menuImg == null) {
 			
 			//#ifdef HACK_XX65
-			
-			if(canvasHeight < 140) {
-			
-				menuImg = loadImage("/caratula2");
-				
-			} else {
-				
-				menuImg = loadImage("/caratula");				
-			}
-			
 			//#else
 			
 			menuImg = loadImage("/caratula");
@@ -12389,7 +9333,6 @@ public void menuCreate(boolean fullRead)
 		//#ifdef J2ME
 			if (playerSelectImg == null) {playerSelectImg = loadImage("/caras");}
 		//#elifdef DOJA
-			playerSelectImg = loadImage("/caras/", 4);
 		//#endif
 	//#endif
 	}
@@ -12408,8 +9351,6 @@ public void menuDestroy()
 	System.gc();
 
 //#ifndef FIX_GC_GRAPHICS
-	menuImg = null;
-	playerSelectImg = null;
 //#endif
 
 	formDestroy();
@@ -12465,9 +9406,6 @@ public void menuInit(int type, int pos)
 			formListAdd(0, gameText[TEXT_MORE_GAMES], MENU_ACTION_MORE_GAMES);
 		}
 	//#else
-		//#if BUILD_MORE_GAMES_POPUP && MOVISTAR
-			formListAdd(0, gameText[TEXT_MORE_GAMES], MENU_ACTION_MORE_GAMES_POPUP);
-		//#endif
 	//#endif
 
 		formListAdd(0, gameText[TEXT_EXIT], MENU_ACTION_EXIT_GAME);
@@ -12483,64 +9421,65 @@ public void menuInit(int type, int pos)
 
 
 	case MENU_STAGE_SELECT:
-
-		if (!tutorialViewed)
-		{
-			menuRelease(true);
-			levelSelected = 0;
-		//#ifndef BUILD_ONE_PLAYER
-			menuInit(MENU_PLAYER_SELECT);
-		//#else
-			biosExit = true;
-		//#endif
-			break;
-		}
-
-		formLogoInit(FORM_LOGO_HEIGHT);
-
-		formTitleInit(gameText[TEXT_SELECT_LEVEL][0]);
-
-		formListAdd(0, new String[] {gameText[TEXT_TUTORIAL][0], null}, 0, -1);
-		for (int i=0 ; i<8 ; i++)
-		{
-			formListAdd(0, new String[] {gameText[TEXT_ENCIERRO][0]+" "+(i+1), ""+levelPoints[i]}, 0, (ferminesItem[i]!=0? i:-1));
-		}
-		formListAdd(0, new String[] {gameText[TEXT_SOBREVIVE][0], ""+levelPoints[8]}, 0, -1);
-
-		formBottomText = gameText[TEXT_RECORD_ACTUAL];
-
-		formResultStageSelect = true;
-		formResultMode = FORM_LISTADO_LEVEL;
-
-		pos = levelSelected;
-		formInit(FORM_LISTADO, pos, MENU_ACTION_MENU_EXIT, MENU_ACTION_MENU_EXIT_OK);
-
-	// Centramos la opcion seleccionada en el area de vision
-		formListIni = formListPos - (formListView/2);
-		if (formListIni < 0) {formListIni = 0;}
-		else
-		if (formListIni > formListStr.length - formListView) {formListIni = formListStr.length - formListView;}
-
-		listenerInit(SOFTKEY_BACK, SOFTKEY_ACEPT);
-
-		biosWait();
-		if (menuAcept)
-		{
-			levelSelected = formListPos;
-
-		//#ifndef BUILD_ONE_PLAYER
-			if (playerSelectFlag)
-			{
+		if(!biosWaitComplete) {
+			if (!tutorialViewed) {
+				menuRelease(true);
+				levelSelected = 0;
+				//#ifndef BUILD_ONE_PLAYER
 				menuInit(MENU_PLAYER_SELECT);
-			} else {
-				biosExit = true;
+				//#else
+				//#endif
+				break;
 			}
-		//#else
-			biosExit = true;
-		//#endif
 
-		} else {
-			menuInitBack();
+			formLogoInit(FORM_LOGO_HEIGHT);
+
+			formTitleInit(gameText[TEXT_SELECT_LEVEL][0]);
+
+			formListAdd(0, new String[]{gameText[TEXT_TUTORIAL][0], null}, 0, -1);
+			for (int i = 0; i < 8; i++) {
+				formListAdd(0, new String[]{gameText[TEXT_ENCIERRO][0] + " " + (i + 1), "" + levelPoints[i]}, 0, (ferminesItem[i] != 0 ? i : -1));
+			}
+			formListAdd(0, new String[]{gameText[TEXT_SOBREVIVE][0], "" + levelPoints[8]}, 0, -1);
+
+			formBottomText = gameText[TEXT_RECORD_ACTUAL];
+
+			formResultStageSelect = true;
+			formResultMode = FORM_LISTADO_LEVEL;
+
+			pos = levelSelected;
+			formInit(FORM_LISTADO, pos, MENU_ACTION_MENU_EXIT, MENU_ACTION_MENU_EXIT_OK);
+
+			// Centramos la opcion seleccionada en el area de vision
+			formListIni = formListPos - (formListView / 2);
+			if (formListIni < 0) {
+				formListIni = 0;
+			} else if (formListIni > formListStr.length - formListView) {
+				formListIni = formListStr.length - formListView;
+			}
+
+			listenerInit(SOFTKEY_BACK, SOFTKEY_ACEPT);
+
+			biosWaitInit();
+		}
+		else
+		{
+			biosWaitEnd();
+			if (menuAcept) {
+				levelSelected = formListPos;
+
+				//#ifndef BUILD_ONE_PLAYER
+				if (playerSelectFlag) {
+					menuInit(MENU_PLAYER_SELECT);
+				} else {
+					biosExit = true;
+				}
+				//#else
+				//#endif
+
+			} else {
+				menuInitBack();
+			}
 		}
 	break;
 
@@ -12548,26 +9487,28 @@ public void menuInit(int type, int pos)
 //#ifndef BUILD_ONE_PLAYER
 	case MENU_PLAYER_SELECT:
 
-		formLogoInit(FORM_LOGO_HEIGHT);
+		if(!biosWaitComplete) {
+			formLogoInit(FORM_LOGO_HEIGHT);
 
-		formTitleInit(gameText[TEXT_PLAYER_SELECT][0]);
+			formTitleInit(gameText[TEXT_PLAYER_SELECT][0]);
 
-		for (int i=0 ; i<2 ; i++)
-		{
-			formListAdd(0, gameText[TEXT_PLAYERS_NAMES][i], MENU_ACTION_MENU_EXIT_OK);
+			for (int i = 0; i < 2; i++) {
+				formListAdd(0, gameText[TEXT_PLAYERS_NAMES][i], MENU_ACTION_MENU_EXIT_OK);
+			}
+
+			formInit(FORM_PLAYER_SELECT, pos, MENU_ACTION_MENU_EXIT, MENU_ACTION_MENU_EXIT_OK);
+
+			listenerInit(SOFTKEY_BACK, SOFTKEY_ACEPT);
+
+			biosWaitInit();
 		}
-
-		formInit(FORM_PLAYER_SELECT, pos, MENU_ACTION_MENU_EXIT, MENU_ACTION_MENU_EXIT_OK);
-
-		listenerInit(SOFTKEY_BACK, SOFTKEY_ACEPT);
-
-		biosWait();
-
-		if (menuAcept)
-		{
-			biosExit = true;
-		} else {
-			menuInitBack();
+		else {
+			biosWaitEnd();
+			if (menuAcept) {
+				biosExit = true;
+			} else {
+				menuInitBack();
+			}
 		}
 	break;
 //#endif
@@ -12714,15 +9655,6 @@ public void menuInit(int type, int pos)
 		String fichaName = "/i"+cacheImageId[cacheP[publiPos]];
 
 		//#ifdef HACK_XX65
-		
-		if(canvasHeight < 140) {
-			
-			if(fichaName.equals("/i1")) {
-		
-				fichaName = "/i1c65";
-			}
-		}
-		
 		//#endif
 		
 		img = rmsLoadImage(fichaName);
@@ -12803,8 +9735,6 @@ public void menuInit(int type, int pos)
 		formInit(FORM_LISTADO, pos, MENU_ACTION_BACK, MENU_ACTION_HI_SCORES);
 		listenerInit(SOFTKEY_BACK, SOFTKEY_ACTUALIZAR);
 	//#else
-		formInit(FORM_LISTADO, pos, MENU_ACTION_BACK, MENU_ACTION_NONE);
-		listenerInit(SOFTKEY_BACK, SOFTKEY_NONE);
 	//#endif
 
 	// Centramos la opcion seleccionada en el area de vision
@@ -13062,11 +9992,6 @@ public void menuAction(int cmd)
 
 
 //#ifdef BUILD_MORE_GAMES_POPUP
-	case MENU_ACTION_MORE_GAMES_POPUP:	// Mostramos Menu "Mas juegos"
-
-		popupInitInfo(null, gameText[TEXT_MORE_GAMES_POPUP]);
-		biosWait();
-	break;
 //#endif
 
 
@@ -13142,8 +10067,6 @@ public void menuAction(int cmd)
 	// Regresamos al menu que lanzo la peticion de actualizar scores
 		menuInitBack();
 //#else
-		menuRelease();
-		menuInit(MENU_SCORES);
 //#endif
 	break;
 
@@ -13274,6 +10197,7 @@ public void menuAction(int cmd)
 	//#if !DISABLE_BROWSER && FEATURE_LAUNCH_BROWSER
 		soundStop();
 
+		/* MONGOFIX
 		try {
 			ga.platformRequest(cacheURL[cacheP[publiPos]]);
 		} catch (Exception e)
@@ -13287,20 +10211,20 @@ public void menuAction(int cmd)
 			popupInitInfo(null, new String[] {cacheAltTxt[cacheP[publiPos]]});
 			biosWait();
 			break;
-		}
+		}*/
 
 		//#ifndef FIX_LAUNCH_BROWSER_NO_EXIT
 			biosExit = true;
 			gameExit = true;
 		//#else
-			// Preparamos info para tocar musica al salir de "Juego en Pausa"
+		/*	// Preparamos info para tocar musica al salir de "Juego en Pausa"
 			gameSoundOld = MUSIC_MENU;
 			gameSoundLoop = 0;
-			notifyHecho = true;
+			notifyHecho = true;*/
 		//#endif
 	//#else
-		popupInitInfo(null, new String[] {cacheAltTxt[cacheP[publiPos]]});
-		biosWait();
+	//	popupInitInfo(null, new String[] {cacheAltTxt[cacheP[publiPos]]});
+//		biosWait();
 	//#endif
 	break;
 //#endif
@@ -13549,20 +10473,12 @@ AnimationBank animBank, animBankVasco, animBankChica, animBankTorero, animBankTo
 //#endif
 
 //#ifdef S40
-
-static final int tileWidth = 12;
-static final int tileHeight = 12;
-
 //#elifdef S60
 
 static final int tileWidth = 16;
 static final int tileHeight = 16;
 
 //#elifdef S80
-
-static final int tileWidth = 24;
-static final int tileHeight = 24;
-
 //#endif
 
 
@@ -13578,7 +10494,6 @@ byte[] faseCom;
 	byte[] tilesCor;
 	Image tilesImg;
 //#elifdef DOJA
-	Image[] tilesImg;
 //#endif
 
 
@@ -13609,13 +10524,11 @@ public void playCreate()
 		tilesCor = loadFile("/tiles.cor");
 
 		//#ifdef HIDE_MULTI_PALETE
-			if (tilesImg == null) tilesImg = loadImage("/tiles");
 	    //#else
-			tilesImg = loadImage("/tiles", "tiles_c"+(levelSelected%4)+".pal");
+			tilesImg = loadImage("/tiles", "/tiles_c"+(levelSelected%4)+".pal");
 	    //#endif
 
 	//#elifdef DOJA
-		tilesImg = loadImage("/tiles/", 70);
 	//#endif
 // ====================================
 
@@ -13648,7 +10561,6 @@ public void playCreate()
 	//#ifdef J2ME
 		scrollInit(faseMap, faseCom, faseWidth, faseHeight, tilesImg, tilesCor, 14, 5);
 	//#elifdef DOJA
-		scrollInit(faseMap, faseCom, faseWidth, faseHeight, tilesImg);
 	//#endif
 // ====================================
 //#endif
@@ -13662,97 +10574,91 @@ public void playCreate()
 	//#endif
 //#endif
 
-
-
-
-
-
-//#ifdef BUILD_ANIMATOR
+// #ifdef BUILD_ANIMATOR
 // ------------------------------------
 // Cargamos e inicializamos Re-Animator
 // ====================================
 	//#ifdef S60
-		int spritesMode = 0;
+	int spritesMode = 0;
 	//#else
-		int spritesMode = 1;
 	//#endif
-	
-		try {
+
+	try {
 //		 Indicamos la raiz donde estan los recursos ubicados
-			if(playerSelected == 0) {
-				
-				if(animBankVasco == null) {
-					
-					AnimationBank.DATA_DIR = "/vasco";
-//				 	Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)					
-					animBankVasco = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);
-				}
-				
-				animBank = animBankVasco;
-								
-			} 
-			
+		if(playerSelected == 0) {
+
+			if(animBankVasco == null) {
+
+				AnimationBank.DATA_DIR = "/vasco";
+//				 	Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)
+				animBankVasco = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);
+			}
+
+			animBank = animBankVasco;
+
+		}
+
 //#ifndef BUILD_ONE_PLAYER
-			
-			if(playerSelected == 1) {
-				
-				if(animBankChica == null) {
-				
-					AnimationBank.DATA_DIR = "/chica";
+
+		if(playerSelected == 1) {
+
+			if(animBankChica == null) {
+
+				AnimationBank.DATA_DIR = "/chica";
 //			 		Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)
-					animBankChica = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);
-				}
-				
-				animBank = animBankChica;
+				animBankChica = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);
 			}
-			if(playerSelected == 2) {
-				
-				if(animBankTorero == null) {
-				
-					AnimationBank.DATA_DIR = "/torero";
+
+			animBank = animBankChica;
+		}
+		if(playerSelected == 2) {
+
+			if(animBankTorero == null) {
+
+				AnimationBank.DATA_DIR = "/torero";
 //			 		Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)
-					animBankTorero = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);
-				}
-				
-				animBank = animBankTorero;
-				
+				animBankTorero = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);
 			}
-						
-//#endif						
-						
+
+			animBank = animBankTorero;
+
+		}
+
+//#endif
+
 //		 Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)
-			
+
 		if(animBankToro == null) {
 
 //			 Indicamos la raiz donde estan los recursos ubicados
-			AnimationBank.DATA_DIR = "/toro";			
+			AnimationBank.DATA_DIR = "/toro";
 			animBankToro = new AnimationBank(TORITO_B0, spritesMode);
-			
+
 		}
-			
-//#ifndef NONPCS			
-									
+
+//#ifndef NONPCS
+
 //		 Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)
 		if(animBankVasco != null) {
-			
+
 			animBankNpc = animBankVasco;
-			
+
 		} else {
-			
+
 //		 	Indicamos la raiz donde estan los recursos ubicados
 			AnimationBank.DATA_DIR = "/vasco";
-//		 	Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)					
-			animBankVasco = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);		
-		
+//		 	Contruimos el banco de animacion (cargamos en memoria TODOS los recursos, binarios y graficos)
+			animBankVasco = new AnimationBank(PRUEBAS_VASCO_B0, spritesMode);
+
 			animBankNpc = animBankVasco;
 		}
-	//#endif
-										
-		} catch (Exception e) {}
+		//#endif
+
+	} catch (Exception e) {
+		Gdx.app.log("Animator load exception", e.toString());
+	}
 // ====================================
 //#endif
-
-
 		
 //#ifdef DEBUG_PC_USED_MEM
 	System.gc(); System.out.println("** conAnimator: "+(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
@@ -13771,11 +10677,6 @@ public void playCreate()
 			//#ifdef J2ME
 			obstaclesImg = loadImage("/obstacles");
 			//#elifdef DOJA
-				//#ifdef S60
-				obstaclesImg = loadImage("/obstacles/",38);
-				//#else
-				obstaclesImg = loadImage("/obstacles/",24);
-				//#endif
 			//#endif
 			obstaclesCor = loadFile("/obstacles.cor");
 		}
@@ -13790,7 +10691,6 @@ public void playCreate()
 			//#ifdef J2ME
 			miscImg = loadImage("/misc");
 			//#elifdef DOJA
-			miscImg = loadImage("/misc/",51);
 			//#endif
 			
 			miscCor = loadFile("/misc.cor");
@@ -13819,8 +10719,6 @@ public void playCreate()
 	 
 		
 //#ifdef SPRITEBACKGROUND
-	if (groundImg == null) {groundImg = loadImage("/ground");}
-	if (doorImg == null) {doorImg = loadImage("/door");}
 //#endif
 }
 
@@ -13831,7 +10729,6 @@ public void playCreate()
 public void playDestroy()
 {
 //#ifndef FIX_GC_GRAPHICS
-	tilesImg = null;
 //#endif
 	
 //#ifndef HIDE_SCROLL
@@ -13848,7 +10745,7 @@ public void playDestroy()
 //#endif
 	
 	//#ifndef FIX_GC_GRAPHICS
-	
+	/*
 	//#ifndef DOJA
 		AnimationBank.releaseUnusedResources(animBank);
 		AnimationBank.releaseUnusedResources(animBankToro);
@@ -13872,7 +10769,7 @@ public void playDestroy()
 	//#ifndef NONPCS
 	animBankNpc = null;
 	//#endif
-
+*/
 
 //#ifndef FIX_GC_GRAPHICS
 		obstaclesImg = null;
@@ -13896,8 +10793,6 @@ public void playDestroy()
 	
 //#ifndef FIX_GC_GRAPHICS
 	//#ifdef SPRITEBACKGROUND
-		groundImg = null;
-		doorImg = null;
 	//#endif
 //#endif
 
@@ -13989,7 +10884,6 @@ public void playInit()
 	wideScreenTop = levelSelected == 0 ? canvasHeight / 3 : 0;
 	wideScreenBot = 0;
 	//#ifdef S80
-	screenBarSize = 40;
 	//#else
 	screenBarSize = 20;
 	//#endif
@@ -14106,9 +11000,6 @@ public boolean playTick()
 	gameTicks ++;
 	
 	//#ifdef FAST150
-	if(gameTicks % 3 == 0) {    	
-		gameTicks++;
-	}
 	//#endif
 	
 	
@@ -14411,7 +11302,6 @@ public boolean playTick()
 		}
 		
 		//#ifdef S80
-		if(screenBarSize < 40) {
 		//#else
 		if(screenBarSize < 20*gameText[TEXT_ENCIERRO_COMPLETADO].length) {
 		//#endif
@@ -14470,17 +11360,9 @@ public void playDraw()
 {
 	
 	//#ifdef FRAMESKIP
-	if(gameTicks % 2 == 0) {
-	
-		return;
-	}
 	//#endif
 	
 	//#ifdef FRAMESKIP1OF3
-	if(gameTicks % 3 == 0) {
-	
-		return;
-	}
 	//#endif
 			
 	//fillDraw(0, 0, 0, canvasWidth, canvasHeight);
@@ -14488,52 +11370,7 @@ public void playDraw()
 	cameraTarget = camera; 
 
 	//#ifdef SMALLBACKGROUND
-	// 24, 48
-	int scrollx = isoX(cameraTarget.iBboxBotX, 
- 		   (cameraTarget.iBboxBotY % 384) + 288),
- 		   
- 		scrolly = isoY(cameraTarget.iBboxBotX, 
-	    	   (cameraTarget.iBboxBotY % 384) + 288, 
-	    	   cameraTarget.iBboxBotZ) + 176 + 98;
-			
 	//#elifdef SPRITEBACKGROUND
-	
-	int scrollx = isoX(cameraTarget.iBboxBotX, 	 		   
-				(cameraTarget.iBboxBotY % 128) + 128) + 192,
-				
-	 	scrolly = isoY(cameraTarget.iBboxBotX, 
-		    	   (cameraTarget.iBboxBotY % 128) + 128,	 			
-		    	   cameraTarget.iBboxBotZ) + 
-		    	   
-		    	   //#ifdef H270
-		    	   - 154;
-		    	   //#elifdef H182
-		    	   - 202;
-		    	   //#elifdef H180
-		    	   - 196;
-		    	   //#elifdef H176
-		    	   - 195;
-		    	   //#elifdef H173
-		    	   - 194;
-		    	   //#elifdef H160
-		    	   - 170;
-		    	   //#elifdef H144
-		    	   - 180;		    	   
-		    	   //#elifdef H142
-		    	   - 160;
-		    	   //#elifdef H140		    	   
-		    	   - 160;
-		    	   //#elifdef H131
-	   			   - 156;
-				   //#elifdef H130
-	   			   - 156;
-	   			   //#elifdef H128
-	   			   - 150;
-				   //#elifdef H80
-				   - 112;
-		    	   //#else
-		    	   - 144;
-				   //#endif		
 	//#else
 	// 38, 60
 	int scrollx = isoX(cameraTarget.iBboxBotX, 
@@ -14546,15 +11383,7 @@ public void playDraw()
 			    	   //#ifdef S60
 			    	   -64;
 					   //#elifdef S40
-							//#ifdef H176
-							-48;
-							//#elifdef H160
-							-43;
-							//#else
-							-38;
-							//#endif					   
 					   //#elifdef S80
-					   -102;
 					   //#endif
 	//#endif
 	
@@ -14570,81 +11399,27 @@ public void playDraw()
 // ----------------------------
 // Gestionamos las coordenadas del scroll del juego
 // ============================
-	
-//#ifdef DEBUG
-	Debug.spdStart(2);
-//#endif	
-	
+
+	//#ifdef DEBUG
+		Debug.spdStart(2);
+	//#endif
+
 	//scrollTick_Center(scrollx, scrolly);
 	scrollTick_Center(scrollx, scrolly);
 // ============================
 
-//#ifdef DEBUG
-	Debug.spdStop(2);
-	Debug.spdStart(3);
-//#endif	
-	
+	//#ifdef DEBUG
+		Debug.spdStop(2);
+		Debug.spdStart(3);
+	//#endif
+
 // ----------------------------
 // Renderizamos el scroll del juego
 // ============================
 	scrollDraw(scr);
 // ============================
 //#else
-	
-//#ifdef SPRITEBACKGROUND	
-	
-	//System.out.println("("+(scrollx - cameraIsoX)+","+(scrolly - cameraIsoY)+")");
-		
-	//#ifdef S40
-	
-	fillDraw(0xd4cdbd,0,0,canvasWidth,canvasHeight);
-	fillDraw(0x000000,canvasWidth/4,2*canvasHeight/3,canvasWidth - canvasWidth/4,canvasHeight/3 + 1);
-	
-	if(-scrollx + 48 >= 0) {
-		imageDraw(groundImg,0,0,48,120,-scrollx,-scrolly);
-	}
-	
-	imageDraw(groundImg,0,0,48,120,-scrollx + 48,-scrolly - 24);
-	imageDraw(groundImg,0,0,48,120,-scrollx + 96,-scrolly - 48);
-	imageDraw(groundImg,0,0,48,120,-scrollx + 144,-scrolly - 72);
-	
-	if(-scrollx + 192 < canvasWidth) {
-		
-		imageDraw(groundImg,0,0,48,120,-scrollx + 192,-scrolly - 96);
-		
-		//#if W162 || W176
-		imageDraw(groundImg,0,0,48,120,-scrollx + 240,-scrolly - 120);
-		//#endif
-	}
-	
-	imageDraw(doorImg,0,0,36,66,-scrollx,-scrolly - 62 + 24);	
-	imageDraw(doorImg,0,0,36,66,-scrollx + 96,-scrolly - 62 - 24);
-	imageDraw(doorImg,0,0,36,66,-scrollx + 192,-scrolly - 62 - 72);
-	
-	//#elifdef S60
-	
-	fillDraw(0xd4cdbd,0,0,canvasWidth,canvasHeight);
-	fillDraw(0x000000,canvasWidth/4,2*canvasHeight/3,canvasWidth - canvasWidth/4,canvasHeight/3 + 1);
-	
-	if(-scrollx - 64 > -64) {
-		
-		imageDraw(groundImg,0,0,64,160,-scrollx - 64,-scrolly + 106 + 32);	
-	}
-	imageDraw(groundImg,0,0,64,160,-scrollx,-scrolly + 106);
-	imageDraw(groundImg,0,0,64,176,-scrollx + 64,-scrolly + 106 - 32);
-	imageDraw(groundImg,0,0,64,160,-scrollx + 128,-scrolly + 106 - 64);
-	imageDraw(groundImg,0,0,64,160,-scrollx + 192,-scrolly + 106 - 96);
-	
-	if(-scrollx + 192 < canvasWidth) {
-	
-		imageDraw(groundImg,0,0,64,160,-scrollx + 256,-scrolly + 106 - 128);
-	}
-	
-	imageDraw(doorImg,0,0,48,104,-scrollx,-scrolly + 26 + 32);	
-	imageDraw(doorImg,0,0,48,104,-scrollx + 128,-scrolly + 26 - 32);
-	imageDraw(doorImg,0,0,48,104,-scrollx + 256,-scrolly + 26 - 96);
-	
-	//#endif
+
 		
 //#endif
 
@@ -14697,14 +11472,10 @@ public void playDraw()
 	int iy;
 				
 	//#ifdef SMALLMAPWINDOW
-	int windowBotY = (camera.iBboxBotY/Entity.TILE_WIDTH)*Entity.TILE_WIDTH - 100;
-	int windowTopY = (camera.iBboxBotY/Entity.TILE_WIDTH)*Entity.TILE_WIDTH + 100;
 	//#elifdef LARGEMAPWINDOW
 	int windowBotY = (camera.iBboxBotY/Entity.TILE_WIDTH)*Entity.TILE_WIDTH - 160;
 	int windowTopY = (camera.iBboxBotY/Entity.TILE_WIDTH)*Entity.TILE_WIDTH + 140;
 	//#else
-	int windowBotY = (camera.iBboxBotY/Entity.TILE_WIDTH)*Entity.TILE_WIDTH - 140;
-	int windowTopY = (camera.iBboxBotY/Entity.TILE_WIDTH)*Entity.TILE_WIDTH + 120;
 	//#endif
 	
 	//#ifndef ONERENDERSTEP	
@@ -14726,15 +11497,11 @@ public void playDraw()
 					ix = screenIsoX(x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2,mapY*Entity.TILE_WIDTH);
 					iy = screenIsoY(x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2,mapY*Entity.TILE_WIDTH + Entity.TILE_WIDTH/2,0);
 					
-					//#ifdef S40					
-					ix -= 13;
-					iy -= 32;
+					//#ifdef S40
 					//#elifdef S60					
 					ix -= 18;
 					iy -= 43;
-					//#elifdef S80					
-					ix -= 26;
-					iy -= 39 + 22;
+					//#elifdef S80
 					//#endif
 										
 					switch(tileValue) {
@@ -14880,16 +11647,12 @@ public void playDraw()
 					//=======================================
 					
 					//#ifdef S40
-					
-					int sx = (3*(x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2 - mapY*Entity.TILE_WIDTH))/4;
-					
+
 					//#elifdef S60
 					
 					int sx = x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2 - mapY*Entity.TILE_WIDTH;
 					
 					//#elifdef S80
-					
-					int sx = (3*(x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2 - mapY*Entity.TILE_WIDTH))/2;					
 					
 					//#endif
 					
@@ -14908,18 +11671,11 @@ public void playDraw()
 					
 					//#ifdef S40
 					
-					int sy = (3*(((mapY*Entity.TILE_WIDTH + Entity.TILE_WIDTH/2)>>1) + ((x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2)>>1)))/4;
-					
 					//#elifdef S60
 					
 					int sy = ((mapY*Entity.TILE_WIDTH + Entity.TILE_WIDTH/2)>>1) + ((x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2)>>1);
 					
 					//#elifdef S80
-					
-					int sy = (3*(((mapY*Entity.TILE_WIDTH + Entity.TILE_WIDTH/2)>>1) + ((x*Entity.TILE_WIDTH - Entity.STREET_WIDTH/2)>>1)))/2;
-					
-					
-					
 					//#endif
 					
 					//=======================================
@@ -14931,65 +11687,23 @@ public void playDraw()
 					2*canvasHeight/3 + 20
 					
 					//#elifdef S40
-					
-					2*canvasHeight/3 + 10
-					
 					//#elifdef S80
-					
-					2*canvasHeight/3 + 30
-										
 					//#endif
 					
 					+ sy - cameraIsoY;
 					
 					//============================================================================================
 					
-					//#ifdef S40					
-					ix -= 13;
-					iy -= 32;
+					//#ifdef S40
 					//#elifdef S60					
 					ix -= 18;
 					iy -= 43;
 					//#elifdef S80
-					ix -= 26;
-					iy -= 39 + 22;
 					//#endif
 														
 					switch(tileValue) {
 					
 						//#ifdef ONERENDERSTEP
-					
-						case 1 :
-						spriteDraw(obstaclesImg,  ix, iy,  5, obstaclesCor);
-						break;
-							
-						case 2 :
-						spriteDraw(obstaclesImg,  ix, iy,  4, obstaclesCor);
-						break;
-										
-						case 5 :
-						spriteDraw(obstaclesImg,  ix, iy,  1, obstaclesCor);
-						break;
-							
-						case 6 :
-						spriteDraw(obstaclesImg,  ix, iy,  0, obstaclesCor);
-						break;			
-																							
-						case 15 :
-						spriteDraw(obstaclesImg,  ix, iy,  16, obstaclesCor);
-						break;
-						
-						case 23 :
-						spriteDraw(obstaclesImg,  ix, iy,  17, obstaclesCor);
-						break;
-						
-						case 24 :
-						spriteDraw(obstaclesImg,  ix, iy,  18, obstaclesCor);
-						break;
-						
-						case 25 :
-						spriteDraw(obstaclesImg,  ix, iy,  19, obstaclesCor);
-						break;																
 						//#endif
 												
 						case 3 :						
@@ -15039,9 +11753,7 @@ public void playDraw()
 						//#ifdef S60
 						spriteDraw(miscImg, ix + 5, iy + 11, 72, miscCor);
 						//#elifdef S40
-						spriteDraw(miscImg, ix + 4, iy + 8, 72, miscCor);
 						//#elifdef S80
-						spriteDraw(miscImg, ix + 6, iy + 14, 72, miscCor);
 						//#endif
 						break;
 						
@@ -15285,7 +11997,6 @@ public void playRefresh()
 //#ifdef J2ME
 Image obstaclesImg, hudImg, miscImg;
 //#elifdef DOJA
-Image obstaclesImg[], hudImg, miscImg[];
 //#endif
 byte obstaclesCor[], miscCor[];
 int wideScreenTop, wideScreenBot, screenBarSize = 0;
@@ -15294,7 +12005,6 @@ String tutorialMsg[], tutorialText[][];
 int tutorialStep;
 
 //#ifdef SPRITEBACKGROUND
-Image groundImg, doorImg;
 //#endif
 
 public static final int NUM_BULLS = 3;
@@ -15313,17 +12023,11 @@ int cameraIsoY;
 public int isoX(int x, int y) {
 
 	//#ifdef S40
-	
-	return (3*(x - y))/4;
-	
 	//#elifdef S60
 	
 	return x - y;
 	
 	//#elifdef S80
-	
-	return (3*(x - y))/2;
-			
 	//#endif
 	
 }
@@ -15331,17 +12035,11 @@ public int isoX(int x, int y) {
 public int isoY(int x, int y, int z) {
 
 	//#ifdef S40
-	
-	return (3*((y>>1) + (x>>1) - z))/4;
-	
 	//#elifdef S60
 	
 	return (y>>1) + (x>>1) - z;
 	
 	//#elifdef S80
-	
-	return (3*((y>>1) + (x>>1) - z))/2;
-			
 	//#endif
 	
 	
@@ -15361,13 +12059,7 @@ public int screenIsoY(int x, int y, int z) {
 	2*canvasHeight/3 + 20
 	
 	//#elifdef S40
-	
-	2*canvasHeight/3 + 10
-
 	//#elifdef S80
-	
-	2*canvasHeight/3 + 30
-		
 	//#endif
 	
 	+ isoY(x, y, z) - cameraIsoY;
@@ -15488,7 +12180,6 @@ public void renderEntity(Entity e){
 			//#ifndef NOSHADOWS			
 			
 				//#ifdef S80
-				drawEntityShadow(e, 15);
 				//#else
 				drawEntityShadow(e, 10);
 				//#endif
@@ -15504,9 +12195,7 @@ public void renderEntity(Entity e){
 					//#ifdef S60
 					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY), screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-45, 8 + (e.ticks % 4), miscCor);
 					//#elifdef S40
-					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY), screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-34, 8 + (e.ticks % 4), miscCor);
 					//#elifdef S80
-					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY), screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-57, 8 + (e.ticks % 4), miscCor);
 					//#endif
 					
 				}
@@ -15518,9 +12207,7 @@ public void renderEntity(Entity e){
 					//#ifdef S60
 					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-20, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-27, 8 + (e.ticks % 4), miscCor);
 					//#elifdef S40
-					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-15, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-20, 8 + (e.ticks % 4), miscCor);
 					//#elifdef S80
-					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-30, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-35, 8 + (e.ticks % 4), miscCor);
 					//#endif
 				}
 				
@@ -15529,9 +12216,7 @@ public void renderEntity(Entity e){
 					//#ifdef S60
 					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-2, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-48, 8 + (e.ticks % 4), miscCor);
 					//#elifdef S40
-					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-2, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-36, 8 + (e.ticks % 4), miscCor);
 					//#elifdef S80
-					spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-2, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-68, 8 + (e.ticks % 4), miscCor);
 					//#endif
 					
 				}
@@ -15544,9 +12229,7 @@ public void renderEntity(Entity e){
 				//#ifdef S60
 				spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-25, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-19 , 72, miscCor);
 				//#elifdef S40
-				spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-19, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-14 , 72, miscCor);
 				//#elifdef S80
-				spriteDraw(miscImg, screenIsoX(e.iBboxBotX, e.iBboxBotY)-31, screenIsoY(e.iBboxBotX, e.iBboxBotY, e.iBboxBotZ)-32 , 72, miscCor);
 				//#endif
 			}		
 			
@@ -15570,9 +12253,7 @@ public void renderEntity(Entity e){
 				//#ifdef S60
 				spriteDraw(miscImg, ix - 22, iy - 47, 48, miscCor);
 				//#elifdef S40
-				spriteDraw(miscImg, ix - 16, iy - 32, 48, miscCor);
 				//#elifdef S80
-				spriteDraw(miscImg, ix - 32, iy - 64, 48, miscCor);
 				//#endif
 			}
 			break;
@@ -15586,9 +12267,7 @@ public void renderEntity(Entity e){
 			//#ifdef S60
 			spriteDraw(miscImg, ix - 22, iy - 22, 56 + (e.ticks >= 10 ? 4 : e.ticks / 2), miscCor);
 			//#elifdef S40
-			spriteDraw(miscImg, ix - 16, iy - 16, 56 + (e.ticks >= 10 ? 4 : e.ticks / 2), miscCor);
 			//#elifdef S80
-			spriteDraw(miscImg, ix - 32, iy - 32, 56 + (e.ticks >= 10 ? 4 : e.ticks / 2), miscCor);
 			//#endif
 			
 									
@@ -15605,11 +12284,7 @@ public void renderEntity(Entity e){
 			ix -= 22;
 			iy -= 22;
 			//#elifdef S40
-			ix -= 17;
-			iy -= 17;
 			//#elifdef S80
-			ix -= 34;
-			iy -= 34;
 			//#endif
 						
 			//#ifndef NOSHADOWS
@@ -15617,7 +12292,6 @@ public void renderEntity(Entity e){
 			if(e.entitySubclass != Entity.PARTICLE_SUBCLASS_SMOKE && e.entitySubclass != Entity.PARTICLE_SUBCLASS_SMOKE2 && e.entitySubclass != Entity.PARTICLE_SUBCLASS_WATERDROP) {
 			
 				//#ifdef S80
-				drawEntityShadow(e, 9);
 				//#else
 				drawEntityShadow(e, 6);
 				//#endif				
@@ -15639,7 +12313,6 @@ public void renderEntity(Entity e){
 					
 				case Entity.PARTICLE_SUBCLASS_ROSEPLUS1:	
 					//#ifdef S80
-					printSetArea(screenIsoX(e.rPosX>>8,e.rPosY>>8) - 24,screenIsoY(e.rPosX>>8,e.rPosY>>8,e.rPosZ>>8) - 24,48,48);
 					//#else
 					printSetArea(screenIsoX(e.rPosX>>8,e.rPosY>>8) - 8,screenIsoY(e.rPosX>>8,e.rPosY>>8,e.rPosZ>>8) - 8,16,16);
 					//#endif
@@ -15649,7 +12322,6 @@ public void renderEntity(Entity e){
 					
 				case Entity.PARTICLE_SUBCLASS_ROSEPLUS5:					
 					//#ifdef S80
-					printSetArea(screenIsoX(e.rPosX>>8,e.rPosY>>8) - 24,screenIsoY(e.rPosX>>8,e.rPosY>>8,e.rPosZ>>8) - 24,48,48);
 					//#else
 					printSetArea(screenIsoX(e.rPosX>>8,e.rPosY>>8) - 8,screenIsoY(e.rPosX>>8,e.rPosY>>8,e.rPosZ>>8) - 8,16,16);
 					//#endif
@@ -15920,31 +12592,6 @@ public void hudDraw() {
 		//#ifdef S60
 		
 		//#ifdef PRIMITIVEHUD
-				
-		int barx = (canvasWidth - 176) / 2;
-		int barStart = barx + 5;
-		int barLength = 150;					
-		int mapx;
-		
-		fillDraw(0x5e905c,barStart,4,176,7);
-		
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));
-				
-		fillDraw(0x000000, barStart, 5, barLength, 5);
-				
-		fillDraw(0xff0000, barStart, 5, barLength - mapx, 5);
-		
-		for(int i = 0; i < bull.length; i++) {
-						
-			mapx = ((bull[i].iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));			
-			fillCircleDraw(0x000000, barStart + barLength - mapx - 7, 4, 8, 8);
-			
-		}
-		
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));		
-		fillCircleDraw(0xff9966, barStart + barLength - mapx - 7, 4, 8, 8);
-		
-		
 		//#else
 						
 		int barx = (canvasWidth - 176) / 2;
@@ -15990,122 +12637,7 @@ public void hudDraw() {
 		//#endif
 		
 		//#elifdef S40
-		
-		//#ifdef PRIMITIVEHUD
-				
-				
-		int barx = (canvasWidth - 128) / 2;
-		int barStart = barx + 3;
-		int barLength = 113;					
-		int mapx;
-		
-		fillDraw(0x5e905c,barStart,2,128,4);
-		
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));
-				
-		fillDraw(0x000000, barStart, 3, barLength, 2);
-				
-		fillDraw(0xff0000, barStart, 3, barLength - mapx, 2);
-		
-		for(int i = 0; i < bull.length; i++) {
-						
-			mapx = ((bull[i].iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));			
-			fillCircleDraw(0x000000, barStart + barLength - mapx - 5, 1, 6, 6);
-			
-		}
-		
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));		
-		fillCircleDraw(0xff9966, barStart + barLength - mapx - 5, 1, 6, 6);
-		
-		
-		//#else
-		
-		imageDraw(hudImg,0,0,128,9,0,1);
-		imageDraw(hudImg,116,9,12,5,116,9);
-		
-		int barx = (canvasWidth - 128) / 2;
-		int barStart = barx + 3;
-		int barLength = 113;					
-		int mapx;
-		
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));
-		
-		imageDraw(hudImg, 0, 9, barLength - mapx, 2, 3, 4);
-					
-				
-		for(int i = 0; i < bull.length; i++) {
-											
-			//scr.setColor(0x000000);
-			mapx = ((bull[i].iBboxBotY * (canvasWidth - 10))/(Entity.TILE_WIDTH * Entity.mapLength));
-			imageDraw(hudImg, 111,28,10,8, barStart + barLength - mapx - 5, 2);
-			
-		}
-		
-		//scr.setColor(0xffff00);
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));
-		
-		switch(runner.entitySubclass) {
-		
-			case Entity.PLAYER_SUBCLASS_VASCO:
-				imageDraw(hudImg, 82,28,7,8, barStart + barLength - mapx - 4, 2);
-			break;
-			
-			case Entity.PLAYER_SUBCLASS_CHICA:
-				imageDraw(hudImg, 91,29,10,7, barStart + barLength - mapx - 5, 2);
-			break;
-				
-			case Entity.PLAYER_SUBCLASS_TORERO:
-				imageDraw(hudImg, 102,29,8,7, barStart + barLength - mapx - 4, 2);
-			break;
-		
-		}
-		
-		//#endif
-		
 		//#elifdef S80
-		
-		int barx = (canvasWidth - 240) / 2;
-		int barStart = barx + 6;
-		int barLength = 224;					
-		int mapx;
-		
-		imageDraw(hudImg,0,0,240,17,barx,1);
-		imageDraw(hudImg,223,17,17,7,barx+223,17);
-		
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));
-		
-		imageDraw(hudImg, 0, 17, barLength - mapx, 7, barx + 6, 6);
-					
-				
-		for(int i = 0; i < bull.length; i++) {
-											
-			//scr.setColor(0x000000);
-			mapx = ((bull[i].iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));
-			imageDraw(hudImg, 212,56,26,20,barStart + barLength - mapx - 13, 0);
-			
-		}
-		
-		//scr.setColor(0xffff00);
-		mapx = ((runner.iBboxBotY * (barLength))/(Entity.TILE_WIDTH * Entity.mapLength));
-		
-		switch(runner.entitySubclass) {
-		
-			case Entity.PLAYER_SUBCLASS_VASCO:
-				imageDraw(hudImg, 160,59,15,16, barStart + barLength - mapx - 7, 3);
-			break;
-			
-			case Entity.PLAYER_SUBCLASS_CHICA:
-				imageDraw(hudImg, 175,59,21,15, barStart + barLength - mapx - 10, 3);
-			break;
-				
-			case Entity.PLAYER_SUBCLASS_TORERO:
-				imageDraw(hudImg, 196,60,26,15, barStart + barLength - mapx - 13, 3);
-			break;
-		
-		}
-		
-		
-				
 		//#endif
 											
 	}
@@ -16115,21 +12647,12 @@ public void hudDraw() {
 	if(runner.miscData[Entity.PLAYER_DATA_TURBOS] > 0) {
 				
 		//#ifdef S60
-			//#ifdef PRIMITIVEHUD			
-			fillCircleDraw(0x000000,7,16,27,24);
-			spriteDraw(miscImg, -2, 5, 0, miscCor);
+			//#ifdef PRIMITIVEHUD
 			//#else
 			imageDraw(hudImg,84,25,29,26,2,16);
 			//#endif
 		//#elifdef S40
-			//#ifdef PRIMITIVEHUD			
-			fillCircleDraw(0x000000,1,12,20,18);
-			spriteDraw(miscImg, -5, 4, 0, miscCor);
-			//#else
-			imageDraw(hudImg,62,17,20,19,1,12);
-			//#endif
 		//#elifdef S80
-		imageDraw(hudImg,125,47,35,29,3,24);	
 		//#endif
 				
 	}
@@ -16137,26 +12660,6 @@ public void hudDraw() {
 	//#ifdef S60
 	
 	//#ifdef PRIMITIVEHUD
-	
-	vel = (vel * 33) / 26;
-	
-	fillDraw(0xff0000, canvasWidth - 79 + 31, canvasHeight - 15, 79, 16);
-	
-	fillDraw(0x808080, canvasWidth - 37 + 25, canvasHeight - 40, 10, 37);	
-	fillDraw(0x000000,canvasWidth - 36 + 25, canvasHeight - 39, 8, 35);		
-	fillDraw(0xd9ff00,canvasWidth - 36 + 25, canvasHeight - 39 + 33 + vel, 8, -vel + 2);
-	
-	//spriteDraw(miscImg, canvasWidth - 22, canvasHeight - 26, 80 + playerSelected, miscCor);
-	
-	//fontInit(FONT_SMALL_WHITE);
-	
-	printSetArea(0, 0, canvasWidth, canvasHeight);
-	
-	// Roses count
-	
-	printDraw(""+runner.miscData[Entity.PLAYER_DATA_ROSE_COUNT], canvasWidth - 55 + 13, canvasHeight - 16, 0xffffff, 0);
-
-				
 	//#else
 	
 	// Speed 
@@ -16178,73 +12681,7 @@ public void hudDraw() {
 	//#endif
 	
 	//#elifdef S40
-	
-	//#ifdef PRIMITIVEHUD
-	
-	vel = (vel * 19) / 26;
-	
-	fillDraw(0xff0000, canvasWidth - 59 + 23, canvasHeight - 15, 59, 12);
-	
-	fillDraw(0x808080, canvasWidth - 28 + 23, canvasHeight - 26, 4, 20);	
-	fillDraw(0x000000,canvasWidth - 27 + 23, canvasHeight - 25, 2, 18);		
-	fillDraw(0xd9ff00,canvasWidth - 27 + 23, canvasHeight - 25 + 18 + vel, 2, -vel + 1);
-	
-	//spriteDraw(miscImg, canvasWidth - 22, canvasHeight - 26, 80 + playerSelected, miscCor);
-	
-	//fontInit(FONT_SMALL_WHITE);
-	
-	printSetArea(0, 0, canvasWidth, canvasHeight);
-	
-	// Roses count
-	
-	printDraw(""+runner.miscData[Entity.PLAYER_DATA_ROSE_COUNT], canvasWidth - 55 + 23, canvasHeight - 16, 0xffffff, 0);
-
-	
-	//#else 
-	
-	vel = (vel * 19) / 26;
-	
-	//#ifdef NOPORTRAITATHUD
-	int x = 23;
-	//#else
-	int x = 0;
-	//#endif
-	
-	imageDraw(hudImg,2,11,59,25,canvasWidth - 59 + x, canvasHeight - 28);
-		
-	spriteDraw(miscImg, canvasWidth - 22 + x, canvasHeight - 26, 80 + playerSelected, miscCor);
-	
-	imageDraw(hudImg,0,13 + 18 + vel, 2, -vel + 1, canvasWidth - 27 + x, canvasHeight - 25 + 18 + vel);
-	
-	//fontInit(FONT_SMALL_WHITE);
-	
-	printSetArea(0, 0, canvasWidth, canvasHeight);
-	
-	// Roses count
-	
-	printDraw(""+runner.miscData[Entity.PLAYER_DATA_ROSE_COUNT], canvasWidth - 55 + x, canvasHeight - 14, 0xffffff, 0);
-	
-	//#endif
-	
 	//#elifdef S80
-	
-	vel = (vel * 42) / 26;
-	
-	imageDraw(hudImg,4,24,121,52,canvasWidth - 121, canvasHeight - 52);
-	
-	spriteDraw(miscImg, canvasWidth - 45, canvasHeight - 46, 80 + playerSelected, miscCor);
-	
-	imageDraw(hudImg,1, 24 + 42 + vel, 3, -vel + 1, canvasWidth - 38 - 20, canvasHeight + 2 - 34 + 25 + vel);
-	
-	//fontInit(FONT_SMALL_WHITE);
-	
-	printSetArea(0, 0, canvasWidth, canvasHeight);
-	
-	// Roses count
-	
-	printDraw(""+runner.miscData[Entity.PLAYER_DATA_ROSE_COUNT], canvasWidth - 113, canvasHeight - 23, 0xffffff, 0);
-		
-	
 	//#endif
 		
 	//scr.fillRect(canvasWidth - 20, canvasHeight / 2 + 50 + vel, 10, - vel);
@@ -16848,7 +13285,7 @@ public static final int SINSKIN_B0_K0 = 0;
 // La id de la operadora se carga desde el archivo de textos.
 	int ID_CARRIER = 100;	// 100: Version Generica
 
-	final static int ID_HANDSET = ${handset.handset_ID};
+	final static int ID_HANDSET = 1;//${handset.handset_ID};
 
 // <=- <=- <=- <=- <=-
 

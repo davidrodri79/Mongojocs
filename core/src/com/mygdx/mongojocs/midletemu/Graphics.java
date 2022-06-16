@@ -142,12 +142,18 @@ public class Graphics {
 
         clipx=destX; clipy=destY; clipw=sizeX; cliph=sizeY;
 
-        if(sizeX <= 0) { allClipped = true; return;}
-        if(sizeY <= 0) { allClipped = true; return;}
+        if(clipw <= 0) { allClipped = true; return;}
+        if(cliph <= 0) { allClipped = true; return;}
 
     }
 
-    public void clipRect(int i, int i1, int sizeX, int sizeY) {
+    public void clipRect(int destX, int destY, int sizeX, int sizeY) {
+
+        if(clipx < destX)  clipx = destX;
+        if(clipx+clipw > destX+sizeX)  clipw -= clipx+clipw - (destX+sizeX);
+        if(clipy < destY)  clipy = destY;
+        if(clipy+cliph > destY+sizeY)  cliph -= clipy+cliph - (destY+sizeY);
+
     }
 
     public void drawImage(Image img, int x, int y, int flags)

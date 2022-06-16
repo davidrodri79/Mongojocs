@@ -8,6 +8,7 @@ package com.mygdx.mongojocs.sanfermines2006;
 //#ifdef DEBUG
 
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.Graphics;
 
@@ -77,6 +78,7 @@ static synchronized public void spdStop(int type)
 static synchronized public void println(String str)
 {
 	System.out.println(str);
+	Gdx.app.log("Debug", str);
 
 	if (cachedStr != null)
 	{
