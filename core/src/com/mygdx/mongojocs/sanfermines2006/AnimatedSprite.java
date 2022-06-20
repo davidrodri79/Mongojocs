@@ -3,6 +3,7 @@ package com.mygdx.mongojocs.sanfermines2006;
 //#ifdef BUILD_ANIMATOR
 
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.Graphics;
 
 /**
@@ -247,7 +248,7 @@ public class AnimatedSprite {
         //#ifdef J2ME
 	            
            if(xx < GameCanvas.gc.canvasWidth && yy < GameCanvas.gc.canvasHeight && xx + rw > 0 && yy + rh > 0) {
-                        
+
 	    	   g.setClip(0, 0, GameCanvas.gc.canvasWidth, GameCanvas.gc.canvasHeight);
 	    	   g.clipRect(xx, yy, rw, rh);
 	       

@@ -8690,43 +8690,76 @@ public void gameTick()
 
 	case GAME_MENU_RECUENTO:
 
-		menuCreate(false);
+		if(!biosWaitComplete) {
+			menuCreate(false);
 
-		menuInit(MENU_LOADING);
-		forceRender();
-		menuRelease(true);
+			menuInit(MENU_LOADING);
+			forceRender();
+			menuRelease(true);
 
-		savePrefs();
+			savePrefs();
 
-		menuCreate();
+			menuCreate();
 
-		if (levelPlayed > 0 && levelPlayed < 9)
-		{
-			soundPlay(MUSIC_MENU, 0);
+			if (levelPlayed > 0 && levelPlayed < 9) {
+				soundPlay(MUSIC_MENU, 0);
 
-			menuInit(MENU_RECUENTO);
-			biosWait();
+				menuInit(MENU_RECUENTO);
+				biosWaitInit();
+				break;
+			}
+
+			// Si hemos completado todos los encierros, mostramos "felicidades" e invitamos a jugar en el modo "sobrevive"
+			// Si hemos recogido todas las letras "FERMINES", mostramos popup indicando que hemos desbloqueado
+			if (muestraFelicidades || muestraDesbloqueo) {
+				int tmp = 0;
+				if (muestraFelicidades) {
+					tmp = TEXT_SOBREVIBE_DESBLOQUEADO;
+				}
+				if (muestraDesbloqueo) {
+					tmp = TEXT_TORERO_DESBLOQUEADO;
+				}
+				if (muestraFelicidades && muestraDesbloqueo) {
+					tmp = TEXT_SOBREVIBE_TORERO_DESBLOQUEADO;
+				}
+
+				popupInitInfo(null, gameText[tmp]);
+				biosWait();
+
+				muestraDesbloqueo = false;
+			}
+
+
+			nextLevelFlag = true;
+			gameStatus = GAME_MENU_MAIN;
 		}
+		else {
+
+			biosWaitEnd();
+			// Si hemos completado todos los encierros, mostramos "felicidades" e invitamos a jugar en el modo "sobrevive"
+			// Si hemos recogido todas las letras "FERMINES", mostramos popup indicando que hemos desbloqueado
+			if (muestraFelicidades || muestraDesbloqueo) {
+				int tmp = 0;
+				if (muestraFelicidades) {
+					tmp = TEXT_SOBREVIBE_DESBLOQUEADO;
+				}
+				if (muestraDesbloqueo) {
+					tmp = TEXT_TORERO_DESBLOQUEADO;
+				}
+				if (muestraFelicidades && muestraDesbloqueo) {
+					tmp = TEXT_SOBREVIBE_TORERO_DESBLOQUEADO;
+				}
+
+				popupInitInfo(null, gameText[tmp]);
+				biosWait();
+
+				muestraDesbloqueo = false;
+			}
 
 
-	// Si hemos completado todos los encierros, mostramos "felicidades" e invitamos a jugar en el modo "sobrevive"
-	// Si hemos recogido todas las letras "FERMINES", mostramos popup indicando que hemos desbloqueado
-		if (muestraFelicidades || muestraDesbloqueo)
-		{
-			int tmp = 0;
-			if (muestraFelicidades) {tmp = TEXT_SOBREVIBE_DESBLOQUEADO;}
-			if (muestraDesbloqueo) {tmp = TEXT_TORERO_DESBLOQUEADO;}
-			if (muestraFelicidades && muestraDesbloqueo) {tmp = TEXT_SOBREVIBE_TORERO_DESBLOQUEADO;}
-
-			popupInitInfo(null, gameText[tmp]);
-			biosWait();
-
-			muestraDesbloqueo = false;
+			nextLevelFlag = true;
+			gameStatus = GAME_MENU_MAIN;
 		}
-
-
-		nextLevelFlag = true;
-		gameStatus = GAME_MENU_MAIN;
 	break;
 
 
@@ -9959,7 +9992,27 @@ public void menuAction(int cmd)
 
 		menuAcept = true;
 
+		if (menuType == MENU_STAGE_SELECT) { //MONGOFIX
+			levelSelected = formListPos;
+
+			menuRelease();
+			//#ifndef BUILD_ONE_PLAYER
+			if (playerSelectFlag) {
+				menuInit(MENU_PLAYER_SELECT);
+			} else {
+				biosExit = true;
+			}
+			//#else
+			//#endif
+			break;
+		}
+
 	case MENU_ACTION_MENU_EXIT:	// Salir de los menus
+
+		if(menuType == MENU_STAGE_SELECT) { //MOGOFIX
+			menuInitBack();
+			break;
+		}
 
 		menuRelease();
 
@@ -10124,13 +10177,13 @@ public void menuAction(int cmd)
 	case MENU_ACTION_RESTART:	// Provocamos GAME OVER desde menu (preguntamos)
 
 //		popupSetArea(formBodyX + (formBodyWidth/6), formBodyY + (formBodyHeight/6), formBodyWidth - (formBodyWidth/3), formBodyHeight - (formBodyHeight/3));
-		popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_ARE_YOU_SURE], SOFTKEY_NO, SOFTKEY_YES);
+		/*popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_ARE_YOU_SURE], SOFTKEY_NO, SOFTKEY_YES);
 
 		biosWait();
 
 		forceRender();
 
-		if (popupResult)
+		if (popupResult)*/ //MONGOFIX: biosWait dentro de biosWait no soportado
 		{
 			menuRelease();
 

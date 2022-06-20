@@ -140,6 +140,7 @@ public class Graphics {
         if(destX + sizeX >= maxx) sizeX = maxx - destX;
         if(destY + sizeY >= maxy) sizeY = maxy - destY;
 
+
         clipx=destX; clipy=destY; clipw=sizeX; cliph=sizeY;
 
         if(clipw <= 0) { allClipped = true; return;}
@@ -149,10 +150,10 @@ public class Graphics {
 
     public void clipRect(int destX, int destY, int sizeX, int sizeY) {
 
-        if(clipx < destX)  clipx = destX;
-        if(clipx+clipw > destX+sizeX)  clipw -= clipx+clipw - (destX+sizeX);
-        if(clipy < destY)  clipy = destY;
-        if(clipy+cliph > destY+sizeY)  cliph -= clipy+cliph - (destY+sizeY);
+        if(clipx < destX)  {clipw -= destX - clipx; clipx = destX;}
+        if(clipx+clipw > destX+sizeX)  clipw = (destX + sizeX) - clipx;
+        if(clipy < destY)  {cliph -= destY - clipy; clipy = destY;}
+        if(clipy+cliph > destY+sizeY)  cliph = (destY + sizeY) - clipy;
 
     }
 
@@ -190,7 +191,6 @@ public class Graphics {
                 int dy = (y + h) - (clipy + cliph);
                 h -= dy; v2-= (float)dy/img.texture.getHeight();
             }
-
 
             int finaly = y;
 
