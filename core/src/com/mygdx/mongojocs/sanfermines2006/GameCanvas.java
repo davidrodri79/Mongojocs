@@ -9444,7 +9444,7 @@ public void menuInit(int type, int pos)
 		formListAdd(0, gameText[TEXT_EXIT], MENU_ACTION_EXIT_GAME);
 
 	//#ifdef DEBUG
-		formListAdd(0, "DEBUG", MENU_ACTION_NEW_MENU | MENU_DEBUG<<16);
+		//formListAdd(0, "DEBUG", MENU_ACTION_NEW_MENU | MENU_DEBUG<<16);
 	//#endif
 
 		formInit(FORM_OPTION, pos, MENU_ACTION_NONE, MENU_ACTION_NONE);
@@ -10007,16 +10007,41 @@ public void menuAction(int cmd)
 			break;
 		}
 
+		if(menuType == MENU_PLAYER_SELECT)
+		{
+			biosWaitEnd();
+//#ifdef DEBUG
+			System.out.println("opppps!!!!!! hemos salido del biosWait principal");
+//#endif
+			soundStop();
+
+			// mostramos "loading" dentro de menu para dar paso al juego
+			if (gameStatus == GAME_PLAY) {
+				menuInit(MENU_LOADING);
+				forceRender();
+				menuRelease(true);
+			}
+
+			menuDestroy();
+		}
+
 	case MENU_ACTION_MENU_EXIT:	// Salir de los menus
 
 		if(menuType == MENU_STAGE_SELECT) { //MOGOFIX
+			menuRelease();
 			menuInitBack();
-			break;
 		}
+		else if(menuType == MENU_PLAYER_SELECT) { //MOGOFIX
+			menuRelease();
+			menuInitBack();
+		}
+		else
+		{
 
-		menuRelease();
+			menuRelease();
 
-		biosExit = true;		// Activamos salir del "biosWait()" actual
+			biosExit = true;        // Activamos salir del "biosWait()" actual
+		}
 	break;
 
 
@@ -10198,13 +10223,13 @@ public void menuAction(int cmd)
 	case MENU_ACTION_EXIT_GAME:	// Exit com.mygdx.mongojocs.sanfermines2006.Game???
 
 //		popupSetArea(formBodyX + (formBodyWidth/6), formBodyY + (formBodyHeight/6), formBodyWidth - (formBodyWidth/3), formBodyHeight - (formBodyHeight/3));
-		popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_ARE_YOU_SURE], SOFTKEY_NO, SOFTKEY_YES);
+		//popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_ARE_YOU_SURE], SOFTKEY_NO, SOFTKEY_YES);
 
-		biosWait();
+		/*biosWait();
 
 		forceRender();
 
-		if (popupResult)
+		if (popupResult)*/ //MONGOFIX
 		{
 			menuRelease();
 
