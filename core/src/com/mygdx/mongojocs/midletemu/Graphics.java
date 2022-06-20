@@ -2,6 +2,7 @@ package com.mygdx.mongojocs.midletemu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -95,6 +96,7 @@ public class Graphics {
         String hash = currentFont.face+"-"+ currentFont.style+"-"+currentFont.size+"-"+currentColor;
         BitmapFont f;
 
+        // Generate font if needed
         if(bitmapFonts.containsKey(hash))
         {
             f = bitmapFonts.get(hash);
@@ -105,19 +107,34 @@ public class Graphics {
 
         }
 
+        // Draw text into clipped area texture
         if((flags & HCENTER) != 0)
         {
             x -= currentFont.stringWidth(str)/2;
         }
 
+        Display.clippedAreafbo.begin();
+
+        Gdx.gl.glClearColor(1, 1, 1, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.setProjectionMatrix(textCamera.combined);
+        batch.begin();
+        f.draw(batch, str, x,  Display.height - y - 4);
+        batch.end();
+
+        Display.clippedAreafbo.end();
+
+        // Copy clipped area texture to screen of image
         if(fromImage == null)
             Display.fbo.begin();
         else
             fromImage.fbo.begin();
 
-        batch.setProjectionMatrix(textCamera.combined);
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        f.draw(batch, str, x,  Display.height - y);
+        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
+                clipx/(float)Display.width, clipy/(float)Display.height,
+                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
         batch.end();
 
         if(fromImage == null)
@@ -214,6 +231,7 @@ public class Graphics {
     
     public void drawRect(int x, int y, int w, int h)
     {
+        // WARNING: No esta afectado por el clip!!
         if(allClipped) return;
 
         if(fromImage == null)
@@ -238,6 +256,7 @@ public class Graphics {
 
     public void fillRect(int x, int y, int w, int h) {
 
+        // WARNING: No esta afectado por el clip!!
         if(allClipped) return;
 
         int finaly = y;
@@ -263,16 +282,31 @@ public class Graphics {
     {
         if(allClipped) return;
 
-        if(fromImage == null)
-            Display.fbo.begin();
-        else
-            fromImage.fbo.begin();
+        Display.clippedAreafbo.begin();
+
+        Gdx.gl.glClearColor(1, 1, 1, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
         shapeRenderer.ellipse(cx, cy, rx, ry);
+
         shapeRenderer.end();
+
+        Display.clippedAreafbo.end();
+
+        if(fromImage == null)
+            Display.fbo.begin();
+        else
+            fromImage.fbo.begin();
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
+                clipx/(float)Display.width, clipy/(float)Display.height,
+                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
+        batch.end();
 
         if(fromImage == null)
             Display.fbo.end();
@@ -284,16 +318,31 @@ public class Graphics {
     {
         if(allClipped) return;
 
-        if(fromImage == null)
-            Display.fbo.begin();
-        else
-            fromImage.fbo.begin();
+        Display.clippedAreafbo.begin();
+
+        Gdx.gl.glClearColor(1, 1, 1, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(currentColor);
         shapeRenderer.ellipse(cx, cy, rx, ry);
+
         shapeRenderer.end();
+
+        Display.clippedAreafbo.end();
+
+        if(fromImage == null)
+            Display.fbo.begin();
+        else
+            fromImage.fbo.begin();
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
+                clipx/(float)Display.width, clipy/(float)Display.height,
+                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
+        batch.end();
 
         if(fromImage == null)
             Display.fbo.end();

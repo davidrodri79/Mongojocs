@@ -15,7 +15,9 @@ public class Display {
     public static int width;
     public static int height;
     public static Texture screenBuffer;
+    public static Texture clippedAreaTexture;
     public static FrameBuffer fbo = null;
+    public static FrameBuffer clippedAreafbo = null;
 
     public static Display getDisplay(MIDlet m)
     {
@@ -37,6 +39,14 @@ public class Display {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         fbo.end();
+
+        clippedAreafbo = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
+        clippedAreaTexture = clippedAreafbo.getColorBufferTexture();
+
+        clippedAreafbo.begin();
+        Gdx.gl.glClearColor(1, 1, 1, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        clippedAreafbo.end();
     }
 
     public Displayable getCurrent() {
