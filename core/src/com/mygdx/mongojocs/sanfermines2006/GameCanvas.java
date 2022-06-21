@@ -969,7 +969,7 @@ public void biosRefresh()
 //	com.mygdx.mongojocs.sanfermines2006.Debug.println ("biosStatus="+biosStatus);
 //	com.mygdx.mongojocs.sanfermines2006.Debug.println ("gameStatus="+gameStatus);
 //	com.mygdx.mongojocs.sanfermines2006.Debug.println ("playStatus="+playStatus);
-	Debug.fillYellow = true;
+	//Debug.fillYellow = true; MONGOFIX
 //#endif
 
 //#ifdef J2ME
@@ -9633,17 +9633,18 @@ public void menuInit(int type, int pos)
 		formListClear();
 */
 
-		formLogoInit(FORM_LOGO_HEIGHT);
+		/*formLogoInit(FORM_LOGO_HEIGHT);
 
 		formTitleInit(gameText[TEXT_ENTER_NAME][0]);
 
 		formInit(FORM_EDIT_NAME, pos, MENU_ACTION_MENU_EXIT, MENU_ACTION_MENU_EXIT_OK);
 
-		listenerInit(SOFTKEY_BACK, SOFTKEY_INTRODUCIR);
+		listenerInit(SOFTKEY_BACK, SOFTKEY_INTRODUCIR);*/ //MONGOFIX
 
 		if (type == MENU_INPUT_NAME)
 		{
-			biosWait();
+			//biosWait(); MONGOFIX
+			menuAcept = false;
 
 		// Tras haber editado nuestro nombre, si hemos pulsado aceptar lo actualizamos...
 			if (menuAcept)
@@ -9837,7 +9838,7 @@ public void menuInit(int type, int pos)
 		formListAdd(0, gameText[TEXT_EXIT], MENU_ACTION_EXIT_GAME);
 
 	//#ifdef DEBUG
-		formListAdd(0, "DEBUG", MENU_ACTION_NEW_MENU | MENU_DEBUG<<16);
+		//formListAdd(0, "DEBUG", MENU_ACTION_NEW_MENU | MENU_DEBUG<<16);
 	//#endif
 
 		formInit(FORM_OPTION, pos, MENU_ACTION_NONE, MENU_ACTION_NONE);
@@ -9868,7 +9869,7 @@ public void menuInit(int type, int pos)
 
 		formListAdd(0, new String[] {"Inmune: NO", "Inmune: SI"}, MENU_ACTION_DEBUG_INMUNE_CHG, protInmune?1:0);
 
-		formListAdd(0, "Reset com.mygdx.mongojocs.sanfermines2006.Game", MENU_ACTION_DEBUG_RESET_GAME);
+		formListAdd(0, "Reset game", MENU_ACTION_DEBUG_RESET_GAME);
 
 		formListAdd(0, "Reset HASH", MENU_ACTION_DEBUG_RESET_HASH);
 
@@ -10077,9 +10078,9 @@ public void menuAction(int cmd)
 
 //#ifndef HIDE_CONNECTIVITY
 	// Preguntamos si se quiere conectar a red para tener los resultados de los scores
-		popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_DESCARGAR_SCORES], SOFTKEY_NO, SOFTKEY_YES);
-		biosWait();
-
+		//popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_DESCARGAR_SCORES], SOFTKEY_NO, SOFTKEY_YES);
+		//biosWait();
+		popupResult = false; //MONGOFIX
 	// Si cancelamos, volvemos a la pantalla anterior
 		if (!popupResult)
 		{
