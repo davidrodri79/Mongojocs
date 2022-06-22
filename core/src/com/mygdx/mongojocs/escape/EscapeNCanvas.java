@@ -9,8 +9,8 @@ import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.Image;
 import java.io.InputStream;
 import java.util.Random;
-import com.mygdx.mongojocs.midletemu.Runnable;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Thread;
 
 
 
@@ -194,7 +194,6 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 		//}
 	}
 
-	@Override
 	public void runEnd() {
 
 	}
@@ -221,7 +220,6 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 		}		
 	}
 
-	@Override
 	public void runInit() {
 
 	}

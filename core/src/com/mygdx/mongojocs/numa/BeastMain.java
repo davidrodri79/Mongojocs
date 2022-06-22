@@ -3,6 +3,7 @@ package com.mygdx.mongojocs.numa;/*
 */
 
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.Command;
 import com.mygdx.mongojocs.midletemu.CommandListener;
 import com.mygdx.mongojocs.midletemu.Display;
@@ -11,8 +12,8 @@ import com.mygdx.mongojocs.midletemu.Form;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.RecordStore;
 import com.mygdx.mongojocs.midletemu.TextField;
-import com.mygdx.mongojocs.midletemu.Runnable;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Thread;
 
 
 /*import javax.microedition.lcdui.*;
@@ -192,7 +193,7 @@ public class BeastMain extends MIDlet implements Runnable, CommandListener
 		doUpdate = true;	
 														
 		while (thread!=null){
-			
+
 			t=System.currentTimeMillis();
 			
 			if(doUpdate){

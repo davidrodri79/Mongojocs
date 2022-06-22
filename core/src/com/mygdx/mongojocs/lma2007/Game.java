@@ -14,7 +14,6 @@ package com.mygdx.mongojocs.lma2007;
 
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.MIDlet;
-import com.mygdx.mongojocs.midletemu.Thread;
 
 
 public class Game extends MIDlet                        // Clase Bios integrada en la com.mygdx.mongojocs.lma2007.Game

@@ -42,6 +42,11 @@ public class Graphics {
 
     public Graphics()
     {
+
+    }
+
+    public void init()
+    {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Display.width, Display.height);
         textCamera = new OrthographicCamera();
@@ -176,7 +181,7 @@ public class Graphics {
 
     public void drawImage(Image img, int x, int y, int flags)
     {
-        if(allClipped) return;
+        if(allClipped || img.texture == null) return;
 
         {
 

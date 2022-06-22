@@ -33,7 +33,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.mongojocs.midletemu.Canvas;
-import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Runnable;
 import com.mygdx.mongojocs.midletemu.CommandListener;
 import com.mygdx.mongojocs.midletemu.DeviceControl;
 import com.mygdx.mongojocs.midletemu.DirectGraphics;

@@ -42,7 +42,7 @@ import com.mygdx.mongojocs.midletemu.FullCanvas;
 import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.Image;
 import com.mygdx.mongojocs.midletemu.MIDlet;
-import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Runnable;
 import com.mygdx.mongojocs.midletemu.RecordStore;
 
 import java.io.ByteArrayInputStream;

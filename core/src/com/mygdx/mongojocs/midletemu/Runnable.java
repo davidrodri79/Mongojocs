@@ -1,5 +1,5 @@
 package com.mygdx.mongojocs.midletemu;
-
+/*
 public interface Runnable {
 
     public void run();
@@ -9,4 +9,4 @@ public interface Runnable {
     public void runTick();
 
     public void runEnd();
-}
+}*/

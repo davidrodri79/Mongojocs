@@ -1,6 +1,6 @@
 package com.mygdx.mongojocs.midletemu;
 
-public class Thread {
+/*public class Thread {
 
     public static Runnable currentRunning;
     Runnable runnable;
@@ -18,4 +18,4 @@ public class Thread {
     public static void sleep(long l) throws InterruptedException {
         java.lang.Thread.sleep(l);
     }
-}
+}*/

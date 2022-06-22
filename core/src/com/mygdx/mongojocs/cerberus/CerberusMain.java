@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.*;
 
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.Command;
 import com.mygdx.mongojocs.midletemu.CommandListener;
 import com.mygdx.mongojocs.midletemu.Display;
@@ -17,8 +18,8 @@ import com.mygdx.mongojocs.midletemu.Form;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.RecordStore;
 import com.mygdx.mongojocs.midletemu.TextField;
-import com.mygdx.mongojocs.midletemu.Runnable;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Thread;
 
 
 public class CerberusMain extends MIDlet implements Runnable, CommandListener
@@ -93,7 +94,7 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 		
 		thread=new Thread(this);
 		thread.start();
-				
+
 		System.gc();
 				
 		sv=new SavedGame[3]; for(int i=0; i<3; i++) sv[i]=new SavedGame();
@@ -184,6 +185,7 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 
 	}
 
+	@Override
 	public void run()
 	{	
 		long t;			
@@ -214,7 +216,7 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 			
 			do{
 				try{
-					Thread.sleep(1);
+					Thread.sleep(10);
 				
 				}catch(InterruptedException e) {}
 				

@@ -16,18 +16,18 @@ public class Canvas extends Displayable {
 
     public static Canvas theCanvas = null;
     public Graphics graphics;
+    public boolean repaintAsked = false;
 
     public Canvas()
     {
         theCanvas = this;
         graphics = new Graphics();
+        graphics.init();
     }
 
     public void repaint()
     {
-        graphics.camera.update();
-        paint(graphics);
-
+        repaintAsked = true;
     }
 
     public void paint(Graphics g)
@@ -38,6 +38,15 @@ public class Canvas extends Displayable {
     public void serviceRepaints()
     {
 
+    }
+
+    public void flushRepaints()
+    {
+        if(repaintAsked) {
+            graphics.camera.update();
+            paint(graphics);
+            repaintAsked = false;
+        }
     }
 
     public void keyPressed(int keycode)

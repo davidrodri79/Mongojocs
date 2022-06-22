@@ -23,8 +23,8 @@ import com.mygdx.mongojocs.midletemu.Image;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.RecordStore;
 import com.mygdx.mongojocs.midletemu.TextField;
-import com.mygdx.mongojocs.midletemu.Runnable;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Thread;
 
 
 import java.io.InputStream;

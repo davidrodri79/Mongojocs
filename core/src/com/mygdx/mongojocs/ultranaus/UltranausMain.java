@@ -12,8 +12,8 @@ import com.mygdx.mongojocs.midletemu.Form;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 import com.mygdx.mongojocs.midletemu.RecordStore;
 import com.mygdx.mongojocs.midletemu.TextField;
-import com.mygdx.mongojocs.midletemu.Runnable;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Thread;
 
 import java.util.Random;
 import java.io.*;

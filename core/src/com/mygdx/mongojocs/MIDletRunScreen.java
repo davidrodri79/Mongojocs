@@ -16,8 +16,8 @@ import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.MIDlet;
-import com.mygdx.mongojocs.midletemu.Runnable;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Thread;
 
 public class MIDletRunScreen implements Screen {
 
@@ -156,7 +156,6 @@ public class MIDletRunScreen implements Screen {
         }
 
         game.startApp();
-        Thread.currentRunning.runInit();
     }
 
     @Override
@@ -166,15 +165,17 @@ public class MIDletRunScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        Gdx.app.log("MIDletRunScreen", "render()");
         if(MIDlet.appClosed)
         {
             launcher.setScreen(new CatalogScreen(launcher));
             dispose();
         }
-        else
-            Thread.currentRunning.runTick();
+        //else
+         //   Thread.currentRunning.runTick();
 
         //Graphics.emptyScissors();
+        Canvas.theCanvas.flushRepaints();
 
         launcher.batch.setProjectionMatrix(camera.combined);
         launcher.batch.begin();
@@ -253,7 +254,7 @@ public class MIDletRunScreen implements Screen {
     @Override
     public void dispose() {
 
-        Thread.currentRunning.runEnd();
+        //Thread.currentRunning.runEnd();
         Graphics.bitmapFonts.clear();
     }
 }

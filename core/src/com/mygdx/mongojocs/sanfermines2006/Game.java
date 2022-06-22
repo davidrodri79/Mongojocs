@@ -17,8 +17,8 @@ package com.mygdx.mongojocs.sanfermines2006;
 
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.MIDlet;
-import com.mygdx.mongojocs.midletemu.Runnable;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Runnable;
+//import com.mygdx.mongojocs.midletemu.Thread;
 
 
 

@@ -18,7 +18,7 @@ package com.mygdx.mongojocs.clubfootball2006;
 
 import com.mygdx.mongojocs.midletemu.Command;
 import com.mygdx.mongojocs.midletemu.CommandListener;
-import com.mygdx.mongojocs.midletemu.Thread;
+//import com.mygdx.mongojocs.midletemu.Thread;
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.Displayable;
 import com.mygdx.mongojocs.midletemu.Form;
