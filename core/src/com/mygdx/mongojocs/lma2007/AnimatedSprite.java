@@ -234,7 +234,6 @@ public class AnimatedSprite {
     		return;
     	}
 	//#ifdef GOATSOMETRIC
-        int tr[] = transf2iso(new int[] {x<<8,y<<8});
 	//#endif
         int layerCount = bank.layers[sequence][frameIndex].length;        
         for (int c = 0; c < layerCount; c++) {
@@ -265,13 +264,6 @@ public class AnimatedSprite {
         //#endif            
             // aplicar c�lculos 
         //#ifdef GOATSOMETRIC
-//juan            xx += (tr[0]>>8)/*+bank.rects[grp][idx][0]*/-com.mygdx.mongojocs.lma2007.GameCanvas.gc.scrollX; //Si hacemos un scroll "emmarcado, habra que tenerlo en cuenta aqui.
-//juan            yy += (tr[1]>>8)/*+bank.rects[grp][idx][1]*/-com.mygdx.mongojocs.lma2007.GameCanvas.gc.scrollY;
-            xx += (tr[0]>>8); //Si hacemos un scroll "emmarcado, habra que tenerlo en cuenta aqui.
-            yy += (tr[1]>>8);
-            xx -= getFrameWidth()/2;
-            yy -= getFrameHeight();
-            
         //#else
 
 //juan            xx += x/*+bank.rects[grp][idx][0]*/-com.mygdx.mongojocs.lma2007.GameCanvas.gc.scrollX;
@@ -280,8 +272,8 @@ public class AnimatedSprite {
 	            //xx += x - GameCanvas.gc.scrollX;
 	            //yy += y - GameCanvas.gc.scrollY;
 			//#else
-	            //xx += x;
-	            //yy += y;
+	            xx += x;
+	            yy += y;
 			//#endif
 
         //#endif
@@ -317,51 +309,6 @@ public class AnimatedSprite {
     }
         
 //#ifdef GOATSOMETRIC
-    /**
-     * Coordenada horizontal correspondiente a la esquina superior izquierda
-     * en el bitmap (isom�trico 2D)
-     */
-    public static final int BITMAP_X0 = 495<<8;
-    
-    /**
-     * Coordenada vertical correspondiente a la esquina superior izquierda
-     * en el bitmap (isom�trico 2D) 
-     */
-    public static final int BITMAP_Y0 = 56<<8;
-    
-    /**
-     * Tranformaci�n de coordenadas 2D a isom�trica
-     * @param xy Array de 2 enteros con las coordenadas a transformar
-     * @return Array de 2 enteros con las coordenadas transformadas
-     */
-    public static int[] transf2iso(int[] xy) {
-        int[] res = new int[2];
-
-        res[0] = xy[0]-xy[1]+BITMAP_X0;
-        res[1] = ((xy[0]+xy[1])/2)+BITMAP_Y0;
-
-        return res;
-    }
-   
-    
-    /**
-     * Tranformaci�n de coordenadas 2D a isom�trica
-     * @param as com.mygdx.mongojocs.lma2007.AnimatedSprite cuyas coordenadas se quieren transoformar
-     * @return Array de 2 enteros con las coordenadas transformadas
-     */
- /*   public static int[] transf2iso(com.mygdx.mongojocs.lma2007.AnimatedSprite as) {
-        
-        if(as == null)
-    //#if DEBUG && DEBUG_ANIMATOR
-        {
-            com.mygdx.mongojocs.lma2007.Debug.println("com.mygdx.mongojocs.lma2007.AnimatedSprite.transf2iso(): parametro nulo");
-            return null;
-        }
-    //#else
-        return new int[] {0,0};
-    //#endif
-        return transf2iso(new int[] {as.x<<8,as.y<<8});
-    }*/
 //#endif
 
 }

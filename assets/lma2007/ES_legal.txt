@@ -1,6 +1,6 @@
 {
 LMA 2007
-$version$
+2022
 
 (c)2006 The Codemasters Software Company Limited ("Codemasters").
 Todos los derechos reservados. "Codemasters"(r) es una marca comercial de Codemasters. 

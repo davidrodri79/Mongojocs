@@ -5,8 +5,11 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+
+import javax.imageio.ImageIO;
 
 public class Image {
 
@@ -37,24 +40,16 @@ public class Image {
 
     public static Image createImage(byte[] inbuf, int start, int length)
     {
-        File file = new File(MIDlet.appFilesFolder+"/PNGfrombytes.png");
+        Image im = new Image();
         try {
-            if (!file.exists()) {
-                File dirs = new File(MIDlet.appFilesFolder);
-                dirs.mkdirs();
-                file.createNewFile();
-            }
 
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(inbuf, start, length);
-            fos.close();
+            Pixmap pixMap = new Pixmap(inbuf, start, length);
+            im.texture = new Texture(pixMap);
+
         }catch(Exception e)
         {
             e.printStackTrace();
         }
-
-        Image im = new Image();
-        im.texture = new Texture(file.toString());
         return im;
     }
 

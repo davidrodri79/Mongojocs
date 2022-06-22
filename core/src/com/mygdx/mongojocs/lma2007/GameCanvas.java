@@ -746,8 +746,8 @@ public void biosCreate()
 	//#ifndef REM_CUSTOM_SMALL_FONT
 		fontCor = loadFile("/font.cor");
 		fontWhiteImg = loadImage("/fontWhite");
-		fontBlackImg = loadImage("/fontWhite"); //MONGOFIX changePal(loadFile("/fontWhite.png"), fontWhiteRgbs, fontBlackRGB);
-		fontOrangeImg = loadImage("/fontWhite"); //MONGOFIX changePal(loadFile("/fontWhite.png"), fontWhiteRgbs, fontOrangeRGB);
+		fontBlackImg =  changePal(loadFile("/fontWhite.png"), fontWhiteRgbs, fontBlackRGB);
+		fontOrangeImg = changePal(loadFile("/fontWhite.png"), fontWhiteRgbs, fontOrangeRGB);
 
 		for (int i=0 ; i<fontCor.length ; i+=6) {fontCor[i] = 0;}
     //#endif
@@ -756,10 +756,10 @@ public void biosCreate()
 	//#ifndef REM_CUSTOM_BIG_FONT
 		fontBigCor = loadFile("/fontBig.cor");
 		fontBigWhiteImg = loadImage("/fontBigWhite");
-		fontBigBlackImg = loadImage("/fontBigWhite"); //MONGOFIX changePal(loadFile("/fontBigWhite.png"), fontBigWhiteRgbs, fontBigBlackRGB);
-		fontBigYellowImg = loadImage("/fontBigWhite"); //MONGOFIX changePal(loadFile("/fontBigWhite.png"), fontBigWhiteRgbs, fontBigYellowRGB);
+		fontBigBlackImg = changePal(loadFile("/fontBigWhite.png"), fontBigWhiteRgbs, fontBigBlackRGB);
+		fontBigYellowImg = changePal(loadFile("/fontBigWhite.png"), fontBigWhiteRgbs, fontBigYellowRGB);
 		//#ifndef REM_FONT_GREY
-			fontBigGreyImg = loadImage("/fontBigWhite"); //MONGOFIX changePal(loadFile("/fontBigWhite.png"), fontBigWhiteRgbs, fontBigGreyRGB);
+			fontBigGreyImg = changePal(loadFile("/fontBigWhite.png"), fontBigWhiteRgbs, fontBigGreyRGB);
 		//#else
 		//#endif
 
@@ -6637,12 +6637,12 @@ public void gfxMatchCamTick()
 	//#ifdef FEA_CHAPAS
 	//int cw2 = canvasWidth/2;
 	
-	if (cameraX < (canvasWidth-20)<<8) cameraX = (canvasWidth-20)<<8;
+	/*if (cameraX < (canvasWidth-20)<<8) cameraX = (canvasWidth-20)<<8;
 	if (cameraX > (20+GROUNDWIDTH-(canvasWidth)<<8)) cameraX = (20+GROUNDWIDTH-(canvasWidth)<<8);
 	
 	//if (cameraY < (canvasHeight-40)<<8) cameraY = (canvasHeight-20)<<8;
 	if (cameraY < (canvasHeight-80)<<8) cameraY = (canvasHeight-80)<<8;
-	if (cameraY > (60+GROUNDHEIGHT-(canvasHeight)<<8)) cameraY = (60+GROUNDHEIGHT-(canvasHeight)<<8);
+	if (cameraY > (60+GROUNDHEIGHT-(canvasHeight)<<8)) cameraY = (60+GROUNDHEIGHT-(canvasHeight)<<8);*/
 	
 	//if (cameraX > (HGROUNDWIDTH+canvasWidth+10)<<8) cameraX = (HGROUNDWIDTH+canvasWidth+10)<<8;
 	//System.out.println("cameraX:"+(cameraX>>8)+" - cw2:"+canvasWidth);
@@ -15173,7 +15173,7 @@ void selectTeam(int _i)
 	
 	
 	//#ifndef REM_TEAMSHIELDS	
-		shieldImg = Image.createImage("/escudos.png"); //MONGOFIX shieldImg = changePal(loadFile("/escudos.png"), shieldRgbs, league.userTeam.flagColor);
+		shieldImg = changePal(loadFile("/escudos.png"), shieldRgbs, league.userTeam.flagColor);
 	//#endif
 
 		

@@ -2305,7 +2305,7 @@ formBodyMode = -10; // SUPER HACK, pero mucho mucho...
 
 	// cargamos escudo de la opcion seleccionada
 		//#ifndef REM_TEAMSHIELDS
-		formShieldImg = Image.createImage("/escudos.png"); //MONGOFIX changePal(loadFile("/escudos.png"), shieldRgbs, league.teams[xLeague][xTeam].flagColor);
+		formShieldImg = changePal(loadFile("/escudos.png"), shieldRgbs, league.teams[xLeague][xTeam].flagColor);
 		//#endif
 		
 		formListClear();
@@ -3152,8 +3152,8 @@ public void menuAction(int cmd)
 
 		// Generamos escudos con sus colores correctos
 			//#ifndef REM_TEAMSHIELDS
-			matchShieldsImg[0] = Image.createImage("/escudos.png"); //MONGOFIX changePal(loadFile("/escudos.png"), shieldRgbs, league.userMatch[0].flagColor);
-			matchShieldsImg[1] = Image.createImage("/escudos.png"); //MONGOFIX changePal(loadFile("/escudos.png"), shieldRgbs, league.userMatch[1].flagColor);
+			matchShieldsImg[0] = changePal(loadFile("/escudos.png"), shieldRgbs, league.userMatch[0].flagColor);
+			matchShieldsImg[1] = changePal(loadFile("/escudos.png"), shieldRgbs, league.userMatch[1].flagColor);
 			//#endif
 			//gameMode = EXHIBITION;
 			exhibitionFlag = true;
@@ -4419,7 +4419,7 @@ public void menuAction(int cmd)
 
 		// cargamos escudo de la opcion seleccionada
 			//#ifndef REM_TEAMSHIELDS
-			formShieldImg = Image.createImage("/escudos.png"); //MONGOFIX changePal(loadFile("/escudos.png"), shieldRgbs, league.teams[xLeague][xTeam].flagColor);
+			formShieldImg = changePal(loadFile("/escudos.png"), shieldRgbs, league.teams[xLeague][xTeam].flagColor);
 			//#endif
 		break;
 

@@ -302,8 +302,7 @@ public class AnimationBank implements AnimPakConstants {
                 	
                 	if(inputPalette != null) {
                 	
-                		//bitmap[c] = GameCanvas.gc.changePal(GameCanvas.gc.loadFile(pngName+".png"), inputPalette, outputPalette);
-                		bitmap[c] = GameCanvas.gc.loadImage(pngName); //MONGOFIX
+                		bitmap[c] = GameCanvas.gc.changePal(GameCanvas.gc.loadFile(pngName+".png"), inputPalette, outputPalette);
                 	
                 	} else {
                 		
