@@ -2564,8 +2564,8 @@ formBodyMode = -10; // SUPER HACK, pero mucho mucho...
 
 		
 		
-		popupInitAsk(new String[] {substringReplace(getMenuText(MENTXT_WELCOME)[0], "[team]",league.userTeam.name), getMenuText(MENTXT_WELCOME)[1], getMenuText(MENTXT_SEASONGOALS)[league.playerSeasonGoal]}, SOFTKEY_NONE, SOFTKEY_CONTINUE);
-		popupWait();
+		//popupInitAsk(new String[] {substringReplace(getMenuText(MENTXT_WELCOME)[0], "[team]",league.userTeam.name), getMenuText(MENTXT_WELCOME)[1], getMenuText(MENTXT_SEASONGOALS)[league.playerSeasonGoal]}, SOFTKEY_NONE, SOFTKEY_CONTINUE);
+		//popupWait(); MONGOFIX
 
 
 		menuRelease();
@@ -5262,11 +5262,11 @@ public void menuAction(int cmd)
 
 			if (formListPos < checkBonusCodes.length)
 			{
-				if (!checkBonusCodes[formListPos])
+				/*if (!checkBonusCodes[formListPos])
 				{
 					popupInitBack(new String[] {getMenuText(MENTXT_LST_NEEDED_TO_UNLOCK)[formListPos]});
 					popupWait();
-				} else {
+				} else*/ {
 					bonusCodes[formListPos] = (byte)(bonusCodes[formListPos]!=0? 0:1);
 					formListDat[formListPos][0] = (bonusCodes[formListPos]==0? SOFTKEY_ENABLE:SOFTKEY_DISABLE)<<16;
 					formShow = true;

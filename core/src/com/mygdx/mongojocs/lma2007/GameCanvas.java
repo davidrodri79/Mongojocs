@@ -4448,11 +4448,12 @@ boolean popupExit;
 public void popupWait()
 {
 	popupExit = false;
-	while (!popupExit)
+	/*while (!popupExit)
 	{
 		biosLoop();
-	}
+	}*/
 	popupExit = false;
+	popupResult = true; //MONGOHACK
 
 // Gestion del teclado, es necesario para evitar problemas...
 	lastKeyMenu = keyMenu;	// Keys del Frame Anterior
@@ -10059,7 +10060,11 @@ String[] getMenuText(int id)
 	for (int i=0 ; i<str.length ; i++)
 	{
 		int ini = menuTextOffs[baseOffset++];
-		str[i] = new String(menuText, ini, menuTextOffs[baseOffset] - ini);
+		char menuTextChar[] = new char[menuTextOffs[baseOffset] - ini];
+		for(int j=0; j < menuTextChar.length; j++)
+			menuTextChar[j] = (char)(menuText[ini + j] < 0 ? menuText[ini + j] + 256 : menuText[ini + j]);
+		//str[i] = new String(menuText, ini, menuTextOffs[baseOffset] - ini); MONGOFIX
+		str[i] = new String(menuTextChar);
 	}
 	//System.out.println("dsds "+str[0]);
 	return str;
