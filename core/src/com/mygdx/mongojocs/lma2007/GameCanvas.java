@@ -12791,7 +12791,8 @@ public void loadGame()
 
 // Actualizamos las variables del juego segun las prefs leidas
 	try {
-		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(prefsData, 0, prefsData.length));
+		ByteArrayInputStream bais = new ByteArrayInputStream(prefsData, 0, prefsData.length);
+		DataInputStream dis = new DataInputStream(bais);
 
 		byte checksum = 0; for (int i=1 ; i<prefsData.length ; i++) {checksum += prefsData[i];}
 		//#ifdef DEBUG
@@ -13365,8 +13366,6 @@ public void saveGame()
 		dos.writeInt(league.userTeam.flagColor[0]);
 		dos.writeInt(league.userTeam.flagColor[1]);
 		//#else
-		dos.writeInt(0);
-		dos.writeInt(0);
 		//#endif
 		dos.writeInt(gameMode);
 

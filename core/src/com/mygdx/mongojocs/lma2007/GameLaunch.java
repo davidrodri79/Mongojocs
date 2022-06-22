@@ -3638,7 +3638,6 @@ public void menuAction(int cmd)
 		//#endif
 		
 		//#ifdef REM_2DMATCH
-		if (formCiclePos > 0) formCiclePos++;
 		//#endif
 		
 		switch (formCiclePos)

@@ -277,11 +277,11 @@ public class AnimatedSprite {
 //juan            xx += x/*+bank.rects[grp][idx][0]*/-com.mygdx.mongojocs.lma2007.GameCanvas.gc.scrollX;
 //juan            yy += y/*+bank.rects[grp][idx][1]*/-com.mygdx.mongojocs.lma2007.GameCanvas.gc.scrollY;
 			//#ifdef BUILD_SCROLLLL
-	            xx += x - GameCanvas.gc.scrollX;
-	            yy += y - GameCanvas.gc.scrollY;
+	            //xx += x - GameCanvas.gc.scrollX;
+	            //yy += y - GameCanvas.gc.scrollY;
 			//#else
-	            xx += x;
-	            yy += y;
+	            //xx += x;
+	            //yy += y;
 			//#endif
 
         //#endif

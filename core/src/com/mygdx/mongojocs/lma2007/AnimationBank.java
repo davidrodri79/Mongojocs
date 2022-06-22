@@ -205,7 +205,10 @@ public class AnimationBank implements AnimPakConstants {
         boolean extBitmap = true;        
     //#ifdef J2ME        
         String filename = DATA_DIR + "b" + bankId + "c" + cellSetId;
-    	dis = new DataInputStream(getClass().getResourceAsStream(filename + ".pak"));
+    	//dis = new DataInputStream(getClass().getResourceAsStream(filename + ".pak"));
+        //MONGOFIX
+        byte bytes[] = GameCanvas.gc.loadFile(filename + ".pak");
+        dis = new DataInputStream( new ByteArrayInputStream(bytes, 0, bytes.length));
 	//#elifdef DOJA
    	//#endif
         byte chunkId = CHUNK_EOF;
@@ -299,7 +302,8 @@ public class AnimationBank implements AnimPakConstants {
                 	
                 	if(inputPalette != null) {
                 	
-                		bitmap[c] = GameCanvas.gc.changePal(GameCanvas.gc.loadFile(pngName+".png"), inputPalette, outputPalette);                		
+                		//bitmap[c] = GameCanvas.gc.changePal(GameCanvas.gc.loadFile(pngName+".png"), inputPalette, outputPalette);
+                		bitmap[c] = GameCanvas.gc.loadImage(pngName); //MONGOFIX
                 	
                 	} else {
                 		

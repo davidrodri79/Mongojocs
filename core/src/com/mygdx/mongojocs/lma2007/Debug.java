@@ -15,6 +15,7 @@ package com.mygdx.mongojocs.lma2007;
 //#endif
 
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.Graphics;
 
@@ -161,6 +162,7 @@ static public void drawString(Graphics scr, String str, int x, int y)
 {
 //#ifdef J2ME
 	scr.drawString(str, x, y, 20);
+	Gdx.app.log("Debug", str);
 //#elifdef DOJA
 //#endif
 }
