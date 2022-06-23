@@ -53,7 +53,7 @@ public class Font {
     public int stringWidth(String s)
     {
         String hash = face+"-"+ style+"-"+size;
-        BitmapFont fnt;
+        BitmapFont fnt = null;
 
         if(Graphics.bitmapFonts.containsKey(hash))
         {

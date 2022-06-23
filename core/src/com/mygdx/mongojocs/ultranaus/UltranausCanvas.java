@@ -7,6 +7,7 @@ package com.mygdx.mongojocs.ultranaus;
 
 import java.io.InputStream;
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.DirectGraphics;
 import com.mygdx.mongojocs.midletemu.DirectUtils;
 import com.mygdx.mongojocs.midletemu.Font;
@@ -645,36 +646,42 @@ class UltranausCanvas extends FullCanvas
 		
 	public void create_city_gfx()
 	{
-		Image cityTiles=null;
-		InputStream is;		
-		int k,t,t1,t2;
-		byte b[]=new byte[116*60*2];
-		
-		try{
-			cityTiles = Image.createImage("/City.png");
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				Image cityTiles=null;
+				InputStream is;
+				int k,t,t1,t2;
+				byte b[]=new byte[116*60*2];
 
-		}catch(Exception err) {}
-		
-		//is=getClass().getResourceAsStream("/City.map");
-		readingdata.leerdata("/City.map",b,116*60*2);
-		
-		//City=Image.createImage(928,480);
-		City=Image.createImage(728,380);
-		
-		Graphics g=City.getGraphics();
-		
-		for(int j=0; j<60; j++)
-		for(int i=0; i<116; i++){
-			
-			k=(j*116)+i;		
-			t1=b[2*k]; if(t1<0) t1+=256;
-			t2=b[(2*k)+1]; if(t2<0) t2+=256;
-			t=(t1<<8)+t2;			
-			g.setClip(i*8,j*8,8,8);
-			g.drawImage(cityTiles,(i*8)-((t%25)*8),(j*8)-((t/25)*8),20);			
-		}
-		b=null; cityTiles=null; g=null; System.gc();
-														
+				try{
+					cityTiles = new Image();
+					cityTiles._createImage("/City.png");
+
+				}catch(Exception err) {}
+
+				//is=getClass().getResourceAsStream("/City.map");
+				readingdata.leerdata("/City.map",b,116*60*2);
+
+				//City=Image.createImage(928,480);
+				City=Image.createImage(728,380);
+
+				Graphics g=City.getGraphics();
+
+				for(int j=0; j<60; j++)
+					for(int i=0; i<116; i++){
+
+						k=(j*116)+i;
+						t1=b[2*k]; if(t1<0) t1+=256;
+						t2=b[(2*k)+1]; if(t2<0) t2+=256;
+						t=(t1<<8)+t2;
+						g.setClip(i*8,j*8,8,8);
+						g.drawImage(cityTiles,(i*8)-((t%25)*8),(j*8)-((t/25)*8),20);
+					}
+				b=null; cityTiles=null; g=null; System.gc();
+			}
+		});
+
 	}
 	
 	public void destroy_race_gfx()
@@ -861,30 +868,37 @@ class UltranausCanvas extends FullCanvas
 	
 	public void create_console()
 	{
-		try {
-			WindowTile = Image.createImage("/WindowTile.png"); 
-			Border = Image.createImage("/Border.png"); 
-			
-		} catch (Exception err) {}
-				
-		Console=Image.createImage(CANVX,CANVY);
-		Graphics g=Console.getGraphics();		
-		g.setClip(0,0,CANVX,CANVY);
-		for(int i=0; i<=CANVX/24; i++)	
-		for(int j=0; j<=CANVY/24; j++)	
-			g.drawImage(WindowTile,i*24,j*24,20);			
-		g.setClip(0,0,CANVX,10);
-		g.drawImage(Border,0,0,20);
-		g.setClip(0,CANVY-10,CANVX,10);
-		g.drawImage(Border,0,CANVY-10-14,20);		
-		for(int j=10; j<=CANVY-10; j+=4){
-			g.setClip(0,j,CANVX,4);
-			g.drawImage(Border,0,j-10,20);			
-		}		
-		g=null;
-		WindowTile=null;
-		Border=null;
-		System.gc();
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					WindowTile = new Image();
+					WindowTile._createImage("/WindowTile.png");
+					Border = new Image();
+					Border._createImage("/Border.png");
+
+				} catch (Exception err) {}
+
+				Console=Image.createImage(CANVX,CANVY);
+				Graphics g=Console.getGraphics();
+				g.setClip(0,0,CANVX,CANVY);
+				for(int i=0; i<=CANVX/24; i++)
+					for(int j=0; j<=CANVY/24; j++)
+						g.drawImage(WindowTile,i*24,j*24,20);
+				g.setClip(0,0,CANVX,10);
+				g.drawImage(Border,0,0,20);
+				g.setClip(0,CANVY-10,CANVX,10);
+				g.drawImage(Border,0,CANVY-10-14,20);
+				for(int j=10; j<=CANVY-10; j+=4){
+					g.setClip(0,j,CANVX,4);
+					g.drawImage(Border,0,j-10,20);
+				}
+				g=null;
+				WindowTile=null;
+				Border=null;
+				System.gc();
+			}
+		});
 	}
 	
 	public void show_font_text(Graphics g, String s, int px, int py, int fnt, int max)

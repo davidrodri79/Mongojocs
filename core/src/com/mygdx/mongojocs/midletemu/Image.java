@@ -26,12 +26,34 @@ public class Image {
 
         @Override
         public void run() {
-            image.texture = new Texture(MIDlet.assetsFolder+"/"+filename.substring(1));
+            image._createImage(filename);
+        }
+    };
+
+    static class ImageCreateTask implements Runnable {
+
+        Image image;
+        int width, height;
+
+        ImageCreateTask(Image i, int w, int h)
+        {
+            image = i;
+            width = w; height = h;
+        }
+
+        @Override
+        public void run() {
+            image._createImage(width, height);
         }
     };
 
     public Texture texture;
     FrameBuffer fbo = null;
+
+    public Image()
+    {
+
+    }
 
     public static Image createImage(String fileName)
     {
@@ -42,18 +64,29 @@ public class Image {
         return im;
     }
 
+    public void _createImage(String fileName)
+    {
+        texture = new Texture(MIDlet.assetsFolder+"/"+fileName.substring(1));
+    }
+
     public static Image createImage(int w, int h)
     {
         Image im = new Image();
-        im.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
-        im.texture = im.fbo.getColorBufferTexture();
+        ImageCreateTask task = new ImageCreateTask(im, w, h);
+        Gdx.app.postRunnable(task);
+        return im;
+    }
 
-        im.fbo.begin();
+    public void _createImage(int w, int h)
+    {
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
+        texture = fbo.getColorBufferTexture();
+
+        fbo.begin();
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        im.fbo.end();
+        fbo.end();
 
-        return im;
     }
 
     public static Image createImage(byte[] inbuf, int start, int length)

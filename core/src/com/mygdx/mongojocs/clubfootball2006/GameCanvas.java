@@ -31,6 +31,7 @@ package com.mygdx.mongojocs.clubfootball2006;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.mongojocs.midletemu.Canvas;
 //import com.mygdx.mongojocs.midletemu.Runnable;
@@ -891,7 +892,9 @@ public void biosCreate()
 	//#else
 	canvasTextCreate(10,0,canvasWidth - 20,canvasHeight);
 	//#endif
-	
+
+	Graphics.fontGenerate(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN , Font.SIZE_SMALL, Color.WHITE);
+
 	menuListFont =
 //#ifdef J2ME
 	Font.getFont(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN ,

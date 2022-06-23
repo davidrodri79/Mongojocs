@@ -3,6 +3,7 @@ package com.mygdx.mongojocs.escape;
 
 
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.FullCanvas;
 import com.mygdx.mongojocs.midletemu.Graphics;
@@ -528,21 +529,26 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 			break;
 						
 			case LOAD_DATA : 
-			if(cnt>1){
+			if(cnt==1){
 				/*sc=null; 
 				repaint();
 				serviceRepaints();
 				System.gc();*/			
 					
 				//Loading data
-				switch(level){
-					case 0 : sc=new EscapeNCity(dif); break;
-					case 1 : sc=new EscapeNMotorway(dif); break;
-					case 2 : sc=new EscapeNDesert(dif); break;
-				}
-				System.gc();			
-				crono=sc.total_time();
-				set_state(GAME_ACTION);					
+				Gdx.app.postRunnable(new Runnable() {
+					@Override
+					public void run() {
+						switch(level){
+							case 0 : sc=new EscapeNCity(dif); break;
+							case 1 : sc=new EscapeNMotorway(dif); break;
+							case 2 : sc=new EscapeNDesert(dif); break;
+						}
+						System.gc();
+						crono=sc.total_time();
+						set_state(GAME_ACTION);
+					}
+				});
 			}
 			break;
 			

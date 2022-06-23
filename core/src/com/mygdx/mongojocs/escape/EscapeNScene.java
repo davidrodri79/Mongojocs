@@ -2,6 +2,7 @@ package com.mygdx.mongojocs.escape;
 
 
 //import com.nokia.mid.ui.*;
+import com.badlogic.gdx.Gdx;
 import com.mygdx.mongojocs.midletemu.Graphics;
 import com.mygdx.mongojocs.midletemu.Image;
 
@@ -84,7 +85,8 @@ abstract class EscapeNScene {
 				
 		// Load tile bitmaps		
 		try {
-			TileImg = Image.createImage("/Stage"+Integer.toString(l)+"Tiles.png"); 
+			TileImg = new Image();
+			TileImg._createImage("/Stage"+Integer.toString(l)+"Tiles.png");
 			//TileImg = Image.createImage(8,8); 
 		}catch(Exception err) {}
 		
@@ -198,11 +200,10 @@ abstract class EscapeNScene {
 	
 	protected void create_backgrounds()
 	{
-						
 		byte t;
-		
-		Background=Image.createImage(tx*8,ty*8);
-		
+
+		Background=new Image();
+		Background._createImage(tx*8,ty*8);
 		bggr=Background.getGraphics();
 	}
 	

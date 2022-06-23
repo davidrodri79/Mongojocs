@@ -109,7 +109,6 @@ public class Graphics {
         else
         {
             f = fontGenerate(currentFont.face, currentFont.style, currentFont.size, currentColor);
-
         }
 
         // Draw text into clipped area texture

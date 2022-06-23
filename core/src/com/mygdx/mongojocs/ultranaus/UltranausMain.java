@@ -135,6 +135,7 @@ public class UltranausMain extends MIDlet implements Runnable, CommandListener
 	{		
 		/*display.setCurrent(null);
 		pant=null; */
+		thread=null;
 		save_data();		
 		System.gc();
 		this.notifyDestroyed();
@@ -172,8 +173,28 @@ public class UltranausMain extends MIDlet implements Runnable, CommandListener
 	}
 	
 	public void run()
-	{	
+	{
+		long t;
 
+		while (thread!=null){
+
+			t=System.currentTimeMillis();
+
+			game_update();
+
+			pant.repaint();
+
+			pant.serviceRepaints();
+
+			do{
+				try{
+					Thread.sleep(1);
+
+				}catch(InterruptedException e) {}
+
+			}while(System.currentTimeMillis()<t+50);
+
+		}
 	}
 	
 	public void set_state(int s)

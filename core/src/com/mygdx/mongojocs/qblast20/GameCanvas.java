@@ -19,6 +19,7 @@ package com.mygdx.mongojocs.qblast20;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.mygdx.mongojocs.midletemu.Canvas;
 import com.mygdx.mongojocs.midletemu.Command;
 import com.mygdx.mongojocs.midletemu.CommandListener;
@@ -90,43 +91,48 @@ static int loadPercent;
 public GameCanvas(Game ga) 
 {
 	this.ga = ga;
-	
-	//#ifdef FORCEFULLSCREEN
-	//#endif
-	
-	//#ifdef J2ME  
-	menuListFont = Font.getFont( Font.FACE_PROPORTIONAL ,
-	
-	//#ifdef BOLDMENUFONT
-	//#else
-								 Font.STYLE_PLAIN , 
-	//#endif			
-	//#ifdef LARGEMENUFONT
-	//#else
-								 Font.SIZE_SMALL );
-	//#endif								
-	//#elifdef DOJA
-	//#endif
-	fontHeight = menuListFont.getHeight();
-	
-	//#ifdef SG-Z105
-	//#endif	
-	
-	//#ifdef J2ME		
-	buttonImg = loadImage("/menu.png");	
-	
-		//#ifdef NOPHONEFONTATBAR
-		timerFnt = loadImage("/numbers.png");	
-		//#endif
-	//#endif
-		
-	frustum = new int[9];
-	
-	//#ifdef J2ME
-	thread=new Thread(this); System.gc();
-	thread.start();
-	//#endif
 
+	 {
+			//#ifdef FORCEFULLSCREEN
+			//#endif
+
+			Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL, Color.WHITE);
+
+			//#ifdef J2ME
+			menuListFont = Font.getFont( Font.FACE_PROPORTIONAL ,
+
+					//#ifdef BOLDMENUFONT
+					//#else
+					Font.STYLE_PLAIN ,
+					//#endif
+					//#ifdef LARGEMENUFONT
+					//#else
+					Font.SIZE_SMALL );
+			//#endif
+			//#elifdef DOJA
+			//#endif
+			fontHeight = menuListFont.getHeight();
+
+			//#ifdef SG-Z105
+			//#endif
+
+			//#ifdef J2ME
+			buttonImg = new Image();
+			buttonImg._createImage("/menu.png");
+
+			//#ifdef NOPHONEFONTATBAR
+			//timerFnt = new Image();
+			//timerFnt._createImage("/numbers.png");
+			//#endif
+			//#endif
+
+			frustum = new int[9];
+
+			//#ifdef J2ME
+			thread=new Thread(this); System.gc();
+			thread.start();
+			//#endif
+		}
 }
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -4133,7 +4139,6 @@ public void biosRefresh()
 // menu Refresh
 // --------------------
 	case BIOS_MENU:
-		
 		menuInit(menuType);
 		menuShow=true;		
 	return;
