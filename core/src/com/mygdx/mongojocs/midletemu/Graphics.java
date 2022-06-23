@@ -181,7 +181,12 @@ public class Graphics {
 
     public void drawImage(Image img, int x, int y, int flags)
     {
-        if(allClipped || img.texture == null) return;
+        _drawImage(this, img, x, y, flags);
+    }
+
+    public static void _drawImage(Graphics g, Image img, int x, int y, int flags)
+    {
+        if(g.allClipped || img.texture == null) return;
 
         {
 
@@ -193,94 +198,103 @@ public class Graphics {
             float v2 = 1;
 
             //Clipping
-            if(x < clipx)
+            if(x < g.clipx)
             {
-                int dx = clipx - x;
+                int dx = g.clipx - x;
                 x += dx; w -= dx; u+= (float)dx/img.texture.getWidth();
             }
-            if(x + w > clipx + clipw)
+            if(x + w > g.clipx + g.clipw)
             {
-                int dx = (x + w) - (clipx + clipw);
+                int dx = (x + w) - (g.clipx + g.clipw);
                 w -= dx; u2-= (float)dx/img.texture.getWidth();
             }
-            if(y < clipy)
+            if(y < g.clipy)
             {
-                int dy = clipy - y;
+                int dy = g.clipy - y;
                 y += dy; h -= dy; v+= (float)dy/img.texture.getHeight();
             }
-            if(y + h > clipy + cliph)
+            if(y + h > g.clipy + g.cliph)
             {
-                int dy = (y + h) - (clipy + cliph);
+                int dy = (y + h) - (g.clipy + g.cliph);
                 h -= dy; v2-= (float)dy/img.texture.getHeight();
             }
 
             int finaly = y;
 
-            if(fromImage == null)
+            if(g.fromImage == null)
                 Display.fbo.begin();
             else
-                fromImage.fbo.begin();
+                g.fromImage.fbo.begin();
 
-            batch.setProjectionMatrix(camera.combined);
-            batch.begin();
-            batch.draw(img.texture, x, finaly, w, h, u, v, u2, v2 );
-            batch.end();
+            g.batch.setProjectionMatrix(g.camera.combined);
+            g.batch.begin();
+            g.batch.draw(img.texture, x, finaly, w, h, u, v, u2, v2 );
+            g.batch.end();
 
-            if(fromImage == null)
+            if(g.fromImage == null)
                 Display.fbo.end();
             else
-                fromImage.fbo.end();
+                g.fromImage.fbo.end();
         }
 
     }
     
     public void drawRect(int x, int y, int w, int h)
     {
-        // WARNING: No esta afectado por el clip!!
-        if(allClipped) return;
+       _drawRect(this, x, y, w, h);
+    }
 
-        if(fromImage == null)
+    public static void _drawRect(Graphics g, int x, int y, int w, int h)
+    {
+        if(g.allClipped) return;
+
+        if(g.fromImage == null)
             Display.fbo.begin();
         else
-            fromImage.fbo.begin();
+            g.fromImage.fbo.begin();
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(currentColor);
-        shapeRenderer.rect(x, y, w, 1);
-        shapeRenderer.rect(x, y, 1, h);
-        shapeRenderer.rect(x, y + h, w, 1);
-        shapeRenderer.rect(x + w - 1, y, 1, h);
-        shapeRenderer.end();
+        g.shapeRenderer.setProjectionMatrix(g.camera.combined);
+        g.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        g.shapeRenderer.setColor(g.currentColor);
+        g.shapeRenderer.rect(x, y, w, 1);
+        g.shapeRenderer.rect(x, y, 1, h);
+        g.shapeRenderer.rect(x, y + h, w, 1);
+        g.shapeRenderer.rect(x + w - 1, y, 1, h);
+        g.shapeRenderer.end();
 
-        if(fromImage == null)
+        if(g.fromImage == null)
             Display.fbo.end();
         else
-            fromImage.fbo.end();
+            g.fromImage.fbo.end();
     }
 
     public void fillRect(int x, int y, int w, int h) {
 
+        _fillRect(this, x, y, w, h);
+    }
+
+    public static void _fillRect(Graphics g, int x, int y, int w, int h) {
+
         // WARNING: No esta afectado por el clip!!
-        if(allClipped) return;
+        if(g.allClipped) return;
 
         int finaly = y;
 
-        if(fromImage == null)
+        if(g.fromImage == null)
             Display.fbo.begin();
         else
-            fromImage.fbo.begin();
+            g.fromImage.fbo.begin();
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(currentColor);
-        shapeRenderer.rect(x, finaly, w, h);
-        shapeRenderer.end();
+        g.shapeRenderer.setProjectionMatrix(g.camera.combined);
+        g.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        g.shapeRenderer.setColor(g.currentColor);
+        g.shapeRenderer.rect(x, finaly, w, h);
+        g.shapeRenderer.end();
 
-        if(fromImage == null)
+        if(g.fromImage == null)
             Display.fbo.end();
         else
-            fromImage.fbo.end();
+            g.fromImage.fbo.end();
     }
 
     public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1)

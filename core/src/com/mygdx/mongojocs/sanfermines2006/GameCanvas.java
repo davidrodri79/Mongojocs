@@ -6655,10 +6655,16 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image img
 
 //#ifdef SCROLL_BUFFER_RENDER
 // Generamos imagen para doble bufer
-	if (scrollFondoImg == null) {
-		scrollFondoImg = Image.createImage(scrollFondoWidth * tileWidth, scrollFondoHeight * tileHeight);
-		scrollFondoGfx = scrollFondoImg.getGraphics();
-	}
+	Gdx.app.postRunnable(new Runnable() {
+		@Override
+		public void run() {
+			if (scrollFondoImg == null) {
+				scrollFondoImg = Image.createImage(scrollFondoWidth * tileWidth, scrollFondoHeight * tileHeight);
+				scrollFondoGfx = scrollFondoImg.getGraphics();
+			}
+		}
+	});
+
 //#endif
 
 }

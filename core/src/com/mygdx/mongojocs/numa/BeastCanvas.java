@@ -153,8 +153,13 @@ public class BeastCanvas
 			ExtrasCoo = LoadFile("/Extras.coo",ExtrasCoo.length);
 			
 			loadProgressInc(10);	// 20
-			
-			 Bkg = Image.createImage(96,250);
+
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				Bkg = Image.createImage(96,250);
+			}
+		});
 
 			loadProgressInc(10);	// 30
 			
@@ -358,124 +363,130 @@ public class BeastCanvas
 		//#endif
 
 
-		Graphics gg = Bkg.getGraphics();
-		
-		int sky[][][]={{{25,113,134},{251,212,93}},					  					  
-					  {{158,11,14},{255,247,153}},
-					  {{13,2,0},{8,76,115}}};
-		int caves[][][]={{{147,48,29},{223,188,117}},
-						 {{190,148,148},{110,67,67}},
-						 {{51,46,31},{126,113,76}},						 
-						 {{46,28,0},{127,105,46}},
-						 {{0,0,0},{255,0,0}}
-						 };					 
-		
-		if(game.world.tileSet==0){
-						
-			//#ifndef INITIALLOAD
-			//Bkg1 = loadImage("/Bkg1.png");
-			//#endif
-							
-			int r1=sky[game.world.level][0][0], r2=sky[game.world.level][1][0], g1=sky[game.world.level][0][1], 
-				g2=sky[game.world.level][1][1], b1=sky[game.world.level][0][2], b2=sky[game.world.level][1][2];
-			
-			gg.setClip(0,0,288,250);
-			gg.setColor(r1,g1,b1);
-			gg.fillRect(0,0,288,140);				
-			for(int i = 0; i<20; i++){
-				gg.setColor(((r2*i)+(r1*(19-i)))/19,
-							((g2*i)+(g1*(19-i)))/19,
-							((b2*i)+(b1*(19-i)))/19);
-				gg.fillRect(0,98+2*i,288,2);
-			}				
-			gg.setColor(2,45,42);
-			gg.fillRect(0,160,288,200);		
-			gg.drawImage(Bkg1,0,122,20);
-			gg.drawImage(Bkg1,96,122,20);
-			gg.drawImage(Bkg1,192,122,20);
-			
-			if(game.world.level==2){				
-				for(int i=0; i<30; i++){
-					int x=Math.abs(game.rnd.nextInt())%96, y=Math.abs(game.rnd.nextInt())%110, l=1+Math.abs(game.rnd.nextInt())%5;
-					gg.setColor(255/l,255/l,255/l);
-					gg.fillRect(x,y,1,1);
-					gg.fillRect(96+x,y,1,1);
-					gg.fillRect(192+x,y,1,1);
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				Graphics gg = Bkg.getGraphics();
+
+				int sky[][][]={{{25,113,134},{251,212,93}},
+						{{158,11,14},{255,247,153}},
+						{{13,2,0},{8,76,115}}};
+				int caves[][][]={{{147,48,29},{223,188,117}},
+						{{190,148,148},{110,67,67}},
+						{{51,46,31},{126,113,76}},
+						{{46,28,0},{127,105,46}},
+						{{0,0,0},{255,0,0}}
+				};
+
+				if(game.world.tileSet==0){
+
+					//#ifndef INITIALLOAD
+					//Bkg1 = loadImage("/Bkg1.png");
+					//#endif
+
+					int r1=sky[game.world.level][0][0], r2=sky[game.world.level][1][0], g1=sky[game.world.level][0][1],
+							g2=sky[game.world.level][1][1], b1=sky[game.world.level][0][2], b2=sky[game.world.level][1][2];
+
+					gg.setClip(0,0,288,250);
+					gg.setColor(r1,g1,b1);
+					gg.fillRect(0,0,288,140);
+					for(int i = 0; i<20; i++){
+						gg.setColor(((r2*i)+(r1*(19-i)))/19,
+								((g2*i)+(g1*(19-i)))/19,
+								((b2*i)+(b1*(19-i)))/19);
+						gg.fillRect(0,98+2*i,288,2);
+					}
+					gg.setColor(2,45,42);
+					gg.fillRect(0,160,288,200);
+					gg.drawImage(Bkg1,0,122,20);
+					gg.drawImage(Bkg1,96,122,20);
+					gg.drawImage(Bkg1,192,122,20);
+
+					if(game.world.level==2){
+						for(int i=0; i<30; i++){
+							int x=Math.abs(game.rnd.nextInt())%96, y=Math.abs(game.rnd.nextInt())%110, l=1+Math.abs(game.rnd.nextInt())%5;
+							gg.setColor(255/l,255/l,255/l);
+							gg.fillRect(x,y,1,1);
+							gg.fillRect(96+x,y,1,1);
+							gg.fillRect(192+x,y,1,1);
+						}
+					}
 				}
+
+
+
+				if(game.world.tileSet==1){
+
+					//#ifndef INITIALLOAD
+					//Bkg2 = loadImage("/Bkg2.png");
+					//#endif
+
+					int l=game.world.level-3;
+					int r1=caves[l][0][0], r2=caves[l][1][0], g1=caves[l][0][1],
+							g2=caves[l][1][1], b1=caves[l][0][2], b2=caves[l][1][2];
+
+					gg.setClip(0,0,288,250);
+
+					gg.setColor(r1,g1,b1);
+					gg.fillRect(0,0,288,50);
+
+					gg.setColor(r1,g1,b1);
+					gg.fillRect(0,0,288,98);
+					gg.setColor(r2,g2,b2);
+					gg.fillRect(0,198,288,98);
+
+					for(int i = 0; i<50; i++){
+						gg.setColor(((r2*i)+(r1*(49-i)))/49,
+								((g2*i)+(g1*(49-i)))/49,
+								((b2*i)+(b1*(49-i)))/49);
+						gg.fillRect(0,50+3*i,288,3);
+					}
+
+					gg.drawImage(Bkg2,0,0,20);
+					gg.drawImage(Bkg2,96,0,20);
+					gg.drawImage(Bkg2,192,0,20);
+
+				}
+
+				if(game.world.tileSet==2){
+
+					//#ifndef INITIALLOAD
+					//Bkg3 = loadImage("/Bkg3.png");
+					//#endif
+
+					int l=game.world.level-3;
+					int r1=caves[l][0][0], r2=caves[l][1][0], g1=caves[l][0][1],
+							g2=caves[l][1][1], b1=caves[l][0][2], b2=caves[l][1][2];
+
+					gg.setClip(0,0,288,250);
+
+					gg.setColor(r1,g1,b1);
+					gg.fillRect(0,0,288,98);
+					gg.setColor(r2,g2,b2);
+					gg.fillRect(0,98,288,198);
+
+					for(int i = 0; i<50; i++){
+						gg.setColor(((r2*i)+(r1*(49-i)))/49,
+								((g2*i)+(g1*(49-i)))/49,
+								((b2*i)+(b1*(49-i)))/49);
+						gg.fillRect(0,75+2*i,288,4);
+					}
+
+					//#ifdef GFXHUGE
+					//#else
+					gg.drawImage(Bkg3,0,0,20);
+					gg.drawImage(Bkg3,96,0,20);
+					gg.drawImage(Bkg3,192,0,20);
+					//#endif
+
+				}
+				//#endif
+
+				gg.setClip(0,0,176,208);
+				Bkg.flipVertical();
 			}
-		}
+		});
 
-
-		
-		if(game.world.tileSet==1){
-								
-			//#ifndef INITIALLOAD
-			//Bkg2 = loadImage("/Bkg2.png");
-			//#endif
-					
-			int l=game.world.level-3;
-			int r1=caves[l][0][0], r2=caves[l][1][0], g1=caves[l][0][1], 
-				g2=caves[l][1][1], b1=caves[l][0][2], b2=caves[l][1][2];
-			
-			gg.setClip(0,0,288,250);
-			
-			gg.setColor(r1,g1,b1);
-			gg.fillRect(0,0,288,50);
-			
-			gg.setColor(r1,g1,b1);
-			gg.fillRect(0,0,288,98);
-			gg.setColor(r2,g2,b2);
-			gg.fillRect(0,198,288,98);			
-			
-			for(int i = 0; i<50; i++){
-				gg.setColor(((r2*i)+(r1*(49-i)))/49,		
-							((g2*i)+(g1*(49-i)))/49,
-							((b2*i)+(b1*(49-i)))/49);
-				gg.fillRect(0,50+3*i,288,3);				
-			}
-									
-			gg.drawImage(Bkg2,0,0,20);
-			gg.drawImage(Bkg2,96,0,20);
-			gg.drawImage(Bkg2,192,0,20);
-			
-		}
-		
-		if(game.world.tileSet==2){
-					
-			//#ifndef INITIALLOAD									
-			//Bkg3 = loadImage("/Bkg3.png");
-			//#endif
-									
-			int l=game.world.level-3;
-			int r1=caves[l][0][0], r2=caves[l][1][0], g1=caves[l][0][1], 
-				g2=caves[l][1][1], b1=caves[l][0][2], b2=caves[l][1][2];
-			
-			gg.setClip(0,0,288,250);
-					
-			gg.setColor(r1,g1,b1);
-			gg.fillRect(0,0,288,98);
-			gg.setColor(r2,g2,b2);
-			gg.fillRect(0,98,288,198);		
-		
-			for(int i = 0; i<50; i++){
-				gg.setColor(((r2*i)+(r1*(49-i)))/49,		
-							((g2*i)+(g1*(49-i)))/49,
-							((b2*i)+(b1*(49-i)))/49);
-				gg.fillRect(0,75+2*i,288,4);				
-			}			
-			
-			//#ifdef GFXHUGE
-			//#else
-			gg.drawImage(Bkg3,0,0,20);
-			gg.drawImage(Bkg3,96,0,20);
-			gg.drawImage(Bkg3,192,0,20);
-			//#endif
-			
-		}		
-		//#endif
-
-		gg.setClip(0,0,176,208);
-		Bkg.flipVertical();
 
 		loadProgress = 100;	loadProgressInc(0);		
 		loadProgress = 0;

@@ -165,40 +165,50 @@ class CerberusCanvas extends FullCanvas
 		
 		repaint(); serviceRepaints();
 		
-		try{
-		//Paper = loadImageFromFile("/Misc.dat",misc_dat,7); 						
-		Paper = Image.createImage("/Paper.png"); 						
-		
-		
-		load_percent++; repaint(); serviceRepaints();
+		try {
+			//Paper = loadImageFromFile("/Misc.dat",misc_dat,7);
+			Paper = Image.createImage("/Paper.png");
+
+
+			load_percent++;
+			repaint();
+			serviceRepaints();
 		
 		/*SwampMap = loadImageFromFile("/Swamp.dat",swamp_dat,2); 						
 		CavesMap = loadImageFromFile("/Caves.dat",caves_dat,2); 						
 		ForestMap = loadImageFromFile("/Forest.dat",forest_dat,1); 						
 		CastleMap = loadImageFromFile("/Castle.dat",castle_dat,1); 						
 		Moon = loadImageFromFile("/Misc.dat",misc_dat,6);*/
-		
-		SwampMap = Image.createImage("/SwampMap.png"); 						
-		CavesMap = Image.createImage("/CavesMap.png"); 						
-		ForestMap = Image.createImage("/ForestMap.png"); 						
-		CastleMap = Image.createImage("/CastleMap.png"); 						
-		Moon = Image.createImage("/Moon.png"); 						
-					
-		load_percent++; repaint(); serviceRepaints();
-						
-		//Player = loadImageFromFile("/Player.dat",player_dat,1);
-		
-		Player = Image.createImage("/Samuel.png"); 						
-		
-		buffer = null;		
-		System.gc(); load_percent++; repaint(); serviceRepaints();
-			
-		//Armor = loadImageFromFile("/Player.dat",player_dat,0);
-		
-		Armor = Image.createImage("/Armor.png");
-						
-		buffer = null;								
-		System.gc(); load_percent++; repaint(); serviceRepaints();
+
+			SwampMap = Image.createImage("/SwampMap.png");
+			CavesMap = Image.createImage("/CavesMap.png");
+			ForestMap = Image.createImage("/ForestMap.png");
+			CastleMap = Image.createImage("/CastleMap.png");
+			Moon = Image.createImage("/Moon.png");
+
+			load_percent++;
+			repaint();
+			serviceRepaints();
+
+			//Player = loadImageFromFile("/Player.dat",player_dat,1);
+
+			Player = Image.createImage("/Samuel.png");
+
+			buffer = null;
+			System.gc();
+			load_percent++;
+			repaint();
+			serviceRepaints();
+
+			//Armor = loadImageFromFile("/Player.dat",player_dat,0);
+
+			Armor = Image.createImage("/Armor.png");
+
+			buffer = null;
+			System.gc();
+			load_percent++;
+			repaint();
+			serviceRepaints();
 							
 		
 		/*SwampT = loadImageFromFile("/Swamp.dat",swamp_dat,5); 					
@@ -207,67 +217,81 @@ class CerberusCanvas extends FullCanvas
 		SwampMisc = loadImageFromFile("/Swamp.dat",swamp_dat,3); 					
 		Clouds = loadImageFromFile("/Misc.dat",misc_dat,2); 					
 		SwampEnemy = loadImageFromFile("/Swamp.dat",swamp_dat,1); */
-		
-		SwampT = Image.createImage("/SwampT.png");					
-		SwampPlants = Image.createImage("/SwampPlants.png");					
-		SwampCave = Image.createImage("/SwampCave.png");					
-		SwampMisc = Image.createImage("/SwampMisc.png");					
-		Clouds = Image.createImage("/Clouds.png");					
-		SwampEnemy = Image.createImage("/SwampEnemy.png");					
-		
-		load_percent++; repaint(); serviceRepaints();
+
+			SwampT = Image.createImage("/SwampT.png");
+			SwampPlants = Image.createImage("/SwampPlants.png");
+			SwampCave = Image.createImage("/SwampCave.png");
+			SwampMisc = Image.createImage("/SwampMisc.png");
+			Clouds = Image.createImage("/Clouds.png");
+			SwampEnemy = Image.createImage("/SwampEnemy.png");
+
+			load_percent++;
+			repaint();
+			serviceRepaints();
 							
 		/*CavesT = loadImageFromFile("/Caves.dat",caves_dat,3); 						
 		CavesWall = loadImageFromFile("/Caves.dat",caves_dat,4); 						
 		//CavesLava = loadImageFromFile("/Caves.dat",caves_dat,1); 						
-		CavesEnemy = loadImageFromFile("/Caves.dat",caves_dat,0); */						
-		
-		CavesT = Image.createImage("/CavesT.png");					
-		CavesWall = Image.createImage("/CavesWall.png");					
-		CavesLava = Image.createImage("/CavesLava.png");						
-		CavesEnemy = Image.createImage("/CavesEnemy.png");						
-					
-		load_percent++; repaint(); serviceRepaints();
+		CavesEnemy = loadImageFromFile("/Caves.dat",caves_dat,0); */
+
+			CavesT = Image.createImage("/CavesT.png");
+			CavesWall = Image.createImage("/CavesWall.png");
+			CavesLava = Image.createImage("/CavesLava.png");
+			CavesEnemy = Image.createImage("/CavesEnemy.png");
+
+			load_percent++;
+			repaint();
+			serviceRepaints();
 						
 		/*ForestT = loadImageFromFile("/Forest.dat",forest_dat,2); 						
 		ForestTree = loadImageFromFile("/Forest.dat",forest_dat,3); 						
 		ForestEnemy = loadImageFromFile("/Forest.dat",forest_dat,0); 						
-		Clouds2 = loadImageFromFile("/Misc.dat",misc_dat,3); */						
-		
-		ForestT = Image.createImage("/ForestT.png");						
-		ForestTree = Image.createImage("/ForestTree.png");										
-		ForestEnemy = Image.createImage("/ForestEnemy.png");						
-		Clouds2 = Image.createImage("/Clouds2.png");						
-						
-		load_percent++; repaint(); serviceRepaints();
+		Clouds2 = loadImageFromFile("/Misc.dat",misc_dat,3); */
+
+			ForestT = Image.createImage("/ForestT.png");
+			ForestTree = Image.createImage("/ForestTree.png");
+			ForestEnemy = Image.createImage("/ForestEnemy.png");
+			Clouds2 = Image.createImage("/Clouds2.png");
+
+			load_percent++;
+			repaint();
+			serviceRepaints();
 							
 		/*CastleT = loadImageFromFile("/Castle.dat",castle_dat,2); 						
 		CastleEnemy = loadImageFromFile("/Castle.dat",castle_dat,0); 						
 		//Rain = loadImageFromFile("/Castle.dat",castle_dat,3);*/
-		
-		CastleT = Image.createImage("/CastleT.png");								 						 
-		CastleEnemy = Image.createImage("/CastleEnemy.png");								 						 
-		Rain = Image.createImage("/Rain.png");								 						 
-		 						 						
-		load_percent++; repaint(); serviceRepaints();
 
-		Sky = Image.createImage(CANVX,SCREENY);
-										
-		// Create sky
-						
-		Graphics gg=Sky.getGraphics();
-				
-		gg.setColor(0,3,29);
-		gg.fillRect(0,64,CANVX,SCREENY-64);
+			CastleT = Image.createImage("/CastleT.png");
+			CastleEnemy = Image.createImage("/CastleEnemy.png");
+			Rain = Image.createImage("/Rain.png");
 
-			for(int i=0; i<CANVX; i+=32){
-					
-			gg.setClip(i,0,32,64);
-			gg.drawImage(SwampMisc,i,0,20);
-		}	
-				
-		gg.setClip(0,22,175,SCREENY);
-		gg.drawImage(Clouds,0,22,20);
+			load_percent++;
+			repaint();
+			serviceRepaints();
+
+			Thread.sleep(100);
+
+			Gdx.app.postRunnable(new Runnable() {
+
+				public void run() {
+
+					Sky = Image.createImage(CANVX, SCREENY);
+					// Create sky
+					Graphics gg = Sky.getGraphics();
+
+					gg.setColor(0, 3, 29);
+					gg.fillRect(0, 64, CANVX, SCREENY - 64);
+
+					for (int i = 0; i < CANVX; i += 32) {
+
+						gg.setClip(i, 0, 32, 64);
+						gg.drawImage(SwampMisc, i, 0, 20);
+					}
+
+					gg.setClip(0, 22, 175, SCREENY);
+					gg.drawImage(Clouds, 0, 22, 20);
+				}
+			});
 				
 		int map_offset[]={1088,576,1032,632,810,588,400,448,448};
 		AuxTileMap=multiread("/Maps.map",map_offset,8);

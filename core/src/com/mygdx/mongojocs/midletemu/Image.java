@@ -30,45 +30,6 @@ public class Image {
         }
     };
 
-    static class ImageCreateTask implements Runnable {
-
-        Image im;
-        int width, height;
-
-        ImageCreateTask(Image i, int w, int h)
-        {
-            im = i;
-            width = w;
-            height = h;
-        }
-
-        @Override
-        public void run() {
-            im.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
-            im.texture = im.fbo.getColorBufferTexture();
-
-            im.fbo.begin();
-            Gdx.gl.glClearColor(1, 1, 1, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            im.fbo.end();
-        }
-    };
-
-    public class GetGraphicsFromImage implements Runnable {
-
-        Graphics g;
-        GetGraphicsFromImage(Graphics graphics)
-        {
-            g=graphics;
-        }
-        @Override
-        public void run() {
-            g.init();
-            g.camera.setToOrtho(false, getWidth(), getHeight());
-            g.batch.setProjectionMatrix(g.camera.combined);
-        }
-    };
-
     public Texture texture;
     FrameBuffer fbo = null;
 
@@ -84,8 +45,13 @@ public class Image {
     public static Image createImage(int w, int h)
     {
         Image im = new Image();
-        ImageCreateTask task = new ImageCreateTask(im, w, h);
-        Gdx.app.postRunnable(task);
+        im.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
+        im.texture = im.fbo.getColorBufferTexture();
+
+        im.fbo.begin();
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        im.fbo.end();
 
         return im;
     }
@@ -109,7 +75,9 @@ public class Image {
     {
         Graphics g = new Graphics();
         g.fromImage = this;
-        Gdx.app.postRunnable(new GetGraphicsFromImage(g));
+        g.init();
+        g.camera.setToOrtho(false, getWidth(), getHeight());
+        g.batch.setProjectionMatrix(g.camera.combined);
         return g;
     }
 
