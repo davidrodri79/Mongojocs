@@ -42,7 +42,11 @@ public class Font {
        f.style = style;
        f.size = size;
 
-        return f;
+       /*String hash = face+"-"+ style+"-"+size;
+       if(Graphics.bitmapFonts.get(hash) == null)
+           Graphics.fontGenerate(face, style, size, Color.WHITE);*/
+
+       return f;
     }
 
     public int getHeight()
@@ -61,11 +65,15 @@ public class Font {
         }
         else
         {
-            fnt = Graphics.fontGenerate(face, style, size, Color.WHITE);
+            Graphics.fontGenerate(face, style, size, Color.WHITE);
         }
 
-        layout.setText( fnt, s);
-        return (int)layout.width;
+        if(fnt != null) {
+            layout.setText(fnt, s);
+            return (int) layout.width;
+        }
+        else
+            return 0;
 
     }
 

@@ -893,6 +893,7 @@ public void biosCreate()
 	canvasTextCreate(10,0,canvasWidth - 20,canvasHeight);
 	//#endif
 
+	Graphics.fontGenerate(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN , Font.SIZE_SMALL, new Color(0x000000ff));
 	Graphics.fontGenerate(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN , Font.SIZE_SMALL, Color.WHITE);
 
 	menuListFont =
@@ -9522,7 +9523,7 @@ public void initResources()
     
     //#ifdef J2ME
     byte inbuf[] = loadFile("/plant.png");        
-    imgTeam[0] = Image.createImage("/plant.png"); //MONGO changePal(inbuf, AshirtsRGB[AhomeCostume ? 0 : 1]);
+    imgTeam[0] = changePal(inbuf, AshirtsRGB[AhomeCostume ? 0 : 1]);
     inbuf = null;   
     progressBarStep(20);
     //#else
@@ -9532,7 +9533,7 @@ public void initResources()
     //#ifdef J2ME
     inbuf = loadFile("/plant.png");
     
-    imgTeam[1] = Image.createImage("/plant.png"); //MONGO changePal(inbuf, BshirtsRGB[BhomeCostume ? 0 : 1]);
+    imgTeam[1] = changePal(inbuf, BshirtsRGB[BhomeCostume ? 0 : 1]);
                         
     inbuf = null;   
     progressBarStep(20);

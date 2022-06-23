@@ -135,6 +135,7 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 	{
 		/*display.setCurrent(null);
 		pant=null; */
+		thread = null;
 		save_data();		
 		System.gc();
 		this.notifyDestroyed();
@@ -222,7 +223,7 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 				
 			} while(System.currentTimeMillis()<t+50);
 									
-		}		
+		}
 	}
 	
 	public void set_state(int s)

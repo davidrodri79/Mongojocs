@@ -286,7 +286,7 @@ public void runEnd()
 
 boolean biosExit;
 
-/*
+
 public void biosWait()
 {
 //#if DEBUG && DEBUG_STACK
@@ -321,12 +321,12 @@ public void biosWait()
 	keyY    = intKeyY;
 	keyMisc = intKeyMisc;
 }
-*/
-	//MONGOFIX biosWait no bloqueante!!!!
-	boolean biosWaiting = false;
-	boolean biosWaitComplete = false;
 
-	public void biosWait()
+	//MONGOFIX biosWait no bloqueante!!!!
+	//boolean biosWaiting = false;
+	//boolean biosWaitComplete = false;
+
+	/*public void biosWait()
 	{
 		Gdx.app.log("biosWait","Estamos en biosWait!!!!");
 		biosExit = false;
@@ -356,7 +356,7 @@ public void biosWait()
 	public void biosWaitEnd()
 	{
 		biosWaitComplete = false;
-	}
+	}*/
 // --------------------
 // bios Push
 // ====================
@@ -2541,8 +2541,8 @@ public Image loadImage(String FileName)
 // ---------------------------------------------------------
 
 public Image loadImage(String file, String palfile) {
-	//Image img;
-	/*System.gc();
+	Image img;
+	System.gc();
 	byte[] data = loadFile(file+".png");
 	if (palfile != null) {
 		byte[] pal = loadFile(palfile);
@@ -2569,8 +2569,7 @@ public Image loadImage(String file, String palfile) {
 	//#endif
 		return null;
 	}
-	return img;*/  //MONGOFIX
-	return loadImage(file);
+	return img;
 }
 
 
@@ -6659,7 +6658,8 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image img
 		@Override
 		public void run() {
 			if (scrollFondoImg == null) {
-				scrollFondoImg = Image.createImage(scrollFondoWidth * tileWidth, scrollFondoHeight * tileHeight);
+				scrollFondoImg = new Image();
+				scrollFondoImg._createImage(scrollFondoWidth * tileWidth, scrollFondoHeight * tileHeight);
 				scrollFondoGfx = scrollFondoImg.getGraphics();
 			}
 		}
@@ -8523,12 +8523,6 @@ public void gameCreate()
 
 public void gameTick()
 {
-	//MONGOFIX
-	if(biosWaiting)
-	{
-		biosWaitTick();
-		return;
-	}
 
 	switch (gameStatus)
 	{
@@ -8563,7 +8557,7 @@ public void gameTick()
 // ===============================
 	case GAME_MENU_START:			// Inicializamos recursos para menus y preguntamos si queremos juego con sonido
 
-		if(!biosWaitComplete) {
+		{
 			biosPauseEnabled = true;
 
 //		menuCreate();
@@ -8573,11 +8567,8 @@ public void gameTick()
 
 			//#ifndef PLAYER_NONE
 			popupInitAsk(null, gameText[TEXT_GAME_WITH_SOUND], SOFTKEY_NO, SOFTKEY_YES);
-			biosWaitInit();
-		}
-		else
-		{
-			biosWaitEnd();
+			biosWait();
+
 			gameSound = popupResult;
 			soundPlay(MUSIC_CLIN, 1);
 			//#endif
@@ -8619,7 +8610,7 @@ public void gameTick()
 
 
 	case GAME_MENU_MAIN:
-		if(!biosWaitComplete) {
+		{
 			menuInit(MENU_MAIN);
 			if (soundOld != MUSIC_MENU) {
 				soundPlay(MUSIC_MENU, 0);
@@ -8648,13 +8639,12 @@ public void gameTick()
 				menuInit(MENU_STAGE_SELECT);
 				if (!menuAcept) {
 					playerSelectFlag = true;
-					biosWaitInit();
+					biosWait();
 				}
 			} else {
-				biosWaitInit();
+				biosWait();
 			}
-		}else {
-			biosWaitEnd();
+
 //#ifdef DEBUG
 			System.out.println("opppps!!!!!! hemos salido del biosWait principal");
 //#endif
@@ -8696,7 +8686,7 @@ public void gameTick()
 
 	case GAME_MENU_RECUENTO:
 
-		if(!biosWaitComplete) {
+		{
 			menuCreate(false);
 
 			menuInit(MENU_LOADING);
@@ -8711,37 +8701,9 @@ public void gameTick()
 				soundPlay(MUSIC_MENU, 0);
 
 				menuInit(MENU_RECUENTO);
-				biosWaitInit();
-				break;
-			}
-
-			// Si hemos completado todos los encierros, mostramos "felicidades" e invitamos a jugar en el modo "sobrevive"
-			// Si hemos recogido todas las letras "FERMINES", mostramos popup indicando que hemos desbloqueado
-			if (muestraFelicidades || muestraDesbloqueo) {
-				int tmp = 0;
-				if (muestraFelicidades) {
-					tmp = TEXT_SOBREVIBE_DESBLOQUEADO;
-				}
-				if (muestraDesbloqueo) {
-					tmp = TEXT_TORERO_DESBLOQUEADO;
-				}
-				if (muestraFelicidades && muestraDesbloqueo) {
-					tmp = TEXT_SOBREVIBE_TORERO_DESBLOQUEADO;
-				}
-
-				popupInitInfo(null, gameText[tmp]);
 				biosWait();
-
-				muestraDesbloqueo = false;
 			}
 
-
-			nextLevelFlag = true;
-			gameStatus = GAME_MENU_MAIN;
-		}
-		else {
-
-			biosWaitEnd();
 			// Si hemos completado todos los encierros, mostramos "felicidades" e invitamos a jugar en el modo "sobrevive"
 			// Si hemos recogido todas las letras "FERMINES", mostramos popup indicando que hemos desbloqueado
 			if (muestraFelicidades || muestraDesbloqueo) {
@@ -8846,13 +8808,12 @@ public void gameTick()
 
 	case GAME_PLAY_TICK:
 
-		if(!biosWaitComplete)
-		{
-	//#ifdef CHEATS
-		cheats();
-	//#endif
 
-	// Si pulsamos la softKey de ir a menu, pasamos al ESTADO de menu durante juego.
+		//#ifdef CHEATS
+		cheats();
+		//#endif
+
+		// Si pulsamos la softKey de ir a menu, pasamos al ESTADO de menu durante juego.
 		if (keyMenu == -1 && lastKeyMenu == 0)
 		{
 			playLeftSoftkeyOld = listenerIdLeft;
@@ -8861,176 +8822,93 @@ public void gameTick()
 			menuCreate(false);
 
 			menuInit(MENU_INGAME);
-			biosWaitInit();
+			biosWait();
+
+			menuDestroy();
 			break;
 		}
 
 
-	// Si estamos en el Juego Tutorial, la softkey Izquierda es para saltar el tutorial
+		// Si estamos en el Juego Tutorial, la softkey Izquierda es para saltar el tutorial
 		if (levelSelected == 0 && keyMenu == 1 && lastKeyMenu == 0)
 		{
 			playExit = 1;
 		}
 
 
-	// Procesamos un TICK del juego, si true: debemos parar el juego...
+		// Procesamos un TICK del juego, si true: debemos parar el juego...
 		if (playExit == 0) {if (!playTick()) {break;}}
 
 		listenerInit(SOFTKEY_NONE, SOFTKEY_NONE);
 
 		soundStop();
 
-	// Desalojamos todos los recursos cargados en 'playInit()'
+		// Desalojamos todos los recursos cargados en 'playInit()'
 		playRelease();
 
-	// Colocamos el ESTADO en 'GAME_PLAY_INIT'
+		// Colocamos el ESTADO en 'GAME_PLAY_INIT'
 		gameStatus = GAME_PLAY_INIT;
 
 		switch (playExit)
 		{
-		case 1:	// Nivel Completado, pasamos al siguiente nivel
+			case 1:	// Nivel Completado, pasamos al siguiente nivel
 
-			levelPlayed = levelSelected;
-			
-		// Actualizamos rosas pilladas en este nivel
-			if (levelSelected > 0) {if (levelPoints[levelSelected - 1] < roseCount) {levelPoints[levelSelected - 1] = roseCount;}}
+				levelPlayed = levelSelected;
 
-		// Actualizamos hiscores sumando las rosas pilladas en todos los niveles
-			hiscore = 0; for (int i=0 ; i<levelPoints.length ; i++) {hiscore += levelPoints[i];}
+				// Actualizamos rosas pilladas en este nivel
+				if (levelSelected > 0) {if (levelPoints[levelSelected - 1] < roseCount) {levelPoints[levelSelected - 1] = roseCount;}}
 
-			updateRankingArrow = true;
+				// Actualizamos hiscores sumando las rosas pilladas en todos los niveles
+				hiscore = 0; for (int i=0 ; i<levelPoints.length ; i++) {hiscore += levelPoints[i];}
 
-		// Destruimos todos los recursos cargados en 'playCreate()'
-			playDestroy();
+				updateRankingArrow = true;
 
-		// Si tenemos TODAS las letras, desbloqueamos torero
-			for (int i=0 ; i<8 ; i++)
-			{
-				if (ferminesItem[i] == 0) {break;}
-			//#ifndef BUILD_ONE_PLAYER
-				if (i==7) {muestraDesbloqueo = toreroLocked; toreroLocked = false;}
-			//#endif
-			}
+				// Destruimos todos los recursos cargados en 'playCreate()'
+				playDestroy();
 
-
-		// Si acabado de completar el nivel 8, activamos mostar popup de "felicidades"
-			muestraFelicidades = (currentLevel == levelSelected && currentLevel == 8);
+				// Si tenemos TODAS las letras, desbloqueamos torero
+				for (int i=0 ; i<8 ; i++)
+				{
+					if (ferminesItem[i] == 0) {break;}
+					//#ifndef BUILD_ONE_PLAYER
+					if (i==7) {muestraDesbloqueo = toreroLocked; toreroLocked = false;}
+					//#endif
+				}
 
 
-		// Si hemos jugado al ultimo nivel disponible, liberamos el siguiente
-			if (levelSelected == currentLevel)
-			{
-				if (currentLevel < 9) {currentLevel++; levelSelected++;}
-			}
-			else
-			if (levelSelected == 0)
-			{
-				levelSelected++;
-			}
+				// Si acabado de completar el nivel 8, activamos mostar popup de "felicidades"
+				muestraFelicidades = (currentLevel == levelSelected && currentLevel == 8);
 
-			gameStatus = GAME_MENU_RECUENTO;
-		break;
 
-		//case 2:	// Una vida menos y regresamos al inicio del nivel			
-		//break;
+				// Si hemos jugado al ultimo nivel disponible, liberamos el siguiente
+				if (levelSelected == currentLevel)
+				{
+					if (currentLevel < 9) {currentLevel++; levelSelected++;}
+				}
+				else
+				if (levelSelected == 0)
+				{
+					levelSelected++;
+				}
 
-		case 3:	// Producir com.mygdx.mongojocs.sanfermines2006.Game Over
+				gameStatus = GAME_MENU_RECUENTO;
+				break;
 
-		// Destruimos todos los recursos cargados en 'playCreate()'
-			playDestroy();
+			//case 2:	// Una vida menos y regresamos al inicio del nivel
+			//break;
 
-		// Saltamos al ESTADO de 'GAME OVER'
-			gameStatus = GAME_MENU_GAMEOVER;
-		break;
+			case 3:	// Producir Game Over
+
+				// Destruimos todos los recursos cargados en 'playCreate()'
+				playDestroy();
+
+				// Saltamos al ESTADO de 'GAME OVER'
+				gameStatus = GAME_MENU_GAMEOVER;
+				break;
 		}
 
 		playExit=0;
-		}
-		else
-		{
-			biosWaitEnd();
-			menuDestroy();
-
-			// Si estamos en el Juego Tutorial, la softkey Izquierda es para saltar el tutorial
-			if (levelSelected == 0 && keyMenu == 1 && lastKeyMenu == 0)
-			{
-				playExit = 1;
-			}
-
-			// Procesamos un TICK del juego, si true: debemos parar el juego...
-			if (playExit == 0) {if (!playTick()) {break;}}
-
-			listenerInit(SOFTKEY_NONE, SOFTKEY_NONE);
-
-			soundStop();
-
-			// Desalojamos todos los recursos cargados en 'playInit()'
-			playRelease();
-
-			// Colocamos el ESTADO en 'GAME_PLAY_INIT'
-			gameStatus = GAME_PLAY_INIT;
-
-			switch (playExit)
-			{
-				case 1:	// Nivel Completado, pasamos al siguiente nivel
-
-					levelPlayed = levelSelected;
-
-					// Actualizamos rosas pilladas en este nivel
-					if (levelSelected > 0) {if (levelPoints[levelSelected - 1] < roseCount) {levelPoints[levelSelected - 1] = roseCount;}}
-
-					// Actualizamos hiscores sumando las rosas pilladas en todos los niveles
-					hiscore = 0; for (int i=0 ; i<levelPoints.length ; i++) {hiscore += levelPoints[i];}
-
-					updateRankingArrow = true;
-
-					// Destruimos todos los recursos cargados en 'playCreate()'
-					playDestroy();
-
-					// Si tenemos TODAS las letras, desbloqueamos torero
-					for (int i=0 ; i<8 ; i++)
-					{
-						if (ferminesItem[i] == 0) {break;}
-						//#ifndef BUILD_ONE_PLAYER
-						if (i==7) {muestraDesbloqueo = toreroLocked; toreroLocked = false;}
-						//#endif
-					}
-
-
-					// Si acabado de completar el nivel 8, activamos mostar popup de "felicidades"
-					muestraFelicidades = (currentLevel == levelSelected && currentLevel == 8);
-
-
-					// Si hemos jugado al ultimo nivel disponible, liberamos el siguiente
-					if (levelSelected == currentLevel)
-					{
-						if (currentLevel < 9) {currentLevel++; levelSelected++;}
-					}
-					else
-					if (levelSelected == 0)
-					{
-						levelSelected++;
-					}
-
-					gameStatus = GAME_MENU_RECUENTO;
-					break;
-
-				//case 2:	// Una vida menos y regresamos al inicio del nivel
-				//break;
-
-				case 3:	// Producir com.mygdx.mongojocs.sanfermines2006.Game Over
-
-					// Destruimos todos los recursos cargados en 'playCreate()'
-					playDestroy();
-
-					// Saltamos al ESTADO de 'GAME OVER'
-					gameStatus = GAME_MENU_GAMEOVER;
-					break;
-			}
-
-			playExit=0;
-		}
-	break;
+		break;
 // ===============================
 	}
 }
@@ -9460,7 +9338,7 @@ public void menuInit(int type, int pos)
 
 
 	case MENU_STAGE_SELECT:
-		if(!biosWaitComplete) {
+		{
 			if (!tutorialViewed) {
 				menuRelease(true);
 				levelSelected = 0;
@@ -9499,11 +9377,8 @@ public void menuInit(int type, int pos)
 
 			listenerInit(SOFTKEY_BACK, SOFTKEY_ACEPT);
 
-			biosWaitInit();
-		}
-		else
-		{
-			biosWaitEnd();
+			biosWait();
+
 			if (menuAcept) {
 				levelSelected = formListPos;
 
@@ -9526,7 +9401,7 @@ public void menuInit(int type, int pos)
 //#ifndef BUILD_ONE_PLAYER
 	case MENU_PLAYER_SELECT:
 
-		if(!biosWaitComplete) {
+	 {
 			formLogoInit(FORM_LOGO_HEIGHT);
 
 			formTitleInit(gameText[TEXT_PLAYER_SELECT][0]);
@@ -9539,10 +9414,8 @@ public void menuInit(int type, int pos)
 
 			listenerInit(SOFTKEY_BACK, SOFTKEY_ACEPT);
 
-			biosWaitInit();
-		}
-		else {
-			biosWaitEnd();
+			biosWait();
+
 			if (menuAcept) {
 				biosExit = true;
 			} else {
@@ -9999,56 +9872,11 @@ public void menuAction(int cmd)
 
 		menuAcept = true;
 
-		if (menuType == MENU_STAGE_SELECT) { //MONGOFIX
-			levelSelected = formListPos;
-
-			menuRelease();
-			//#ifndef BUILD_ONE_PLAYER
-			if (playerSelectFlag) {
-				menuInit(MENU_PLAYER_SELECT);
-			} else {
-				biosExit = true;
-			}
-			//#else
-			//#endif
-			break;
-		}
-
-		if(menuType == MENU_PLAYER_SELECT)
-		{
-			biosWaitEnd();
-//#ifdef DEBUG
-			System.out.println("opppps!!!!!! hemos salido del biosWait principal");
-//#endif
-			soundStop();
-
-			// mostramos "loading" dentro de menu para dar paso al juego
-			if (gameStatus == GAME_PLAY) {
-				menuInit(MENU_LOADING);
-				forceRender();
-				menuRelease(true);
-			}
-
-			menuDestroy();
-		}
-
 	case MENU_ACTION_MENU_EXIT:	// Salir de los menus
 
-		if(menuType == MENU_STAGE_SELECT) { //MOGOFIX
-			menuRelease();
-			menuInitBack();
-		}
-		else if(menuType == MENU_PLAYER_SELECT) { //MOGOFIX
-			menuRelease();
-			menuInitBack();
-		}
-		else
-		{
+		menuRelease();
 
-			menuRelease();
-
-			biosExit = true;        // Activamos salir del "biosWait()" actual
-		}
+		biosExit = true;		// Activamos salir del "biosWait()" actual
 	break;
 
 
@@ -10209,13 +10037,13 @@ public void menuAction(int cmd)
 	case MENU_ACTION_RESTART:	// Provocamos GAME OVER desde menu (preguntamos)
 
 //		popupSetArea(formBodyX + (formBodyWidth/6), formBodyY + (formBodyHeight/6), formBodyWidth - (formBodyWidth/3), formBodyHeight - (formBodyHeight/3));
-		/*popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_ARE_YOU_SURE], SOFTKEY_NO, SOFTKEY_YES);
+		popupInitAsk(gameText[TEXT_CONFIRMATION][0], gameText[TEXT_ARE_YOU_SURE], SOFTKEY_NO, SOFTKEY_YES);
 
 		biosWait();
 
 		forceRender();
 
-		if (popupResult)*/ //MONGOFIX: biosWait dentro de biosWait no soportado
+		if (popupResult)
 		{
 			menuRelease();
 

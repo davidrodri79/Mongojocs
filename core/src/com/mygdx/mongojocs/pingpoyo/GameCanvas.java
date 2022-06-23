@@ -11,6 +11,8 @@ package com.mygdx.mongojocs.pingpoyo;
 //import com.nokia.mid.ui.*;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.mygdx.mongojocs.midletemu.DirectGraphics;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.Graphics;
@@ -157,9 +159,15 @@ public class GameCanvas extends BiosCanvas
 	{
 		soundCreate();
 		//canvasWidth = 128; canvasHeight = 128;
-		introTxt = textoBreak(ga.gameText[23][0], 151, Font.getFont(Font.FACE_PROPORTIONAL,Font.STYLE_BOLD,Font.SIZE_SMALL));
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				Graphics._fontGenerate(Font.FACE_PROPORTIONAL,Font.STYLE_BOLD,Font.SIZE_SMALL, Color.WHITE);
+				introTxt = textoBreak(ga.gameText[23][0], 151, Font.getFont(Font.FACE_PROPORTIONAL,Font.STYLE_BOLD,Font.SIZE_SMALL));
+			}
+		});
 	}
-	
+
 	
 	// -------------------
 	// Draw

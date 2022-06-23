@@ -664,7 +664,8 @@ class UltranausCanvas extends FullCanvas
 				readingdata.leerdata("/City.map",b,116*60*2);
 
 				//City=Image.createImage(928,480);
-				City=Image.createImage(728,380);
+				City=new Image();
+				City._createImage(728,380);
 
 				Graphics g=City.getGraphics();
 
@@ -676,7 +677,7 @@ class UltranausCanvas extends FullCanvas
 						t2=b[(2*k)+1]; if(t2<0) t2+=256;
 						t=(t1<<8)+t2;
 						g.setClip(i*8,j*8,8,8);
-						g.drawImage(cityTiles,(i*8)-((t%25)*8),(j*8)-((t/25)*8),20);
+						Graphics._drawImage(g, cityTiles,(i*8)-((t%25)*8),(j*8)-((t/25)*8),20);
 					}
 				b=null; cityTiles=null; g=null; System.gc();
 			}
@@ -879,19 +880,20 @@ class UltranausCanvas extends FullCanvas
 
 				} catch (Exception err) {}
 
-				Console=Image.createImage(CANVX,CANVY);
+				Console=new Image();
+				Console._createImage(CANVX,CANVY);
 				Graphics g=Console.getGraphics();
 				g.setClip(0,0,CANVX,CANVY);
 				for(int i=0; i<=CANVX/24; i++)
 					for(int j=0; j<=CANVY/24; j++)
-						g.drawImage(WindowTile,i*24,j*24,20);
+						g._drawImage(g, WindowTile,i*24,j*24,20);
 				g.setClip(0,0,CANVX,10);
-				g.drawImage(Border,0,0,20);
+				g._drawImage(g, Border,0,0,20);
 				g.setClip(0,CANVY-10,CANVX,10);
-				g.drawImage(Border,0,CANVY-10-14,20);
+				g._drawImage(g, Border,0,CANVY-10-14,20);
 				for(int j=10; j<=CANVY-10; j+=4){
 					g.setClip(0,j,CANVX,4);
-					g.drawImage(Border,0,j-10,20);
+					g._drawImage(g, Border,0,j-10,20);
 				}
 				g=null;
 				WindowTile=null;

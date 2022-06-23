@@ -936,12 +936,13 @@ public class GameCanvas extends FullCanvas
 	
 	void createFlag(int id, byte[] data)
 	{
+		//TODO no funciona en multithread
 		Graphics g = UserFlag[id].getGraphics();
 		g.setClip(0,0,11,11);
 		for(int i=0; i<121; i++){
-			g.setColor(flagColors[data[i]][0],flagColors[data[i]][1],flagColors[data[i]][2]);						
-			g.fillRect(i%11,i/11,1,1);			
-		}			
+			g.setColor(flagColors[data[i]][0],flagColors[data[i]][1],flagColors[data[i]][2]);
+			g.fillRect(i%11,i/11,1,1);
+		}
 	}
 	
 	void drawPlayerLogo(Graphics g, int plId, int x, int y)

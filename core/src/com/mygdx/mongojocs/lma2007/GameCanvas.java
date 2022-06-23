@@ -397,7 +397,8 @@ public void paint(Graphics g)
 			//#ifdef DOUBLE_BUFFER
 			if (bimg == null)
 			{
-				bimg = Image.createImage(getWidth(), getHeight());
+				bimg = new Image();
+				bimg._createImage(getWidth(), getHeight());
 				bscr = bimg.getGraphics();
 			}
 			scr = bscr;
@@ -4448,10 +4449,10 @@ boolean popupExit;
 public void popupWait()
 {
 	popupExit = false;
-	/*while (!popupExit)
+	while (!popupExit)
 	{
 		biosLoop();
-	}*/
+	}
 	popupExit = false;
 	popupResult = true; //MONGOHACK
 
@@ -8453,8 +8454,15 @@ public void scrollInit(byte[] map, byte[] comb, int width, int height, Image img
 
 //#ifdef SCROLL_BUFFER_RENDER
 //Generamos imagen para doble bufer
-	scrollFondoImg = Image.createImage(scrollFondoWidth*tileWidth, scrollFondoHeight*tileHeight);
-	scrollFondoGfx = scrollFondoImg.getGraphics();
+	Gdx.app.postRunnable(new Runnable() {
+		@Override
+		public void run() {
+			scrollFondoImg = new Image();
+			scrollFondoImg._createImage(scrollFondoWidth*tileWidth, scrollFondoHeight*tileHeight);
+			scrollFondoGfx = scrollFondoImg.getGraphics();
+		}
+	});
+
 //#endif
 }
 
@@ -11901,9 +11909,9 @@ public void gameTick()
 		gameText[TEXT_SOFTKEYS][0] = " ";
 		gameText[TEXT_SOFTKEYS][1] = langText[langSelected][1];
 	
-		//popupInit(POPUP_LANG, POPUP_ACTION_NONE, POPUP_ACTION_EXIT, 0, 1);
-		//popupListPos = langSelected;
-		//popupWait(); MONGOFIX
+		popupInit(POPUP_LANG, POPUP_ACTION_NONE, POPUP_ACTION_EXIT, 0, 1);
+		popupListPos = langSelected;
+		popupWait();
 
 	//#ifdef FULLSCREEN
 		canvasHeight += listenerHeight;		// Liberamos area para las softkeys
@@ -12570,13 +12578,13 @@ public void gameDraw()
 
 
 //#ifdef DEBUG_SHOW_FREE_MEM
-	fontInit(FONT_WHITE);
+	/*fontInit(FONT_WHITE);
 	printSetArea(0, 0, canvasWidth, printFontHeight);
 	System.gc();
 // 	String mem = ""+((int)(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
  	String mem = ""+(int)(Runtime.getRuntime().freeMemory());
 	fillDraw(0x000000, printX, printY, printStringWidth(mem)+2, printHeight+2);
-	printDraw(mem, 1, 1, fontPenRGB, PRINT_LEFT);
+	printDraw(mem, 1, 1, fontPenRGB, PRINT_LEFT);*/
 //#endif
 	
 }

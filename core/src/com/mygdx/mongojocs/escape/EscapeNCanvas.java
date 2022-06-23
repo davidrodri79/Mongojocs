@@ -150,6 +150,7 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 			case KEY_NUM8 : ctrl.down=true; break; 
 			case KEY_NUM9 : ctrl.down=true; ctrl.right=true; break;
 			case KEY_NUM0 : ctrl.but2=true; break;
+			case -6 :
 			case KEY_STAR : ctrl.but3=true; break;
 		}
 		
@@ -218,7 +219,7 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 				
 			}catch(InterruptedException e) {}
 																			
-		}		
+		}
 	}
 
 	public void runInit() {
@@ -478,7 +479,7 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 					 break;					 
 				case 2 : set_state(HELP); break;
 				case 3 : set_state(CREDITS); break;
-				case 4 : EscapeNMain.gameMidl.destroyApp(false); break;
+				case 4 : { thread= null; EscapeNMain.gameMidl.destroyApp(false); }break;
 				}
 			}
 			if(cnt>=400) set_state(MAIN_TITLE);				

@@ -47,6 +47,25 @@ public class Image {
         }
     };
 
+    static class ImageCreateBinaryTask implements Runnable {
+
+        Image image;
+        byte buffer[];
+        int start, length;
+
+        ImageCreateBinaryTask(Image i, byte[] b, int s, int l)
+        {
+            image = i;
+            buffer = b;
+            start = s; length = l;
+        }
+
+        @Override
+        public void run() {
+            image._createImage(buffer, start, length);
+        }
+    };
+
     public Texture texture;
     FrameBuffer fbo = null;
 
@@ -92,16 +111,22 @@ public class Image {
     public static Image createImage(byte[] inbuf, int start, int length)
     {
         Image im = new Image();
+        ImageCreateBinaryTask task = new ImageCreateBinaryTask(im, inbuf, start, length);
+        Gdx.app.postRunnable(task);
+        return im;
+    }
+
+    public void _createImage(byte[] inbuf, int start, int length)
+    {
         try {
 
             Pixmap pixMap = new Pixmap(inbuf, start, length);
-            im.texture = new Texture(pixMap);
+            texture = new Texture(pixMap);
 
         }catch(Exception e)
         {
             e.printStackTrace();
         }
-        return im;
     }
 
     public Graphics getGraphics()

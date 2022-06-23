@@ -16,6 +16,7 @@ package com.mygdx.mongojocs.lma2007;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.Graphics;
 
@@ -51,6 +52,7 @@ static synchronized public void debugCreate(GameCanvas gCanvas)
 	gc = gCanvas;
 //#ifdef J2ME
 	debugFont = Font.getFont(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN , Font.SIZE_SMALL);
+	Graphics.fontGenerate(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN , Font.SIZE_SMALL, Color.WHITE);
 //#elifdef DOJA
 //#endif
 	debugFontHeight = debugFont.getHeight();
@@ -85,7 +87,9 @@ static synchronized public void spdStop(int type)
 static synchronized public void println(String str)
 {
 	System.out.println(str);
+	Gdx.app.log("Debug", str);
 
+	/*
 	if (cachedStr != null)
 	{
 		String[] strPartido = gc.textBreak(str, gc.canvasWidth, debugFont);
@@ -99,7 +103,7 @@ static synchronized public void println(String str)
 
 			cachedStr[cachedStr.length-1] = strPartido[t];
 		}
-	}
+	}*/
 	
 	//if (gc != null && gc.canvasShow == false && enabled) gc.forceRender();
 }

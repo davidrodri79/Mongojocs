@@ -275,21 +275,22 @@ class CerberusCanvas extends FullCanvas
 
 				public void run() {
 
-					Sky = Image.createImage(CANVX, SCREENY);
+					Sky = new Image();
+					Sky._createImage(CANVX, SCREENY);
 					// Create sky
 					Graphics gg = Sky.getGraphics();
 
 					gg.setColor(0, 3, 29);
-					gg.fillRect(0, 64, CANVX, SCREENY - 64);
+					Graphics._fillRect(gg,0, 64, CANVX, SCREENY - 64);
 
 					for (int i = 0; i < CANVX; i += 32) {
 
 						gg.setClip(i, 0, 32, 64);
-						gg.drawImage(SwampMisc, i, 0, 20);
+						Graphics._drawImage(gg, SwampMisc, i, 0, 20);
 					}
 
 					gg.setClip(0, 22, 175, SCREENY);
-					gg.drawImage(Clouds, 0, 22, 20);
+					Graphics._drawImage(gg, Clouds, 0, 22, 20);
 				}
 			});
 				

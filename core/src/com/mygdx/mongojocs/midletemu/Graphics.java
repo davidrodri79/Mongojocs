@@ -72,7 +72,26 @@ public class Graphics {
         currentColor = new Color(r/255.f, g/255.f, b/255.f, 1);
     }
 
-    public static BitmapFont fontGenerate(int face, int style, int size, Color color)
+    static class FontGenerateTask implements Runnable {
+
+        int face, style, size;
+        Color color;
+        FontGenerateTask(int f, int st, int si, Color c)
+        {
+            face = f; style = st; size = si; color = c;
+        }
+        @Override
+        public void run() {
+            Graphics._fontGenerate(face, style, size, color);
+        }
+    }
+
+    public static void fontGenerate(int face, int style, int size, Color color)
+    {
+        Gdx.app.postRunnable(new FontGenerateTask(face, style, size, color));
+    }
+
+    public static BitmapFont _fontGenerate(int face, int style, int size, Color color)
     {
         String hash = face+"-"+ style+"-"+size+"-"+color;
         String hashNoColor = face+"-"+ style+"-"+size;
@@ -99,7 +118,7 @@ public class Graphics {
 
 
         String hash = currentFont.face+"-"+ currentFont.style+"-"+currentFont.size+"-"+currentColor;
-        BitmapFont f;
+        BitmapFont f = null;
 
         // Generate font if needed
         if(bitmapFonts.containsKey(hash))
@@ -108,7 +127,7 @@ public class Graphics {
         }
         else
         {
-            f = fontGenerate(currentFont.face, currentFont.style, currentFont.size, currentColor);
+            fontGenerate(currentFont.face, currentFont.style, currentFont.size, currentColor);
         }
 
         // Draw text into clipped area texture
@@ -123,7 +142,7 @@ public class Graphics {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(textCamera.combined);
         batch.begin();
-        f.draw(batch, str, x,  Display.height - y - 4);
+        if(f!=null) f.draw(batch, str, x,  Display.height - y - 4);
         batch.end();
 
         Display.clippedAreafbo.end();

@@ -117,6 +117,7 @@ public class QBlastMain extends MIDlet implements Runnable
 	{
 		/*display.setCurrent(null);
 		gameCanvas=null; */
+		thread = null;
 		saveData();
 		System.gc();
 		this.notifyDestroyed();
@@ -202,7 +203,8 @@ public class QBlastMain extends MIDlet implements Runnable
 				
 			} while(System.currentTimeMillis()<t+75);
 									
-		}		
+		}
+		t = 99;
 	}
 	
 	public void set_state(int s)

@@ -135,6 +135,7 @@ public class BeastMain extends MIDlet implements Runnable, CommandListener
 	{
 		/*display.setCurrent(null);
 		gameCanvas=null; */
+		thread = null;
 		saveData();
 		System.gc();
 		this.notifyDestroyed();
