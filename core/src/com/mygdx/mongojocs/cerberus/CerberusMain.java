@@ -240,7 +240,7 @@ public class CerberusMain extends MIDlet implements Runnable, CommandListener
 		switch(state) {
 			
 			case PRESENTS :
-			if(cnt>1){
+			if(cnt>20){
 				pant.load_intro_gfx();
 				pant.play_music(0,1);
 				set_state(INTRO);

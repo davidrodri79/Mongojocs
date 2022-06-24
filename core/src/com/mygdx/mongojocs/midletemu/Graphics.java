@@ -142,7 +142,7 @@ public class Graphics {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(textCamera.combined);
         batch.begin();
-        if(f!=null) f.draw(batch, str, x,  Display.height - y - 4);
+        if(f!=null) f.draw(batch, str, x,  Display.height - y - 2);
         batch.end();
 
         Display.clippedAreafbo.end();
