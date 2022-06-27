@@ -101,8 +101,8 @@ public class Graphics {
         params.minFilter = Texture.TextureFilter.Nearest;
         params.magFilter = Texture.TextureFilter.Nearest;
         params.size = Font.pixelWidths[size];
-        params.borderWidth = 0;
-        //params.borderColor = Color.BLACK;
+        params.borderWidth = style == Font.STYLE_BOLD ? 1 : 0;
+        params.borderColor = Color.BLACK;
         params.color = color;
         params.characters = fontChars;
         BitmapFont f = generator.generateFont(params); // font size 12 pixels

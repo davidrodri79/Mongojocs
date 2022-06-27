@@ -8,13 +8,4 @@ public class FullCanvas extends Canvas {
         super();
     }
 
-    public int getWidth()
-    {
-        return Display.width;
-    }
-
-    public int getHeight()
-    {
-        return Display.height;
-    }
 }

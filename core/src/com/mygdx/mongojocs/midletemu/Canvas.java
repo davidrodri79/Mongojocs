@@ -25,6 +25,16 @@ public class Canvas extends Displayable {
         graphics.init();
     }
 
+    public int getWidth()
+    {
+        return Display.width;
+    }
+
+    public int getHeight()
+    {
+        return Display.height;
+    }
+
     public void repaint()
     {
         repaintAsked = true;

@@ -7,9 +7,4 @@ public class Form extends Displayable {
     public void append(TextField inputField) {
     }
 
-    public void addCommand(Command doneCommand) {
-    }
-
-    public void setCommandListener(CommandListener m) {
-    }
 }

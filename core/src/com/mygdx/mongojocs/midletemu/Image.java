@@ -86,6 +86,7 @@ public class Image {
     public void _createImage(String fileName)
     {
         texture = new Texture(MIDlet.assetsFolder+"/"+fileName.substring(1));
+        Gdx.app.log("Image", "createImage "+fileName.toString());
     }
 
     public static Image createImage(int w, int h)
