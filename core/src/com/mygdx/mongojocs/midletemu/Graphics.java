@@ -61,6 +61,11 @@ public class Graphics {
         currentFont = f;
     }
 
+    public Font getFont()
+    {
+        return currentFont;
+    }
+
     public void setColor(int c) {
         currentColor = new Color(((c & 0xff0000) >> 16)/255.f,
                 ((c & 0xff00) >> 8)/255.f,
