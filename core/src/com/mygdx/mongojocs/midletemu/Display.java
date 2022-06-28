@@ -52,4 +52,8 @@ public class Display {
     public Displayable getCurrent() {
         return currentDisplayable;
     }
+
+    public void vibrate(int time) {
+        Gdx.input.vibrate(time);
+    }
 }

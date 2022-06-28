@@ -77,6 +77,9 @@ public class Graphics {
         currentColor = new Color(r/255.f, g/255.f, b/255.f, 1);
     }
 
+    public void translate(int X, int Y) {
+    }
+
     static class FontGenerateTask implements Runnable {
 
         int face, style, size;
