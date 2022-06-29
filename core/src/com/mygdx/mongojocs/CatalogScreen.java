@@ -45,6 +45,7 @@ public class CatalogScreen implements Screen {
     MongoGame catalog[]={
 
             new MongoGame("3D QBlast 2.0", 2005, "Nokia series60", "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
+            new MongoGame("Aminoid X", 2003, "Nokia series60","aminoid", com.mygdx.mongojocs.aminoid.Game.class),
             new MongoGame("Astro 3003", 2003, "Nokia series60","astro", com.mygdx.mongojocs.astro.Game.class),
             new MongoGame("BraveWar", 2003, "Nokia series60","bravewar", com.mygdx.mongojocs.bravewar.GameMidletLogic.class),
             new MongoGame("Club Football 2006", 2006, "Nokia series60","clubfootball2006", com.mygdx.mongojocs.clubfootball2006.Game.class),

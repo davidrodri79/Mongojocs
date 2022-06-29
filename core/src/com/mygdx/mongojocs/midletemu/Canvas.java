@@ -69,4 +69,10 @@ public class Canvas extends Displayable {
 
     }
 
+    public int getGameAction(int keyData) {
+        return 0;
+    }
+
+    public void setFullScreenMode(boolean b) {
+    }
 }
