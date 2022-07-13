@@ -44,4 +44,7 @@ public class MIDlet {
     }
 
 
+    public String getAppProperty(String s) {
+        return "Dummy";
+    }
 }
