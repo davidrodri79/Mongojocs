@@ -406,16 +406,52 @@ public class Graphics {
     public void drawLine(int x1, int y1, int x2, int y2) {
         if(allClipped) return;
 
-        if(fromImage == null)
-            Display.fbo.begin();
+        int minx, maxx, miny, maxy;
+
+        if (x1 < x2)
+        {
+            minx = x1; maxx = x2;
+        }
         else
-            fromImage.fbo.begin();
+        {
+            minx = x2; maxx = x1;
+        }
+
+        if (y1 < y2)
+        {
+            miny = y1; maxy = y2;
+        }
+        else
+        {
+            miny = y2; maxy = y1;
+        }
+
+        if(minx > clipx + clipw || miny > clipy + cliph || maxx < clipx || maxy < clipy) return;
+
+        Display.clippedAreafbo.begin();
+
+        Gdx.gl.glClearColor(1, 1, 1, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
         shapeRenderer.rectLine(x1+1,y1+1,x2+1,y2+1,1);
         shapeRenderer.end();
+
+        Display.clippedAreafbo.end();
+
+        if(fromImage == null)
+            Display.fbo.begin();
+        else
+            fromImage.fbo.begin();
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
+                clipx/(float)Display.width, clipy/(float)Display.height,
+                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
+        batch.end();
 
         if(fromImage == null)
             Display.fbo.end();
