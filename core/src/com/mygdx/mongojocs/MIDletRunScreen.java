@@ -177,10 +177,15 @@ public class MIDletRunScreen implements Screen {
         //Graphics.emptyScissors();
         Canvas.theCanvas.flushRepaints();
 
-        launcher.batch.setProjectionMatrix(camera.combined);
-        launcher.batch.begin();
-        launcher.batch.draw(Display.screenBuffer, 0, 0, 176, 208, 0, 1, 1, 0);
-        launcher.batch.end();
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                launcher.batch.setProjectionMatrix(camera.combined);
+                launcher.batch.begin();
+                launcher.batch.draw(Display.screenBuffer, 0, 0, 176, 208, 0, 1, 1, 0);
+                launcher.batch.end();
+            }
+        });
 
         // KEYBOARD LAYOUT
 

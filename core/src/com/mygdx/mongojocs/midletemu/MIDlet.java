@@ -45,6 +45,9 @@ public class MIDlet {
 
 
     public String getAppProperty(String s) {
-        return "Dummy";
+        if (s.equals("MIDlet-Version"))
+                return "1.0";
+        else
+            return "Dummy";
     }
 }
