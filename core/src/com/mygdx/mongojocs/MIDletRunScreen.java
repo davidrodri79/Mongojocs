@@ -97,7 +97,7 @@ public class MIDletRunScreen implements Screen {
                 {
                     Vector3 touchPos = new Vector3();
                     touchPos.set(screenX, screenY, 0);
-                    Canvas.theCanvas.graphics.camera.unproject(touchPos);
+                    camera.unproject(touchPos);
                     //game.gameCanvas.g.camera.unproject(touchPos);
 
                     if(vkeys[i].inside((int)touchPos.x, 208 - (int)touchPos.y)) {
@@ -144,7 +144,7 @@ public class MIDletRunScreen implements Screen {
         });
 
 
-        Display.setSize(176,208);
+        Display.setSize(128,128);
         MIDlet.appClosed = false;
 
         try {
@@ -180,9 +180,18 @@ public class MIDletRunScreen implements Screen {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
+                int px = (176 - Display.width) / 2;
+                int py = (208 - Display.height) / 2;
+
+                launcher.shapeRenderer.setProjectionMatrix(camera.combined);
+                launcher.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                launcher.shapeRenderer.setColor(Color.BLACK);
+                launcher.shapeRenderer.rect(0, 0, 176, 208);
+                launcher.shapeRenderer.end();
+
                 launcher.batch.setProjectionMatrix(camera.combined);
                 launcher.batch.begin();
-                launcher.batch.draw(Display.screenBuffer, 0, 0, 176, 208, 0, 1, 1, 0);
+                launcher.batch.draw(Display.screenBuffer, px, py, Display.width, Display.height, 0, 1, 1, 0);
                 launcher.batch.end();
             }
         });

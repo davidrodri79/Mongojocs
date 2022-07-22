@@ -203,6 +203,9 @@ public class Graphics {
         if(clipy < destY)  {cliph -= destY - clipy; clipy = destY;}
         if(clipy+cliph > destY+sizeY)  cliph = (destY + sizeY) - clipy;
 
+        if(clipw <= 0) { allClipped = true; return;}
+        if(cliph <= 0) { allClipped = true; return;}
+
     }
 
     public void drawImage(Image img, int x, int y, int flags)

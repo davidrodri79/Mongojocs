@@ -67,7 +67,7 @@ public class Image {
     };
 
     public Texture texture = null;
-    FrameBuffer fbo = null;
+    public FrameBuffer fbo = null;
 
     public Image()
     {
