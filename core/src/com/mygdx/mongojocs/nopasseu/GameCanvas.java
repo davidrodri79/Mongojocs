@@ -160,6 +160,7 @@ public void run()
 			if (limpiaKeyMenu) {limpiaKeyMenu=false; intKeyMenu = 0;}
 
 			try {
+				Gdx.app.log("GameCanvas", "run() iteration");
 				biosTick();
 				if (gameForceRefresh) {gameForceRefresh = false; biosRefresh();}
 				gameDraw();
@@ -225,7 +226,8 @@ public void gameDraw()
 Graphics scr;
 
 public void paint (Graphics g)
-{       
+{
+	Gdx.app.log("GameCanvas", "paint() call");
 	if (canvasShow)
 	{
 		synchronized (this)

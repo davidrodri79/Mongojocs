@@ -125,7 +125,7 @@ public void ScrollSET(byte[] Mapa, byte[] coli, byte[] comb, int SizeX, int Size
 
 	for (int i=0 ; i<FondoMap.length ; i++) {FondoMap[i]=-1;}
 
-	ScrollUpdate();
+	ScrollUpdate_outsideMainThread();
 }
 
 
@@ -181,12 +181,35 @@ public void ScrollRUN_Centro_Max(int X, int Y)
 // com.mygdx.mongojocs.toro2.Scroll Update
 // ===================
 
+	public static boolean waitingForMainThread = false;
+
+	public void ScrollUpdate_outsideMainThread()
+	{
+		waitingForMainThread = true;
+
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+
+				ScrollUpdate();
+				waitingForMainThread = false;
+			}
+	});
+
+		while(waitingForMainThread)
+		{
+			try {
+				Thread.sleep(10);
+			} catch(InterruptedException e)
+			{
+
+			}
+		}
+}
+
 public void ScrollUpdate()
 {
 
-	Gdx.app.postRunnable(new Runnable() {
-		@Override
-		public void run() {
 
 
 //	for (int i=0 ; i<FondoEjeX.length ; i++) {FondoEjeX[i] = -1;}
@@ -471,8 +494,7 @@ public void ScrollUpdate()
 	//#endif
 	}
 
-		}
-	});
+
 
 }
 

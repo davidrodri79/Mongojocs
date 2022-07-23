@@ -81,7 +81,7 @@ public class MIDletRunScreen implements Screen {
             };
     VirtualKey pressedKey = null;
 
-    MIDletRunScreen(Launcher l, Class midletClass)
+    MIDletRunScreen(Launcher l, Class midletClass, int screenWidth, int screenHeight)
     {
         this.launcher = l;
 
@@ -144,7 +144,7 @@ public class MIDletRunScreen implements Screen {
         });
 
 
-        Display.setSize(128,128);
+        Display.setSize(screenWidth,screenHeight);
         MIDlet.appClosed = false;
 
         try {
@@ -165,6 +165,7 @@ public class MIDletRunScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         Gdx.app.log("MIDletRunScreen", "render()");
         if(MIDlet.appClosed)
         {

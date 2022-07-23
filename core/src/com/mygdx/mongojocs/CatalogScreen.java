@@ -23,16 +23,38 @@ public class CatalogScreen implements Screen {
     OrthographicCamera camera;
     Vector3 lastTouch;
 
+    public static final int NOKIA_SERIES_40 = 0;
+    public static final int NOKIA_SERIES_60 = 1;
+
+    class Device
+    {
+        String name;
+        int screenWidth;
+        int screenHeight;
+
+        Device(String n, int sw, int sh)
+        {
+            this.name = n;
+            this.screenWidth = sw;
+            this.screenHeight = sh;
+        }
+    }
+
+    Device devices[] = {
+            new Device("Nokia series40", 128, 128),
+            new Device("Nokia series60", 176, 208)
+    };
+
     class MongoGame
     {
         String name;
         String assetsFolder;
-        String platform;
+        int platform;
         int year;
         Class midletClass;
         Texture icon;
 
-        MongoGame(String name, int year, String platform, String folder, Class c)
+        MongoGame(String name, int year, int platform, String folder, Class c)
         {
             this.name = name;
             this.year = year;
@@ -44,27 +66,27 @@ public class CatalogScreen implements Screen {
 
     MongoGame catalog[]={
 
-            new MongoGame("3D QBlast 2.0", 2005, "Nokia series60", "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
-            new MongoGame("Aminoid X", 2003, "Nokia series60","aminoid", com.mygdx.mongojocs.aminoid.Game.class),
-            new MongoGame("Astro 3003", 2003, "Nokia series60","astro", com.mygdx.mongojocs.astro.Game.class),
-            new MongoGame("BraveWar", 2003, "Nokia series60","bravewar", com.mygdx.mongojocs.bravewar.GameMidletLogic.class),
-            new MongoGame("Club Football 2006", 2006, "Nokia series60","clubfootball2006", com.mygdx.mongojocs.clubfootball2006.Game.class),
-            new MongoGame("Cerberus Lair", 2003, "Nokia series60","cerberus", com.mygdx.mongojocs.cerberus.CerberusMain.class),
-            new MongoGame("Domino", 2005, "Nokia series60","domino", com.mygdx.mongojocs.domino.Game.class),
-            new MongoGame("Escape", 2003, "Nokia series60","escape", com.mygdx.mongojocs.escape.EscapeNMain.class),
-            new MongoGame("LMA 2007", 2006, "Nokia series60","lma2007", com.mygdx.mongojocs.lma2007.Game.class),
-            new MongoGame("Movistar Racing 2", 2005, "Nokia series60","mr2", com.mygdx.mongojocs.mr2.Game.class),
-            new MongoGame("No Passeu", 2005, "Nokia series60","nopasseu", com.mygdx.mongojocs.nopasseu.Game.class),
-            new MongoGame("Numa the beast", 2004, "Nokia series60","numa", com.mygdx.mongojocs.numa.BeastMain.class),
-            //new MongoGame("Petanca", 2004, "Nokia series60","petanca", com.mygdx.mongojocs.petanca.Game.class),
-            new MongoGame("Ping Poyo", 2004, "Nokia series60","pingpoyo", com.mygdx.mongojocs.pingpoyo.Game.class),
-            new MongoGame("QBlast Ironball", 2005, "Nokia series60","qblast", com.mygdx.mongojocs.qblast.QBlastMain.class),
-            new MongoGame("Sabotage", 2003, "Nokia series60","sabotage", com.mygdx.mongojocs.sabotage.Game.class),
-            new MongoGame("Sanfermines 2006", 2006, "Nokia series60","sanfermines2006", com.mygdx.mongojocs.sanfermines2006.Game.class),
-            new MongoGame("Sextron", 2004, "Nokia series60","sextron", com.mygdx.mongojocs.sextron.Game.class),
-            new MongoGame("Toro 2", 2005, "Nokia series60","toro2", com.mygdx.mongojocs.toro2.Game.class),
-            new MongoGame("The Mute", 2003, "Nokia series60","themute", com.mygdx.mongojocs.themute.Game.class),
-            new MongoGame("Ultranaus", 2003, "Nokia series60","ultranaus", com.mygdx.mongojocs.ultranaus.UltranausMain.class)
+            new MongoGame("3D QBlast 2.0", 2005, NOKIA_SERIES_60, "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
+            new MongoGame("Aminoid X", 2003, NOKIA_SERIES_60,"aminoid", com.mygdx.mongojocs.aminoid.Game.class),
+            new MongoGame("Astro 3003", 2003, NOKIA_SERIES_60,"astro", com.mygdx.mongojocs.astro.Game.class),
+            new MongoGame("BraveWar", 2003, NOKIA_SERIES_60,"bravewar", com.mygdx.mongojocs.bravewar.GameMidletLogic.class),
+            new MongoGame("Club Football 2006", 2006, NOKIA_SERIES_60,"clubfootball2006", com.mygdx.mongojocs.clubfootball2006.Game.class),
+            new MongoGame("Cerberus Lair", 2003, NOKIA_SERIES_60,"cerberus", com.mygdx.mongojocs.cerberus.CerberusMain.class),
+            new MongoGame("Domino", 2005, NOKIA_SERIES_60,"domino", com.mygdx.mongojocs.domino.Game.class),
+            new MongoGame("Escape", 2003, NOKIA_SERIES_60,"escape", com.mygdx.mongojocs.escape.EscapeNMain.class),
+            new MongoGame("LMA 2007", 2006, NOKIA_SERIES_60,"lma2007", com.mygdx.mongojocs.lma2007.Game.class),
+            new MongoGame("Movistar Racing 2", 2005, NOKIA_SERIES_60,"mr2", com.mygdx.mongojocs.mr2.Game.class),
+            new MongoGame("No Passeu", 2005, NOKIA_SERIES_40,"nopasseu", com.mygdx.mongojocs.nopasseu.Game.class),
+            new MongoGame("Numa the beast", 2004, NOKIA_SERIES_60,"numa", com.mygdx.mongojocs.numa.BeastMain.class),
+            //new MongoGame("Petanca", 2004, NOKIA_SERIES_60,"petanca", com.mygdx.mongojocs.petanca.Game.class),
+            new MongoGame("Ping Poyo", 2004, NOKIA_SERIES_60,"pingpoyo", com.mygdx.mongojocs.pingpoyo.Game.class),
+            new MongoGame("QBlast Ironball", 2005, NOKIA_SERIES_60,"qblast", com.mygdx.mongojocs.qblast.QBlastMain.class),
+            new MongoGame("Sabotage", 2003, NOKIA_SERIES_60,"sabotage", com.mygdx.mongojocs.sabotage.Game.class),
+            new MongoGame("Sanfermines 2006", 2006, NOKIA_SERIES_60,"sanfermines2006", com.mygdx.mongojocs.sanfermines2006.Game.class),
+            new MongoGame("Sextron", 2004, NOKIA_SERIES_60,"sextron", com.mygdx.mongojocs.sextron.Game.class),
+            new MongoGame("Toro 2", 2005, NOKIA_SERIES_60,"toro2", com.mygdx.mongojocs.toro2.Game.class),
+            new MongoGame("The Mute", 2003, NOKIA_SERIES_60,"themute", com.mygdx.mongojocs.themute.Game.class),
+            new MongoGame("Ultranaus", 2003, NOKIA_SERIES_60,"ultranaus", com.mygdx.mongojocs.ultranaus.UltranausMain.class)
     };
 
     CatalogScreen(Launcher l)
@@ -104,7 +126,9 @@ public class CatalogScreen implements Screen {
                         {
                             MIDlet.setAssetsFolder(catalog[launcher.selectedGame].assetsFolder);
 
-                            launcher.setScreen(new MIDletRunScreen(launcher, catalog[launcher.selectedGame].midletClass));
+                            launcher.setScreen(new MIDletRunScreen(launcher, catalog[launcher.selectedGame].midletClass,
+                                                                    devices[catalog[launcher.selectedGame].platform].screenWidth,
+                                                                    devices[catalog[launcher.selectedGame].platform].screenHeight));
                             dispose();
                         }
                         else
@@ -170,7 +194,7 @@ public class CatalogScreen implements Screen {
             launcher.batch.begin();
             launcher.batch.draw(catalog[i].icon, 40, catalog.length*200 - launcher.scrollY - i*200 - 200 + 40, 64, 64);
             launcher.bigFont.draw(launcher.batch, catalog[i].name, 40, catalog.length*200 - launcher.scrollY - i*200 - 200  + 160);
-            launcher.smallFont.draw(launcher.batch, catalog[i].platform, 120, catalog.length*200 - launcher.scrollY - i*200 - 200  + 60);
+            launcher.smallFont.draw(launcher.batch, devices[catalog[i].platform].name, 120, catalog.length*200 - launcher.scrollY - i*200 - 200  + 60);
             launcher.smallFont.draw(launcher.batch, ""+catalog[i].year, 120, catalog.length*200 - launcher.scrollY - i*200 - 200  + 100);
             launcher.batch.end();
         }

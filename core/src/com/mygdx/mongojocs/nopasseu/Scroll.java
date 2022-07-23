@@ -111,7 +111,7 @@ public void ScrollSET(byte[] Mapa, byte[] comb, int SizeX, int SizeY, Image ImgA
 
 	for (int i=0 ; i<FondoMap.length ; i++) {FondoMap[i]=-1;}
 
-	ScrollUpdate();
+	ScrollUpdate_outsideMainThread();
 
 	firstTime = true;
 }
@@ -206,99 +206,116 @@ public void ScrollRUN_Centro_Max(int X, int Y)
 // Scroll Update
 // ===================
 
-public void ScrollUpdate()
+	public static boolean mainThreadWaiting = false;
+
+	public void ScrollUpdate()
+	{
+				try {
+
+
+					int FondoDir=0;
+					int CorX=FaseX+(FondoSizeX-FondoX);
+					int CorY=FaseY+(FondoSizeY-FondoY);
+
+					if (CorY< 0) {CorY+=FaseSizeY;}
+					if (CorY>=FaseSizeY) {CorY-=FaseSizeY;}
+
+					if (CorX< 0) {CorX+=FaseSizeX;}
+					if (CorX>=FaseSizeX) {CorX-=FaseSizeX;}
+
+
+					for (int y=0 ; y<FondoSizeY ; y++)
+					{
+						if (y==FondoY) {if ((CorY-=FondoSizeY) < 0) {CorY+=FaseSizeY;}}
+
+						for (int x=0, x2=FondoX, i=0 ; i<2; i++)
+						{
+							for (; x<x2 ; x++)
+							{
+								int FaseDir=(CorY*FaseSizeX)+CorX; if (++CorX >= FaseSizeX) {CorX-=FaseSizeX;}
+
+								if (FaseDir >= 0 && FaseDir < FaseMap.length)
+								{
+									if (FondoMap[FondoDir++] != FaseMap[FaseDir])
+									{
+										int TileNum=FaseMap[FaseDir];
+										FondoMap[FondoDir-1] = (byte)TileNum;
+
+										TileNum--;
+										if (TileNum < 0 ) {TileNum+=256;}
+										FondoGfx.setClip(x*16 ,y*16,  16,16);
+
+										if (TileNum < 71)
+										{
+											if (TileNum < 30)
+											{
+												FondoGfx.drawImage(TilesAImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
+											} else {
+												TileNum -= 30;
+												FondoGfx.drawImage(TilesBImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
+											}
+
+										} else {
+
+											int comTile = (TileNum - 71)*5;
+											for (int z=0 ; z<5 ;z++)
+											{
+												TileNum = TileComb[3+(comTile++)]-1;
+												if (TileNum < 0) {continue;}
+												if (TileNum < 30)
+												{
+													FondoGfx.drawImage(TilesAImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
+												} else {
+													TileNum -= 30;
+													FondoGfx.drawImage(TilesBImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
+												}
+											}
+
+										}
+									}
+								} else {
+									FondoDir++;
+								}
+
+							}
+
+							if (i==0)
+							{
+								if ((CorX-=FondoSizeX) < 0) {CorX+=FaseSizeX;}
+								x2=FondoSizeX;
+							} else {
+								if (++CorY >= FaseSizeY) {CorY-=FaseSizeY;}
+							}
+						}
+					}
+
+
+				} catch (Exception e) {ScrollX=0; ScrollY=0;}
+
+	}
+
+public void ScrollUpdate_outsideMainThread()
 {
+	mainThreadWaiting = true;
+
 	Gdx.app.postRunnable(new Runnable() {
 		@Override
 		public void run() {
 
-
-
-	try {
-
-
-	int FondoDir=0;
-	int CorX=FaseX+(FondoSizeX-FondoX);
-	int CorY=FaseY+(FondoSizeY-FondoY);
-
-	if (CorY< 0) {CorY+=FaseSizeY;}
-	if (CorY>=FaseSizeY) {CorY-=FaseSizeY;}
-
-	if (CorX< 0) {CorX+=FaseSizeX;}
-	if (CorX>=FaseSizeX) {CorX-=FaseSizeX;}
-
-	
-	for (int y=0 ; y<FondoSizeY ; y++)
-	{
-	if (y==FondoY) {if ((CorY-=FondoSizeY) < 0) {CorY+=FaseSizeY;}}
-
-		for (int x=0, x2=FondoX, i=0 ; i<2; i++)
-		{
-			for (; x<x2 ; x++)
-			{
-				int FaseDir=(CorY*FaseSizeX)+CorX; if (++CorX >= FaseSizeX) {CorX-=FaseSizeX;}
-
-				if (FaseDir >= 0 && FaseDir < FaseMap.length)
-				{
-					if (FondoMap[FondoDir++] != FaseMap[FaseDir])
-					{
-						int TileNum=FaseMap[FaseDir];
-						FondoMap[FondoDir-1] = (byte)TileNum;
-
-						TileNum--;
-						if (TileNum < 0 ) {TileNum+=256;}
-						FondoGfx.setClip(x*16 ,y*16,  16,16);
-
-						if (TileNum < 71)
-						{
-							if (TileNum < 30)
-							{
-								FondoGfx.drawImage(TilesAImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
-							} else {
-								TileNum -= 30;
-								FondoGfx.drawImage(TilesBImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
-							}
-
-						} else {
-
-							int comTile = (TileNum - 71)*5;
-							for (int z=0 ; z<5 ;z++)
-							{
-								TileNum = TileComb[3+(comTile++)]-1;
-								if (TileNum < 0) {continue;}
-								if (TileNum < 30)
-								{
-									FondoGfx.drawImage(TilesAImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
-								} else {
-									TileNum -= 30;
-									FondoGfx.drawImage(TilesBImg, (x*16)-((TileNum%TilesLineX)*16), (y*16)-((TileNum/TilesLineX)*16), Graphics.TOP|Graphics.LEFT);
-								}
-							}
-
-						}
-					}
-				} else {
-						FondoDir++;
-				}
-
-			}
-
-			if (i==0)
-			{
-			if ((CorX-=FondoSizeX) < 0) {CorX+=FaseSizeX;}
-			x2=FondoSizeX;
-			} else {
-			if (++CorY >= FaseSizeY) {CorY-=FaseSizeY;}
-			}
-		}
-	}
-
-
-	} catch (Exception e) {ScrollX=0; ScrollY=0;}
+			ScrollUpdate();
+			mainThreadWaiting = false;
 
 		}
 	});
 
+	while (mainThreadWaiting)
+	{
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 

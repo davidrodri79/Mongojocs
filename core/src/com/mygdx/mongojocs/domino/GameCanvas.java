@@ -69,7 +69,7 @@ static GameCanvas gc;
 //  Constructor
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-public GameCanvas(Game ga) 
+public GameCanvas(Game ga)
 {
 	this.ga = ga;
 	gc = this;
@@ -311,7 +311,7 @@ public void paint(Graphics g)
 		//#ifdef DEBUG
 			Debug.spdStart(1);
 		//#endif
-		
+
 		//#ifdef NOKIAUI
 			dscr = DirectUtils.getDirectGraphics(g);
 		//#endif
@@ -729,7 +729,7 @@ public void biosRefresh()
 //#ifdef DEBUG
 	Debug.println ("biosRefresh()");
 	Debug.println ("biosStatus="+biosStatus);
-	Debug.println ("gameStatus="+gameStatus);	
+	Debug.println ("gameStatus="+gameStatus);
 	Debug.fillYellow = true;
 //#endif
 
@@ -1030,10 +1030,10 @@ public void printDraw(String[] str, int x, int y, int RGB, int mode)
 
 		if ( ((mode & PRINT_VMASK) == 0) || (y >= printY) && (y + (printFontHeight*str.length) <= printY + printHeight) )
 		{
-	
+
 		//#ifdef DOJA
 		//#endif
-	
+
 			switch (printFontType)
 			{
 			case 1:
@@ -1073,11 +1073,11 @@ public void printDraw(String[] str, int x, int y, int RGB, int mode)
 			//#elifdef DOJA
 			//#endif
 			break;
-		
+
 		//#ifndef NO_CUSTOM_FONT
 			case 2:
 				byte[] tex = str[line].getBytes();
-		
+
 				for (int add=0, i=0 ; i<tex.length ; i++)
 				{
 					try
@@ -1089,15 +1089,15 @@ public void printDraw(String[] str, int x, int y, int RGB, int mode)
 							letra = 0x61 - printFont_Min;
 						} else {
 							letra -= printFont_Min;
-			
+
 							if (letra >= 0 && letra < printFontCor.length/6)	// Esta dentro de las letras permitidas???
 							{
 								printSpriteDraw(printFontImg, destX+add, destY, letra , printFontCor, mode);
 							}
 						}
-	
+
 						add += printFontCor[(letra * 6) + 2 ] + printFont_Spc;
-		
+
 					} catch (Exception e) {}
 				}
 			break;
@@ -1598,7 +1598,7 @@ public boolean ballColision(int xa, int ya, int da, int xb, int yb, int db)
 	da>>=1;
 	xa += da;
 	ya += da;
-	db>>=1; 
+	db>>=1;
 	xb += db;
 	yb += db;
 
@@ -1877,7 +1877,7 @@ public void imageDraw(Image Img, int X, int Y)
 // ----------------------------------------------------------
 
 public void imageDraw(Image Sour, int SourX, int SourY, int SizeX, int SizeY, int DestX, int DestY)
-{ 
+{
 //#ifdef SI
 //#else
 	if (DestX >= canvasWidth || DestY >= canvasHeight) {return;}
@@ -1940,7 +1940,7 @@ public void spriteDraw(Image img,  int x, int y,  int frame, byte[] cor)
 public void spriteDraw(Image img,  int x, int y,  int frame, byte[] cor, int trozos)
 {
 	frame*=6*trozos;
-	
+
 	for (int i=0 ; i<trozos ; i++)
 	{
 		int destX=cor[frame++];
@@ -1960,7 +1960,7 @@ public void spriteDraw(Image img,  int x, int y,  int frame, byte[] cor, int tro
 			frame+=3;
 		}
 	}
-} 
+}
 
 static final int R_HCENTER = 0x04;
 static final int R_VCENTER = 0x08;
@@ -2371,7 +2371,7 @@ public String[] textBreak(String texto, int width, Font f)
 	    }
 
 	    if (posOld == posIni)
-		{ 
+		{
 			if (posIni == pos-1)
 			{
 				posOld = pos;
@@ -2434,7 +2434,7 @@ public String[] textBreak(String texto, int width, byte[] f, int letraMin, int l
 	    }
 
 	    if (posOld == posIni)
-		{ 
+		{
 			posOld = pos - 1;
 		}
 
@@ -2674,9 +2674,9 @@ vibraInit(microsegundos)
 		// -------------------
 		// Sound INI
 		// ===================
-		
+
 		public void soundCreate(String[] sons)
-		{	
+		{
 			soundTracks = new Player[sons.length];
 
 			for (int i=0 ; i<sons.length ; i++)
@@ -2688,7 +2688,7 @@ vibraInit(microsegundos)
 		public Player SoundCargar(String Nombre)
 		{
 			Player p = null;
-		
+
 			try
 			{
 				//InputStream is = getClass().getResourceAsStream(Nombre);
@@ -2697,14 +2697,14 @@ vibraInit(microsegundos)
 				p.prefetch();
 			}
 			catch(Exception e) {e.printStackTrace();}
-		
+
 			return p;
 		}
-		
+
 		// -------------------
 		// Sound SET
 		// ===================
-		
+
 		public void soundPlay(int Ary, int Loop)
 		{
 			soundLoop = Loop;
@@ -2734,11 +2734,11 @@ vibraInit(microsegundos)
 				soundOld = Ary;
 			}
 		}
-		
+
 		// -------------------
 		// Sound RES
 		// ===================
-		
+
 		public void soundStop()
 		{
 			soundForceRestart = -1;
@@ -2755,15 +2755,15 @@ vibraInit(microsegundos)
 					Debug.println(e.toString());
 				//#endif
 				}
-		
+
 				soundOld = -1;
 			}
 		}
-		
+
 		// -------------------
 		// Sound RUN
 		// ===================
-		
+
 		public void soundTick()
 		{
 			if (soundForceRestart >= 0)
@@ -2783,11 +2783,11 @@ vibraInit(microsegundos)
 
 			soundForceRestart = -1;
 		}
-		
+
 		// -------------------
 		// Vibra SET
 		// ===================
-		
+
 		public void vibraInit(int Time)
 		{
 		//#ifdef VIBRATION
@@ -2979,7 +2979,7 @@ public void convInt2Ary(byte[] bufer, int index, int dato)
 public int[] convByte2Int(byte[] in)
 {
 	int[] out = new int[in.length / 4];
-	
+
 	for (int pos=0, i=0 ; i<out.length ; i++)
 	{
 		out[i] = ((in[pos++]&0xFF)<<24) | ((in[pos++]&0xFF)<<16) | ((in[pos++]&0xFF)<<8) | (in[pos++]&0xFF);
@@ -3512,7 +3512,7 @@ public void formInit(int mode, int pos, int actionBack, int actionAcept)
 		for (int sizeX, t=0 ; t<formListStr.length ; t++)
 		{
 			if (formListStr[t].length > 1) {optionCicle = true;}
-	
+
 			for (int i=0 ; i<formListStr[t].length ; i++)
 			{
 				sizeX = printStringWidth(formListStr[t][i]); if ( textoSizeX < sizeX ) {textoSizeX = sizeX;}
@@ -3531,7 +3531,7 @@ public void formInit(int mode, int pos, int actionBack, int actionAcept)
 		formListView = tmpHeight / formListEnterHeight;	// lineas visibles en lo que queda de pantalla
 		if (formListView > 3) {formListView--;}
 
-	
+
 	// Si tenemos menos lineas que el area para mostrar, centramos la impresion, y anulamos el posible scroll vertical
 		if (formListView >= formListStr.length)
 		{
@@ -3594,7 +3594,7 @@ public void formInit(int mode, int pos, int actionBack, int actionAcept)
 
 	// Calculamos cuantas lineas de texto nos entran en pantalla
 		formListView = (tmpHeight - (FORM_SEPARATOR)) / formListEnterHeight;	// lineas visibles en lo que queda de pantalla
-	
+
 	// Si tenemos menos lineas que el area para mostrar, centramos la impresion, y anulamos el posible scroll vertical
 		if (formListView >= formListStr.length)
 		{
@@ -4039,15 +4039,15 @@ public void formDraw()
 //			alphaFillDraw(0xAA000000|rgb, formBoxX, formBoxY + addY, formBoxWidth, formBoxHeight);
 			fillDraw(rgb, formBoxX, formBoxY + addY, formBoxWidth, formBoxHeight);
 //			formMarcDraw(formBoxX, formBoxY + addY, formBoxWidth, formBoxHeight);
-	
+
 		// Cortamos texto para que no se salga de la pantalla
 			formFontInit( (rgb == FORM_COLOR_BOX? FORM_FONT_SMALL_WHITE:FORM_FONT_SMALL_BLACK) );
 			String str = printTextCut(formListStr[formListIni+i][formListDat[formListIni+i][2]], formBoxWidth);
-	
+
 		// Pintamos texto ya cortado
 			printSetArea(formBoxX, formBoxY + addY, formBoxWidth, formBoxHeight);
 			printDraw(str, 0, 0, formFontPenRGB, PRINT_HCENTER|PRINT_VCENTER);
-	
+
 		// Pintamos aspas horizontales si es necesario
 			if (formListIni + i == formListPos && formListStr[formListIni+i].length > 1)
 			{
@@ -4084,7 +4084,7 @@ public void formDraw()
 		{
 		// Cortamos texto para que no se salga de la pantalla
 			String str = printTextCut(formListStr[formListIni+i][formListDat[formListIni+i][2]], formBoxWidth);
-	
+
 		// Pintamos texto ya cortado
 			printDraw(str, 1, i*formListEnterHeight, formFontPenRGB, (formListView==1? PRINT_HCENTER : PRINT_LEFT));
 		}
@@ -4421,7 +4421,7 @@ public int formListOpt()
 
 // scrollDestroy()
 // Destruimos toda la informacion y recursos del scroll
- 
+
 
 // Diferentes sistemas de movimiento de scroll:
 // --------------------------------------------
@@ -4537,10 +4537,10 @@ public void scrollInit(byte[] map, byte[] comb, final int tileWidth, final int t
 //#elifdef DOJA
 //#endif
 {
-    
+
   this.tileWidth 	= tileWidth;
   this.tileHeight = tileHeight;
-  
+
 
 // Anotamos Imagen que contiene los tiles
 //#ifdef J2ME
@@ -4764,11 +4764,11 @@ public void scrollTick_CenterMaxSlow(int X, int Y)
 {
    X -= (scrollWidth/2);
 	Y -= (scrollHeight/2);
-	
+
     //if (X != scrollX) {scrollX += X > scrollX? 1:-1;}
     //if (Y != scrollY) {scrollY += Y > scrollY? 1:-1;}
-    
-    
+
+
 
 
 	if (X<0) {X=0;} else if (X>=(scrollFaseWidth*tileWidth)-scrollWidth) {X=(scrollFaseWidth*tileWidth)-scrollWidth;}
@@ -4828,9 +4828,6 @@ public void scrollUpdate(int X, int Y, int SizeX, int SizeY)
 public void scrollBufferUpdate()
 {
 
-	Gdx.app.postRunnable(new Runnable() {
-		@Override
-		public void run() {
 
 	try
 	{
@@ -4900,12 +4897,12 @@ public void scrollBufferUpdate()
 									}
 								}
 							}
-/*							
+/*
 //#ifdef DEBUG
 	scrollFondoGfx.setColor(0xffff00);
 	scrollFondoGfx.drawRect(x*tileWidth ,y*tileHeight,  ((x+1)*tileWidth)-1 ,((y+1)*tileHeight)-1);
 //#endif
- */	
+ */
 
 				// =========================================================
 
@@ -4935,8 +4932,6 @@ public void scrollBufferUpdate()
 	//#endif
 	}
 
-		}
-	});
 }
 //#endif
 

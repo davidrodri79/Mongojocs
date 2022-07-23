@@ -1421,7 +1421,7 @@ public void scroll_ScrollSET(byte[] Mapa, int SizeX, int SizeY,  Image Img, int 
 
 	for (int i=0 ; i<FondoMap.length ; i++) {FondoMap[i]=-1;}
 
-	ScrollUpdate();
+	ScrollUpdate_outsideMainThread();
 }
 
 
@@ -1468,11 +1468,32 @@ public void scroll_ScrollRUN_Centro_Max(int X, int Y)
 // Scroll Update
 // ===================
 
+	public static boolean waitingForMainThread = false;
+
+	public void ScrollUpdate_outsideMainThread()
+	{
+		waitingForMainThread = true;
+
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				ScrollUpdate();
+				waitingForMainThread = false;
+			}
+		});
+
+		while(waitingForMainThread)
+		{
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 public void ScrollUpdate()
 {
-	Gdx.app.postRunnable(new Runnable() {
-		@Override
-		public void run() {
 			int FondoDir=0;
 			int CorX=FaseX+(FondoSizeX-FondoX);
 			int CorY=FaseY+(FondoSizeY-FondoY);
@@ -1517,8 +1538,6 @@ public void ScrollUpdate()
 					}
 				}
 			}
-		}
-	});
 }
 
 
