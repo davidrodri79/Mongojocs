@@ -82,7 +82,8 @@ class CerberusCanvas extends FullCanvas
 		ctrl=new Control();
 		
 		try{			
-			Microjocs = Image.createImage("/Microjocs.png"); 					
+			Microjocs = new Image();
+			Microjocs._createImage("/Microjocs.png");
 			/*byte buffer[] = multiread("/Misc.dat",misc_dat,5);
 			Microjocs = Image.createImage(buffer,0,buffer.length);*/ 					
 			

@@ -62,7 +62,8 @@ class UltranausCanvas extends FullCanvas
 		begx=(CANVX-96)/2; begy=(CANVY-65)/2;
 														
 		try {
-			Fonts = Image.createImage("/Fonts.png"); 
+			Fonts = new Image();
+			Fonts._createImage("/Fonts.png");
 			
 		}catch(Exception err) {}
 									

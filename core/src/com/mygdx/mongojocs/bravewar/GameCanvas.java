@@ -60,16 +60,22 @@ public class GameCanvas extends FullCanvas
 		gameMidlet = mid;
    		
    		try{
-   			FontImg = Image.createImage("/Font.png");
-   			BigFontImg = Image.createImage("/BigFnt.png");
-   			GUIImg = Image.createImage("/GUI.png");
-   			IconsImg = Image.createImage("/Icons.png");
-   			BoxImg = Image.createImage("/Box.png");
+   			FontImg = new Image();
+   			FontImg._createImage("/Font.png");
+   			BigFontImg = new Image();
+   			BigFontImg._createImage("/BigFnt.png");
+   			GUIImg = new Image();
+			GUIImg._createImage("/GUI.png");
+   			IconsImg = new Image();
+   			IconsImg._createImage("/Icons.png");
+   			BoxImg = new Image();
+   			BoxImg._createImage("/Box.png");
    			
    		}catch(Exception e) {}
    		
 		//loadPicture();   		   		   		   		
-		Picture = LoadImage("/Picture.png");	
+		Picture = new Image();
+   		Picture._createImage("/Picture.png");
    		   		   		   		
 		HumansCor = LoadFile(3);
 								
@@ -82,15 +88,22 @@ public class GameCanvas extends FullCanvas
 		ExplCor = LoadFile(0);
 				
 		GUICor = LoadFile(2); 		
-		HumansImg = LoadImage("/Humans.png");				
-		OrcsImg = LoadImage("/Orcs.png");					
-		TanksImg = LoadImage("/Tanks.png");						
-		Explos = LoadImage("/Explosions.png");		
-		Misc = LoadImage("/Misc.png");				
+		HumansImg = new Image();
+		HumansImg._createImage("/Humans.png");
+		OrcsImg = new Image();
+		OrcsImg._createImage("/Orcs.png");
+		TanksImg = new Image();
+		TanksImg._createImage("/Tanks.png");
+		Explos = new Image();
+		Explos._createImage("/Explosions.png");
+		Misc = new Image();
+		Misc._createImage("/Misc.png");
 				
 		UserFlag=new Image[6];
-		for(int i=0; i<6; i++)
-			UserFlag[i] = Image.createImage(11,11);
+		for(int i=0; i<6; i++) {
+			UserFlag[i] = new Image();
+			UserFlag[i]._createImage(11, 11);
+		}
 			
 													   		   		   		
    		Point3D.constantInit(CANVX,CANVY);

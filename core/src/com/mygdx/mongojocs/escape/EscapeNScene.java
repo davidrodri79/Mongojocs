@@ -47,7 +47,8 @@ abstract class EscapeNScene {
 				
 		// Load the sprites only once		
 		try {
-			SpriteImg = Image.createImage("/Misc.png"); 
+			SpriteImg = new Image();
+			SpriteImg._createImage("/Misc.png");
 			//SpriteImg = Image.createImage(8,8); 
 			
 		}catch(Exception err) {}

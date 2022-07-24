@@ -562,7 +562,8 @@ public void canvasCreate()
 {
 	canvasFillInit(0xffffff);
 
-	canvasImg = loadImage("/Clock.png");
+	canvasImg = new Image();
+	canvasImg._createImage("/Clock.png");
 
 	canvasShow = true;
 	repaint();

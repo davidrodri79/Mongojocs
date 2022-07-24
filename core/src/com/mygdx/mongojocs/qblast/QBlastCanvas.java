@@ -63,15 +63,24 @@ public class QBlastCanvas extends FullCanvas
 		controlReset();
 							 			
 		try{					
-			Ball = Image.createImage("/QBall.png"); 					
-			BallLine = Image.createImage("/QBallLine.png"); 					
-			Fnt = Image.createImage("/Font.png"); 					
-			BigFnt = Image.createImage("/BigFont.png"); 					
-			Picture = Image.createImage("/Logo.png"); 					
-			Faces = Image.createImage("/Faces.png"); 					
-			Title = Image.createImage("/Title.png"); 					
-			GreatBall = Image.createImage("/GreatBall.png"); 					
-			Bar = Image.createImage("/Bar.png"); 					
+			Ball = new Image();
+			Ball._createImage("/QBall.png");
+			BallLine = new Image();
+			BallLine._createImage("/QBallLine.png");
+			Fnt = new Image();
+			Fnt._createImage("/Font.png");
+			BigFnt = new Image();
+			BigFnt._createImage("/BigFont.png");
+			Picture = new Image();
+			Picture._createImage("/Logo.png");
+			Faces = new Image();
+			Faces._createImage("/Faces.png");
+			Title = new Image();
+			Title._createImage("/Title.png");
+			GreatBall = new Image();
+			GreatBall._createImage("/GreatBall.png");
+			Bar = new Image();
+			Bar._createImage("/Bar.png");
 									
 		}catch(Exception err) {}
 		

@@ -62,11 +62,13 @@ public GameCanvas(Game ga)
 
 	try	{
 	System.gc();
-	LoadingImg = Image.createImage("/gfx/Loading.png");
+	LoadingImg = new Image();
+	LoadingImg._createImage("/gfx/Loading.png");
 	System.gc();
 	if (getHeight()>=ga.GameMaxY+10)
 		{
-		IconMenuImg = Image.createImage("/gfx/IconMenu.png");
+		IconMenuImg = new Image();
+		IconMenuImg._createImage("/gfx/IconMenu.png");
 		System.gc();
 		}
 	} catch (Exception e) {}

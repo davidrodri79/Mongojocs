@@ -154,12 +154,8 @@ public class BeastCanvas
 			
 			loadProgressInc(10);	// 20
 
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run() {
-				Bkg = Image.createImage(96,250);
-			}
-		});
+
+			Bkg = Image.createImage(96,250);
 
 			loadProgressInc(10);	// 30
 			

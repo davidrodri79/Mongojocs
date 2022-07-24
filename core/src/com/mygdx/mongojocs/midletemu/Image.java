@@ -17,6 +17,7 @@ public class Image {
 
         Image image;
         String filename;
+        boolean finished = false;
 
         ImageLoadTask(Image i, String f)
         {
@@ -26,7 +27,11 @@ public class Image {
 
         @Override
         public void run() {
-            image._createImage(filename);
+            try {
+                image._createImage(filename);
+            }catch (Exception e) {
+            }
+            finished = true;
         }
     };
 
@@ -34,6 +39,7 @@ public class Image {
 
         Image image;
         int width, height;
+        boolean finished = false;
 
         ImageCreateTask(Image i, int w, int h)
         {
@@ -44,6 +50,7 @@ public class Image {
         @Override
         public void run() {
             image._createImage(width, height);
+            finished = true;
         }
     };
 
@@ -52,6 +59,7 @@ public class Image {
         Image image;
         byte buffer[];
         int start, length;
+        boolean finished = false;
 
         ImageCreateBinaryTask(Image i, byte[] b, int s, int l)
         {
@@ -63,6 +71,7 @@ public class Image {
         @Override
         public void run() {
             image._createImage(buffer, start, length);
+            finished = true;
         }
     };
 
@@ -80,6 +89,15 @@ public class Image {
         ImageLoadTask task = new ImageLoadTask(im, fileName);
         Gdx.app.postRunnable(task);
 
+        while(!task.finished)
+        {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         return im;
     }
 
@@ -94,6 +112,15 @@ public class Image {
         Image im = new Image();
         ImageCreateTask task = new ImageCreateTask(im, w, h);
         Gdx.app.postRunnable(task);
+
+        while(!task.finished)
+        {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return im;
     }
 
@@ -114,6 +141,14 @@ public class Image {
         Image im = new Image();
         ImageCreateBinaryTask task = new ImageCreateBinaryTask(im, inbuf, start, length);
         Gdx.app.postRunnable(task);
+        while(!task.finished)
+        {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return im;
     }
 

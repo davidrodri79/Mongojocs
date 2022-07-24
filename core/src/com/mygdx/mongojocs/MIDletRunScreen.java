@@ -178,9 +178,6 @@ public class MIDletRunScreen implements Screen {
         //Graphics.emptyScissors();
         Canvas.theCanvas.flushRepaints();
 
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
                 int px = (176 - Display.width) / 2;
                 int py = (208 - Display.height) / 2;
 
@@ -194,8 +191,6 @@ public class MIDletRunScreen implements Screen {
                 launcher.batch.begin();
                 launcher.batch.draw(Display.screenBuffer, px, py, Display.width, Display.height, 0, 1, 1, 0);
                 launcher.batch.end();
-            }
-        });
 
         // KEYBOARD LAYOUT
 

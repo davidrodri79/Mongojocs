@@ -366,6 +366,21 @@ public Image LoadImage(String FileName)
 	return null;
 }
 
+	public Image LoadImage_fromMainThread(String FileName)
+	{
+		System.gc();
+
+		try	{
+			Image Img = new Image();
+			Img._createImage(FileName);
+			System.gc();
+			return Img;
+		} catch (Exception e) {System.out.println("Error leyendo PNG: "+FileName);}
+
+		return null;
+	}
+
+
 
 // -------------------
 // Canvas Img SET
@@ -374,7 +389,7 @@ public Image LoadImage(String FileName)
 public void CanvasImageSET(String FileName, int RGB)
 {
 	CanvasFillRGB=RGB; CanvasFillPaint=1;
-	CanvasImg = LoadImage(FileName);
+	CanvasImg = LoadImage_fromMainThread(FileName);
 }
 
 // -------------------

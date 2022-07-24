@@ -37,7 +37,8 @@ abstract class EscapeNCar {
 				
 		// Load the sprites only once		
 		try {
-			SpriteImg = Image.createImage("/Cars.png"); 
+			SpriteImg = new Image();
+			SpriteImg._createImage("/Cars.png");
 			
 			
 		}catch(Exception err) {}

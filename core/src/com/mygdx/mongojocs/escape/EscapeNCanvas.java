@@ -79,12 +79,14 @@ class EscapeNCanvas extends FullCanvas implements Runnable
 		// Load the titles image		
 				
 		try {
-			Titles = Image.createImage("/Titles.png"); 
+			Titles = new Image();
+			Titles._createImage("/Titles.png");
 			
 		}catch(Exception err) {}
 		
 		try {
-			Sky = Image.createImage("/Sky.png"); 
+			Sky = new Image();
+			Sky._createImage("/Sky.png");
 			
 		}catch(Exception err) {}
 		

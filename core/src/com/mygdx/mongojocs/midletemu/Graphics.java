@@ -35,6 +35,7 @@ public class Graphics {
     static int scissorsSet = 0;
     boolean allClipped = false;
     int clipx,clipy,clipw,cliph;
+    int translatex, translatey;
 
     public static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
     public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'\"";
@@ -42,7 +43,8 @@ public class Graphics {
 
     public Graphics()
     {
-
+        translatex = 0;
+        translatey = 0;
     }
 
     public void init()
@@ -78,6 +80,8 @@ public class Graphics {
     }
 
     public void translate(int X, int Y) {
+        translatex += X;
+        translatey += Y;
     }
 
     static class FontGenerateTask implements Runnable {
@@ -124,6 +128,9 @@ public class Graphics {
     
     public void drawString(String str, int x, int y, int flags) {
 
+
+        x += translatex;
+        y += translatey;
 
         String hash = currentFont.face+"-"+ currentFont.style+"-"+currentFont.size+"-"+currentColor;
         BitmapFont f = null;
@@ -178,6 +185,9 @@ public class Graphics {
 
         allClipped = false;
 
+        destX += translatex;
+        destY += translatey;
+
         int maxx = fromImage == null ? Display.width : fromImage.getWidth();
         int maxy = fromImage == null ? Display.height : fromImage.getHeight();
 
@@ -197,6 +207,9 @@ public class Graphics {
     }
 
     public void clipRect(int destX, int destY, int sizeX, int sizeY) {
+
+        destX += translatex;
+        destY += translatey;
 
         if(clipx < destX)  {clipw -= destX - clipx; clipx = destX;}
         if(clipx+clipw > destX+sizeX)  clipw = (destX + sizeX) - clipx;
@@ -218,6 +231,17 @@ public class Graphics {
         if(g.allClipped || img.texture == null) return;
 
         {
+            if((flags & HCENTER) != 0)
+                x -= img.getWidth() / 2;
+            if((flags & VCENTER) != 0)
+                y -= img.getHeight() / 2;
+            if((flags & RIGHT) != 0)
+                x -= img.getWidth();
+            if((flags & BOTTOM) != 0)
+                y -= img.getHeight();
+
+            x += g.translatex;
+            y += g.translatey;
 
             int w = img.texture.getWidth();
             int h = img.texture.getHeight();
@@ -277,6 +301,9 @@ public class Graphics {
     {
         if(g.allClipped) return;
 
+        x += g.translatex;
+        y += g.translatey;
+
         if(g.fromImage == null)
             Display.fbo.begin();
         else
@@ -307,6 +334,29 @@ public class Graphics {
         // WARNING: No esta afectado por el clip!!
         if(g.allClipped) return;
 
+        x += g.translatex;
+        y += g.translatey;
+
+        if(x < g.clipx)
+        {
+            w -= (g.clipx - x); x = g.clipx;
+        }
+
+        if(y < g.clipy)
+        {
+            h -= (g.clipy - y); y = g.clipy;
+        }
+
+        if(x + w > g.clipx + g.clipw)
+        {
+            w = (g.clipx + g.clipw) - x;
+        }
+
+        if(y + h > g.clipy + g.cliph)
+        {
+            h = (g.clipy + g.cliph) - y;
+        }
+
         int finaly = y;
 
         if(g.fromImage == null)
@@ -329,6 +379,9 @@ public class Graphics {
     public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1)
     {
         if(allClipped) return;
+
+        cx += translatex;
+        cy += translatey;
 
         Display.clippedAreafbo.begin();
 
@@ -365,6 +418,9 @@ public class Graphics {
     public void drawArc(int cx, int cy, int rx, int ry, int a0, int a1)
     {
         if(allClipped) return;
+
+        cx += translatex;
+        cy += translatey;
 
         Display.clippedAreafbo.begin();
 
@@ -408,6 +464,11 @@ public class Graphics {
 
     public void drawLine(int x1, int y1, int x2, int y2) {
         if(allClipped) return;
+
+        x1 += translatex;
+        y1 += translatey;
+        x2 += translatex;
+        y2 += translatey;
 
         int minx, maxx, miny, maxy;
 
