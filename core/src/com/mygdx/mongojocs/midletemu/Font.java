@@ -12,9 +12,11 @@ import java.util.HashMap;
 public class Font {
 
     public static final int FACE_PROPORTIONAL = 1;
+    public static final int FACE_SYSTEM = 2;
 
     public static final int STYLE_PLAIN = 0;
     public static final int STYLE_BOLD = 1;
+    public static final int STYLE_ITALIC = 2;
 
     public static final int SIZE_SMALL = 0;
     public static final int SIZE_MEDIUM = 1;
@@ -22,6 +24,8 @@ public class Font {
 
     public static final int pixelWidths[] = { 8, 10, 12};
     public static final int pixelHeights[] = { 10, 12, 14};
+
+
 
     int face;
     int style;
