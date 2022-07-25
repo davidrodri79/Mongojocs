@@ -4903,10 +4903,6 @@ public void gameCreate()
 	//#endif
 //#endif
 
-	Graphics.fontGenerate(1, 0, 0, Color.WHITE);
-	Graphics.fontGenerate(1, 0, 0, new Color(0x000066ff));
-	Graphics.fontGenerate(1, 0, 0, new Color(0xaaaaaaff));
-
 }
 
 // -------------------

@@ -11,19 +11,21 @@ import java.util.HashMap;
 
 public class Font {
 
-    public static final int FACE_PROPORTIONAL = 1;
-    public static final int FACE_SYSTEM = 2;
+    public static final int FACE_SYSTEM = 0;
+    public static final int FACE_MONOSPACE = 32;
+    public static final int FACE_PROPORTIONAL = 64;
 
     public static final int STYLE_PLAIN = 0;
     public static final int STYLE_BOLD = 1;
     public static final int STYLE_ITALIC = 2;
+    public static final int STYLE_UNDERLINED = 4;
 
-    public static final int SIZE_SMALL = 0;
-    public static final int SIZE_MEDIUM = 1;
-    public static final int SIZE_LARGE = 2;
+    public static final int SIZE_MEDIUM = 0;
+    public static final int SIZE_SMALL = 8;
+    public static final int SIZE_LARGE = 16;
 
-    public static final int pixelWidths[] = { 8, 10, 12};
-    public static final int pixelHeights[] = { 10, 12, 14};
+    //public static final int pixelWidths[] = { 8, 10, 12};
+    //public static final int pixelHeights[] = { 10, 12, 14};
 
 
 
@@ -55,7 +57,22 @@ public class Font {
 
     public int getHeight()
     {
-        return pixelHeights[size];
+        if((size & SIZE_LARGE) != 0)
+            return 16;
+        else if((size & SIZE_SMALL) != 0)
+            return 12;
+        else
+            return 10;
+    }
+
+    public static  int getPixelWidth(int size)
+    {
+        if((size & SIZE_LARGE) != 0)
+            return 14;
+        else if((size & SIZE_SMALL) != 0)
+            return 10;
+        else
+            return 12;
     }
 
     public int stringWidth(String s)
@@ -63,14 +80,31 @@ public class Font {
         String hash = face+"-"+ style+"-"+size;
         BitmapFont fnt = null;
 
-        if(Graphics.bitmapFonts.containsKey(hash))
-        {
-            fnt = Graphics.bitmapFonts.get(hash);
-        }
-        else
+        if(!Graphics.bitmapFonts.containsKey(hash))
         {
             Graphics.fontGenerate(face, style, size, Color.WHITE);
         }
+        fnt = Graphics.bitmapFonts.get(hash);
+
+        if(fnt != null) {
+            layout.setText(fnt, s);
+            return (int) layout.width;
+        }
+        else
+            return 0;
+
+    }
+
+    public int _stringWidth(String s)
+    {
+        String hash = face+"-"+ style+"-"+size;
+        BitmapFont fnt = null;
+
+        if(!Graphics.bitmapFonts.containsKey(hash))
+        {
+            Graphics._fontGenerate(face, style, size, Color.WHITE);
+        }
+        fnt = Graphics.bitmapFonts.get(hash);
 
         if(fnt != null) {
             layout.setText(fnt, s);
@@ -85,6 +119,13 @@ public class Font {
 
         char array[]={c};
         return stringWidth(new String(array));
+
+    }
+
+    public int _charWidth(char c) {
+
+        char array[]={c};
+        return _stringWidth(new String(array));
 
     }
 }

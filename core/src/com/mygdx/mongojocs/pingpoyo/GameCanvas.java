@@ -672,7 +672,7 @@ public class GameCanvas extends BiosCanvas
 	
 	public void opponentTalk(int op, int t, int y)
 	{
-		String txt[] = textoBreak(ga.gameText[33+op][t], canvasWidth-32, Font.getFont(Font.FACE_PROPORTIONAL,Font.STYLE_PLAIN,Font.SIZE_SMALL));			
+		String txt[] = _textoBreak(ga.gameText[33+op][t], canvasWidth-32, Font.getFont(Font.FACE_PROPORTIONAL,Font.STYLE_PLAIN,Font.SIZE_SMALL));
 		
 		g.setClip(0,0,canvasWidth,canvasHeight);
 		g.setColor(255,255,255);

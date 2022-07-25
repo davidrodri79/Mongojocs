@@ -167,8 +167,6 @@ public Marco()
 
 public Marco(int SizeX, int SizeY)
 {
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_SMALL, Color.BLACK);
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL, Color.BLACK);
 	MarLcdSizeX=SizeX;
 	MarLcdSizeY=SizeY;
 

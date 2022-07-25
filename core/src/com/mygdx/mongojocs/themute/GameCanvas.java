@@ -541,9 +541,9 @@ public void StringIMP(String Str, int X, int Y, int RGB, int Mode)
 	LCD_Gfx.setFont(Font.getFont(Font.FACE_PROPORTIONAL, ((Mode&0x0F0)==0?Font.STYLE_PLAIN:Font.STYLE_BOLD), ((Mode&0xF00)==0?Font.SIZE_SMALL : ((Mode&0xF00)==0x100?Font.SIZE_MEDIUM:Font.SIZE_LARGE) )) );
 	Font f = LCD_Gfx.getFont();
 
-	if ((Mode & 0x002)!=0) {X+=( ga.GameSizeX-f.stringWidth(Str) )/2;}
+	if ((Mode & 0x002)!=0) {X+=( ga.GameSizeX-f._stringWidth(Str) )/2;}
 	else
-	if ((Mode & 0x001)!=0) {X+=  ga.GameSizeX-f.stringWidth(Str) ;}
+	if ((Mode & 0x001)!=0) {X+=  ga.GameSizeX-f._stringWidth(Str) ;}
 
 	if ((Mode & 0x008)!=0) {Y+=( ga.GameSizeY-f.getHeight() )/2;}
 	else

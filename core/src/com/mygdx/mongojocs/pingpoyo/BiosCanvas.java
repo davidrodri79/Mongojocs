@@ -412,7 +412,7 @@ static final int TEXT_SHADED =	0x2000;
 
 public void textDraw(String Str, int X, int Y, int RGB, int Mode)
 {
-	textDraw(textoBreak(Str, printerSizeX, Font.getFont(Font.FACE_PROPORTIONAL , ((Mode&0x0F0)==0?Font.STYLE_PLAIN:Font.STYLE_BOLD) , ((Mode&0xF00)==0?Font.SIZE_SMALL : ((Mode&0xF00)==0x100?Font.SIZE_MEDIUM:Font.SIZE_LARGE) ))), X, Y, RGB, Mode);
+	textDraw(_textoBreak(Str, printerSizeX, Font.getFont(Font.FACE_PROPORTIONAL , ((Mode&0x0F0)==0?Font.STYLE_PLAIN:Font.STYLE_BOLD) , ((Mode&0xF00)==0?Font.SIZE_SMALL : ((Mode&0xF00)==0x100?Font.SIZE_MEDIUM:Font.SIZE_LARGE) ))), X, Y, RGB, Mode);
 }
 
 // -------------------
@@ -471,6 +471,54 @@ public void textDraw(String[] Str, int X, int Y, int RGB, int Mode)
 
 
 
+	public String[] _textoBreak(String texto, int width, Font f)
+	{
+		int pos = 0, posIni = 0, posOld = 0, size = 0;
+		int[] positions = new int[512];
+		int count = 0;
+
+		while ( posOld < texto.length() )
+		{
+			size = 0;
+
+			pos = posIni;
+
+			while ( size < width )
+			{
+				if ( pos == texto.length()) {posOld = pos; break;}
+
+				int dat = texto.charAt(pos++);
+
+				if ( dat == '\n') { posOld = pos - 1; break; } // si encontramos un salto de linea, salimos
+
+				if ( dat==0x20 ) { posOld = pos - 1; }
+				size += f._charWidth((char)dat);
+			}
+
+			if (posOld - posIni < 1)
+			{
+				while ( pos < texto.length() && texto.charAt(pos) >= 0x30 ) {pos++;}
+				posOld = pos;
+			}
+
+			posIni = posOld + 1;
+			positions[count] = posOld;
+			count++;
+		}
+
+		String str[] = new String[count];
+		posIni = 0;
+		int posEnd;
+
+		for(int i = 0; i < count; i++)
+		{
+			posEnd = positions[i];
+			str[i] = texto.substring(posIni, posEnd);
+			posIni = posEnd + 1;
+		}
+
+		return str;
+	}
 
 
 public String[] textoBreak(String texto, int width, Font f)

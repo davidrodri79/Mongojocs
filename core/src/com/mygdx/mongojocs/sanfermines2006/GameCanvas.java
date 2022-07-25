@@ -99,10 +99,6 @@ public static GameCanvas gc;
 
 public GameCanvas(Game ga) 
 {
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL, new Color(0xffffffff));
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL, new Color(0xc0c0c0ff));
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL, new Color(0xff0000ff));
-
 	this.ga = ga;
 	gc = this;
 }

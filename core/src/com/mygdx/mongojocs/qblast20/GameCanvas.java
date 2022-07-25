@@ -96,8 +96,6 @@ public GameCanvas(Game ga)
 			//#ifdef FORCEFULLSCREEN
 			//#endif
 
-			Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL, Color.WHITE);
-
 			//#ifdef J2ME
 			menuListFont = Font.getFont( Font.FACE_PROPORTIONAL ,
 
@@ -892,7 +890,7 @@ public String[] textBreak(String texto, int width, Font f)
 
 			if ( dat==0x20 ) { posOld = pos - 1; }
 //#ifdef J2ME
-			size += f.charWidth((char)dat);
+			size += f._charWidth((char)dat);
 //#elifdef DOJA
 //#endif
 	    }

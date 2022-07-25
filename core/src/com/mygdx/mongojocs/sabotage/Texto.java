@@ -26,7 +26,7 @@ static String Start=	"Jugar";
 static String Sound[]=	new String[] {"Sonido en OFF","Sonido en ON"};
 static String Vibrate[]=new String[] {"Vibra en OFF","Vibra en ON"};
 static String Controls=	"Controles";
-static String Credits=	"Cr�ditos";
+static String Credits=	"Créditos";
 static String ExitGame=	"Salir";
 
 static String Continue=	"Continuar";

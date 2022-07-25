@@ -84,6 +84,8 @@ public class Graphics {
         translatey += Y;
     }
 
+    public static boolean generatingFont = false;
+
     static class FontGenerateTask implements Runnable {
 
         int face, style, size;
@@ -95,12 +97,23 @@ public class Graphics {
         @Override
         public void run() {
             Graphics._fontGenerate(face, style, size, color);
+            generatingFont = false;
         }
     }
 
     public static void fontGenerate(int face, int style, int size, Color color)
     {
+        generatingFont = true;
         Gdx.app.postRunnable(new FontGenerateTask(face, style, size, color));
+        while(generatingFont)
+        {
+            try {
+                Gdx.app.log("Graphics","Waiting for main thread to generate font...");
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static BitmapFont _fontGenerate(int face, int style, int size, Color color)
@@ -108,13 +121,25 @@ public class Graphics {
         String hash = face+"-"+ style+"-"+size+"-"+color;
         String hashNoColor = face+"-"+ style+"-"+size;
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("8bitOperatorPlus-Bold.ttf"));
+        String fontFile;
+
+        if((style & Font.STYLE_ITALIC) != 0)
+            fontFile = "prazo-cursiva.otf";
+        else
+        {
+            if((style & Font.STYLE_BOLD) != 0)
+                fontFile = "8bitOperatorPlus-Bold.ttf";
+            else
+                fontFile = "8bitOperatorPlus-Regular.ttf";
+        }
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(fontFile));
         FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
         params.minFilter = Texture.TextureFilter.Nearest;
         params.magFilter = Texture.TextureFilter.Nearest;
-        params.size = Font.pixelWidths[size];
-        params.borderWidth = style == Font.STYLE_BOLD ? 1 : 0;
-        params.borderColor = Color.BLACK;
+        params.size = Font.getPixelWidth(size);
+        params.borderWidth = 0; //style == Font.STYLE_BOLD ? 1 : 0;
+        params.borderColor = color;
         params.color = color;
         params.characters = fontChars;
         BitmapFont f = generator.generateFont(params); // font size 12 pixels
@@ -136,14 +161,11 @@ public class Graphics {
         BitmapFont f = null;
 
         // Generate font if needed
-        if(bitmapFonts.containsKey(hash))
+        if(!bitmapFonts.containsKey(hash))
         {
-            f = bitmapFonts.get(hash);
+            _fontGenerate(currentFont.face, currentFont.style, currentFont.size, currentColor);
         }
-        else
-        {
-            fontGenerate(currentFont.face, currentFont.style, currentFont.size, currentColor);
-        }
+        f = bitmapFonts.get(hash);
 
         // Draw text into clipped area texture
         if((flags & HCENTER) != 0)

@@ -3819,11 +3819,6 @@ public void Parco(int SizeX, int SizeY)
 
 	ParMaxSizeY=ParLcdSizeY-8;
 
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_SMALL, Color.BLACK);
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL, Color.BLACK);
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_MEDIUM, Color.BLACK);
-
-
 	Font f=Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_SMALL);
 	ParMaySizeY=f.getHeight();
 }
@@ -4118,8 +4113,8 @@ public void ParcoTextoIMP(Graphics LCD_Gfx, String Str[][], int Dat[][])
 	LCD_Gfx.setFont(f);
 	int t=Dat[i][2];
 	if ((Dat[i][0]&0xF)==0) {LCD_Gfx.drawString(Str[i][t],  ParTexX, ParTexY+SumaY,  20);}
-	if ((Dat[i][0]&0xF)==1) {LCD_Gfx.drawString(Str[i][t],  ParTexX+((ParTexSizeX-f.stringWidth(Str[i][0]))/2), ParTexY+SumaY,  20);}
-	if ((Dat[i][0]&0xF)==2) {LCD_Gfx.drawString(Str[i][t],  ParTexX+ (ParTexSizeX-f.stringWidth(Str[i][0]))   , ParTexY+SumaY,  20);}
+	if ((Dat[i][0]&0xF)==1) {LCD_Gfx.drawString(Str[i][t],  ParTexX+((ParTexSizeX-f._stringWidth(Str[i][0]))/2), ParTexY+SumaY,  20);}
+	if ((Dat[i][0]&0xF)==2) {LCD_Gfx.drawString(Str[i][t],  ParTexX+ (ParTexSizeX-f._stringWidth(Str[i][0]))   , ParTexY+SumaY,  20);}
 	}
 	SumaY+=f.getHeight();
 	}

@@ -893,9 +893,6 @@ public void biosCreate()
 	canvasTextCreate(10,0,canvasWidth - 20,canvasHeight);
 	//#endif
 
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN , Font.SIZE_SMALL, new Color(0x000000ff));
-	Graphics.fontGenerate(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN , Font.SIZE_SMALL, Color.WHITE);
-
 	menuListFont =
 //#ifdef J2ME
 	Font.getFont(Font.FACE_PROPORTIONAL , Font.STYLE_PLAIN ,
