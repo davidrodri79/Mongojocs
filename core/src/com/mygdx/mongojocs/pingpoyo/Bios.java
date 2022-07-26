@@ -1128,7 +1128,7 @@ public String[] menuListCutText(int Dato, String Texto)
 
 		int Dat = Tex[Pos++];
 		if (Dat==0x20) {PosOld=Pos-1;}
-		Size += f.charWidth((char)Dat);
+		Size += f._charWidth((char)Dat);
 	}
 
 	if (PosOld-PosIni < 1) { while ( Pos < Tex.length && Tex[Pos] >= 0x30 ) {Pos++;} PosOld=Pos; }

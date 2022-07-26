@@ -92,6 +92,7 @@ public class Image {
         while(!task.finished)
         {
             try {
+                Gdx.app.log("Image","Waiting for main thread to create image from file...");
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -116,6 +117,7 @@ public class Image {
         while(!task.finished)
         {
             try {
+                Gdx.app.log("Image","Waiting for main thread to create blank image...");
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -78,6 +78,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("LMA 2007", 2006, NOKIA_SERIES_60,"lma2007", com.mygdx.mongojocs.lma2007.Game.class),
             new MongoGame("Movistar Racing 2", 2005, NOKIA_SERIES_60,"mr2", com.mygdx.mongojocs.mr2.Game.class),
             //new MongoGame("Movistar Racing 3", 2005, NOKIA_SERIES_60,"mr3", com.mygdx.mongojocs.mr3.Game.class),
+            new MongoGame("Ninja Run", 2004, NOKIA_SERIES_60,"ninjarun", com.mygdx.mongojocs.ninjarun.ITGame01.class),
             new MongoGame("No Passeu", 2005, NOKIA_SERIES_40,"nopasseu", com.mygdx.mongojocs.nopasseu.Game.class),
             new MongoGame("Numa the beast", 2004, NOKIA_SERIES_60,"numa", com.mygdx.mongojocs.numa.BeastMain.class),
             //new MongoGame("Petanca", 2004, NOKIA_SERIES_60,"petanca", com.mygdx.mongojocs.petanca.Game.class),

@@ -72,7 +72,7 @@ int gameStatus = 0;
 
 public void gameCreate()
 {	
-	gameText[TEXT_ABOUT_SCROLL][1]=gameText[TEXT_ABOUT_SCROLL][1]+"MONGOEMU";//getAppProperty("MIDlet-Version");
+	gameText[TEXT_ABOUT_SCROLL][1]=gameText[TEXT_ABOUT_SCROLL][1]+getAppProperty("MIDlet-Version");
 	inputDialogCreate(gameText[28][0],gameText[29][0],gameText[30][0],3);
 }
 
