@@ -2,6 +2,7 @@ package com.mygdx.mongojocs.midletemu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -18,6 +19,7 @@ public class Display {
     public static Texture clippedAreaTexture;
     public static FrameBuffer fbo = null;
     public static FrameBuffer clippedAreafbo = null;
+    public static OrthographicCamera clippedAreaCamera;
 
     public static Display getDisplay(MIDlet m)
     {
@@ -42,6 +44,9 @@ public class Display {
 
         clippedAreafbo = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
         clippedAreaTexture = clippedAreafbo.getColorBufferTexture();
+
+        clippedAreaCamera = new OrthographicCamera();
+        clippedAreaCamera.setToOrtho(false, w, h);
 
         clippedAreafbo.begin();
         Gdx.gl.glClearColor(1, 1, 1, 0);

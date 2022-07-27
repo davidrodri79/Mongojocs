@@ -62,7 +62,7 @@ public class Font {
         else if((size & SIZE_SMALL) != 0)
             return 12;
         else
-            return 10;
+            return 14;
     }
 
     public static  int getPixelWidth(int size)
@@ -118,14 +118,28 @@ public class Font {
     public int charWidth(char c) {
 
         char array[]={c};
-        return stringWidth(new String(array));
+        int space;
+        if((size & SIZE_LARGE) != 0)
+            space = 4;
+        else if((size & SIZE_SMALL) != 0)
+            space = 2;
+        else
+            space = 3;
+        return stringWidth(new String(array))+space;
 
     }
 
     public int _charWidth(char c) {
 
         char array[]={c};
-        return _stringWidth(new String(array));
+        int space;
+        if((size & SIZE_LARGE) != 0)
+            space = 4;
+        else if((size & SIZE_SMALL) != 0)
+            space = 2;
+        else
+            space = 3;
+        return _stringWidth(new String(array))+space;
 
     }
 }
