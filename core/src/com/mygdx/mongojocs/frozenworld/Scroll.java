@@ -1,4 +1,5 @@
-package com.mygdx.mongojocs.ninjarun;
+package com.mygdx.mongojocs.frozenworld;
+
 
 // -------------------------------------
 // Scroll Class v1.3 - Rev.6 (2.3.2003)
@@ -39,13 +40,14 @@ int FondoX;
 int FondoY;
 
 Image TilesImg;
+
 int TilesLineX;
 
 int ScrollX;
 int ScrollY;
 int ScrollSizeX;
 int ScrollSizeY;
-
+//int deb = 1;
 
 // -------------------
 // Scroll Constructor
@@ -53,6 +55,7 @@ int ScrollSizeY;
 
 public Scroll()
 {
+	
 }
 
 
@@ -67,17 +70,19 @@ public void ScrollINI(int SizeX, int SizeY)
 	ScrollSizeX=SizeX;
 	ScrollSizeY=SizeY;
 
-	FondoSizeX=(SizeX/12)+((SizeX%12==0)?1:2);
-	FondoSizeY=(SizeY/12)+((SizeY%12==0)?1:2);
+	FondoSizeX=(SizeX/24)+((SizeX%24==0)?1:2);
+	FondoSizeY=(SizeY/24)+((SizeY%24==0)?1:2);
 	FondoMap = new byte[FondoSizeX*FondoSizeY];
 
-	FondoImg=Image.createImage(FondoSizeX*12, FondoSizeY*12);
 	Gdx.app.postRunnable(new Runnable() {
 		@Override
 		public void run() {
+			FondoImg=new Image();
+			FondoImg._createImage(FondoSizeX*24, FondoSizeY*24);
 			FondoGfx=FondoImg.getGraphics();
 		}
 	});
+
 }
 
 
@@ -108,7 +113,6 @@ public void ScrollSET(byte[] Mapa, int SizeX, int SizeY,  Image Img, int LineX)
 			ScrollUpdate();
 		}
 	});
-
 }
 
 
@@ -118,30 +122,29 @@ public void ScrollSET(byte[] Mapa, int SizeX, int SizeY,  Image Img, int LineX)
 
 public void ScrollRUN(int X, int Y)
 {
-	while (X<0) {X+=(FaseSizeX*12);}
-	while (Y<0) {Y+=(FaseSizeY*12);}
+	while (X<0) {X+=(FaseSizeX*24);}
+	while (Y<0) {Y+=(FaseSizeY*24);}
 
-	while (X>=FaseSizeX*12) {X-=(FaseSizeX*12);}
-	while (Y>=FaseSizeY*12) {Y-=(FaseSizeY*12);}
+	while (X>=FaseSizeX*24) {X-=(FaseSizeX*24);}
+	while (Y>=FaseSizeY*24) {Y-=(FaseSizeY*24);}
 
 	ScrollX=X;
 	ScrollY=Y;
 
-	FaseX=(X/12);
-	FaseY=(Y/12);
+	FaseX=(X/24);
+	FaseY=(Y/24);
 
-	FondoX=(X/12)%FondoSizeX;
-	FondoY=(Y/12)%FondoSizeY;
+	FondoX=(X/24)%FondoSizeX;
+	FondoY=(Y/24)%FondoSizeY;
 
 	ScrollUpdate();
 }
 
 
 public void ScrollRUN_Max(int X, int Y)
-{
-
-	if (X<0) {X=0;} else if (X>=(FaseSizeX*12)-ScrollSizeX) {X=(FaseSizeX*12)-ScrollSizeX;}
-	if (Y<0) {Y=0;} else if (Y>=(FaseSizeY*12)-ScrollSizeY) {Y=(FaseSizeY*12)-ScrollSizeY;}
+{   
+	if (X<0) {X=0;} else if (X>=(FaseSizeX*24)-ScrollSizeX) {X=(FaseSizeX*24)-ScrollSizeX-1;}
+	if (Y<0) {Y=0;} else if (Y>=(FaseSizeY*24)-ScrollSizeY) {Y=(FaseSizeY*24)-ScrollSizeY;}
 
 	ScrollRUN(X,Y);
 }
@@ -166,8 +169,7 @@ public void ScrollRUN_Centro_Max(int X, int Y)
 
 public void ScrollUpdate()
 {
-	try {
-
+	FondoGfx.setClip(0, 0,  FondoSizeX*24, FondoSizeY*24);
 
 	int FondoDir=0;
 	int CorX=FaseX+(FondoSizeX-FondoX);
@@ -179,7 +181,6 @@ public void ScrollUpdate()
 	if (CorX< 0) {CorX+=FaseSizeX;}
 	if (CorX>=FaseSizeX) {CorX-=FaseSizeX;}
 
-	
 	for (int y=0 ; y<FondoSizeY ; y++)
 	{
 	if (y==FondoY) {if ((CorY-=FondoSizeY) < 0) {CorY+=FaseSizeY;}}
@@ -190,22 +191,21 @@ public void ScrollUpdate()
 			{
 				int FaseDir=(CorY*FaseSizeX)+CorX; if (++CorX >= FaseSizeX) {CorX-=FaseSizeX;}
 
-		if (FaseDir >= 0 && FaseDir < FaseMap.length)
-		{
 				if (FondoMap[FondoDir++] != FaseMap[FaseDir])
 				{
-				int TileNum=FaseMap[FaseDir];
-				FondoMap[FondoDir-1] = (byte)TileNum;
-				if (TileNum < 0 ) {TileNum+=256;}
-				FondoGfx.setClip(x*12 ,y*12,  12,12);
-				FondoGfx.drawImage(TilesImg, (x*12)-((TileNum%TilesLineX)*12), (y*12)-((TileNum/TilesLineX)*12), Graphics.TOP|Graphics.LEFT);
+    				int TileNum=FaseMap[FaseDir];
+    				FondoMap[FondoDir-1] = (byte)TileNum;
+    				if (TileNum < 0 ) {TileNum+=256;}
+    				
+    				
+    				FondoGfx.setClip(x*24 ,y*24, 24,24);									
+    				if (!GameCanvas.inList(GameCanvas.LST_SIMPLE, TileNum)) 
+    				{
+    				    int TileNum2 = GameCanvas.getBack(FaseDir);
+    				    FondoGfx.drawImage(TilesImg, (x*24)-((TileNum2%TilesLineX)*24), (y*24)-((TileNum2/TilesLineX)*24), Graphics.TOP|Graphics.LEFT);
+    				}
+    				FondoGfx.drawImage(TilesImg, (x*24)-((TileNum%TilesLineX)*24), (y*24)-((TileNum/TilesLineX)*24), Graphics.TOP|Graphics.LEFT);
 				}
-
-		} else {
-				FondoDir++;
-				ScrollX = 0;
-		}
-
 			}
 
 			if (i==0)
@@ -217,11 +217,6 @@ public void ScrollUpdate()
 			}
 		}
 	}
-
-
-	} catch (Exception e) {ScrollX=0; ScrollY=0;}
-
-
 }
 
 
@@ -236,17 +231,17 @@ public void ScrollIMP(Image Img)
 
 public void ScrollIMP(Graphics Gfx)
 {
-	int x=ScrollX%12;
-	int y=ScrollY%12;
+	int x=ScrollX%24;
+	int y=ScrollY%24;
 
-	int sx=((FondoSizeX-FondoX)*12)-x;
-	int sy=((FondoSizeY-FondoY)*12)-y;
+	int sx=((FondoSizeX-FondoX)*24)-x;
+	int sy=((FondoSizeY-FondoY)*24)-y;//+Game.OffY;
 
 	int px=ScrollSizeX-sx;
 	int py=ScrollSizeY-sy;
 
-	int nx=-(FondoX*12)-x;
-	int ny=-(FondoY*12)-y;
+	int nx=-(FondoX*24)-x;
+	int ny=-(FondoY*24)-y;//+Game.OffY;
 
 
 	if (FondoY==0)

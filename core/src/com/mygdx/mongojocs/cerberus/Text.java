@@ -53,7 +53,8 @@ public class Text {
 		music="Musica",
 		microjocs="microjocs 2003",
 		web="www]microjocs]com",
-		thanks="agradecimientos",
+		//thanks="agradecimientos", MONGOFIX
+			thanks="gracias por el codigo",
 		epilogue[]={"]]]de repente[ cuando","cerberus grito tan","fuerte como un trueno[","el fuego del infierno","ascendio y absorbio","tanto a samuel como","al monstruo hacia las","puertas del infierno]]]","quizas[ahora sea cuando","la batalla empieza"," ","continuara]]]"},
 		prologue[][]={
 				   {"Se dice que cada 200","a@os[ el emperador del","inframundo[hades[abre","las puertas del infierno","e intenta conquistar el","mundo] hoy[en el a@o 1765[","criaturas malignas han","aparecido alrededor del","castillo rochefort]]]","Samuel coge su espada]","Sabe que ha llegado","su momento]]]"},
