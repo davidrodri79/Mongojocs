@@ -34,28 +34,29 @@ public class Graphics {
     Color currentColor;
     static int scissorsSet = 0;
     boolean allClipped = false;
-    int clipx,clipy,clipw,cliph;
+    int clipx, clipy, clipw, cliph;
     int translatex, translatey;
 
     public static HashMap<String, BitmapFont> bitmapFonts = new HashMap<>();
-    public static final String fontChars ="abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'\"";
+    public static final String fontChars = "abcçdefghijklmnñopqrstuvwxyzáéíóúABCÇDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚ0123456789¡!¿?[]()+-*/=,.;:%&#@|<>_'\"";
 
 
-    public Graphics()
-    {
+    public Graphics() {
         translatex = 0;
         translatey = 0;
     }
 
-    public void init()
-    {
+    public void init() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Display.width, Display.height);
         textCamera = new OrthographicCamera();
         textCamera.setToOrtho(true, Display.width, Display.height);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        clipx=0; clipy=0; clipw=Display.width; cliph=Display.height;
+        clipx = 0;
+        clipy = 0;
+        clipw = Display.width;
+        cliph = Display.height;
     }
 
     public void setFont(Font f) {
@@ -63,20 +64,19 @@ public class Graphics {
         currentFont = f;
     }
 
-    public Font getFont()
-    {
+    public Font getFont() {
         return currentFont;
     }
 
     public void setColor(int c) {
-        currentColor = new Color(((c & 0xff0000) >> 16)/255.f,
-                ((c & 0xff00) >> 8)/255.f,
-                (c & 0xff)/255.f,
+        currentColor = new Color(((c & 0xff0000) >> 16) / 255.f,
+                ((c & 0xff00) >> 8) / 255.f,
+                (c & 0xff) / 255.f,
                 1);
     }
 
     public void setColor(int r, int g, int b) {
-        currentColor = new Color(r/255.f, g/255.f, b/255.f, 1);
+        currentColor = new Color(r / 255.f, g / 255.f, b / 255.f, 1);
     }
 
     public void translate(int X, int Y) {
@@ -90,10 +90,14 @@ public class Graphics {
 
         int face, style, size;
         Color color;
-        FontGenerateTask(int f, int st, int si, Color c)
-        {
-            face = f; style = st; size = si; color = c;
+
+        FontGenerateTask(int f, int st, int si, Color c) {
+            face = f;
+            style = st;
+            size = si;
+            color = c;
         }
+
         @Override
         public void run() {
             Graphics._fontGenerate(face, style, size, color);
@@ -101,14 +105,12 @@ public class Graphics {
         }
     }
 
-    public static void fontGenerate(int face, int style, int size, Color color)
-    {
+    public static void fontGenerate(int face, int style, int size, Color color) {
         generatingFont = true;
         Gdx.app.postRunnable(new FontGenerateTask(face, style, size, color));
-        while(generatingFont)
-        {
+        while (generatingFont) {
             try {
-                Gdx.app.log("Graphics","Waiting for main thread to generate font...");
+                Gdx.app.log("Graphics", "Waiting for main thread to generate font...");
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -116,18 +118,16 @@ public class Graphics {
         }
     }
 
-    public static BitmapFont _fontGenerate(int face, int style, int size, Color color)
-    {
-        String hash = face+"-"+ style+"-"+size+"-"+color;
-        String hashNoColor = face+"-"+ style+"-"+size;
+    public static BitmapFont _fontGenerate(int face, int style, int size, Color color) {
+        String hash = face + "-" + style + "-" + size + "-" + color;
+        String hashNoColor = face + "-" + style + "-" + size;
 
         String fontFile;
 
-        if((style & Font.STYLE_ITALIC) != 0)
+        if ((style & Font.STYLE_ITALIC) != 0)
             fontFile = "prazo-cursiva.otf";
-        else
-        {
-            if((style & Font.STYLE_BOLD) != 0)
+        else {
+            if ((style & Font.STYLE_BOLD) != 0)
                 fontFile = "8bitOperatorPlus-Bold.ttf";
             else
                 fontFile = "8bitOperatorPlus-Regular.ttf";
@@ -145,32 +145,30 @@ public class Graphics {
         BitmapFont f = generator.generateFont(params); // font size 12 pixels
         generator.dispose();
 
-        bitmapFonts.put(hash,f);
+        bitmapFonts.put(hash, f);
         bitmapFonts.put(hashNoColor, f);
 
         return f;
     }
-    
+
     public void drawString(String str, int x, int y, int flags) {
 
 
         x += translatex;
         y += translatey;
 
-        String hash = currentFont.face+"-"+ currentFont.style+"-"+currentFont.size+"-"+currentColor;
+        String hash = currentFont.face + "-" + currentFont.style + "-" + currentFont.size + "-" + currentColor;
         BitmapFont f = null;
 
         // Generate font if needed
-        if(!bitmapFonts.containsKey(hash))
-        {
+        if (!bitmapFonts.containsKey(hash)) {
             _fontGenerate(currentFont.face, currentFont.style, currentFont.size, currentColor);
         }
         f = bitmapFonts.get(hash);
 
         // Draw text into clipped area texture
-        if((flags & HCENTER) != 0)
-        {
-            x -= currentFont.stringWidth(str)/2;
+        if ((flags & HCENTER) != 0) {
+            x -= currentFont.stringWidth(str) / 2;
         }
 
         Display.clippedAreafbo.begin();
@@ -179,13 +177,13 @@ public class Graphics {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(textCamera.combined);
         batch.begin();
-        if(f!=null) f.draw(batch, str, x,  Display.height - y - 2);
+        if (f != null) f.draw(batch, str, x, Display.height - y - 2);
         batch.end();
 
         Display.clippedAreafbo.end();
 
         // Copy clipped area texture to screen of image
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.begin();
         else
             fromImage.fbo.begin();
@@ -193,11 +191,11 @@ public class Graphics {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
-                clipx/(float)Display.width, clipy/(float)Display.height,
-                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
+                clipx / (float) Display.width, clipy / (float) Display.height,
+                (clipx + clipw) / (float) Display.width, (clipy + cliph) / (float) Display.height);
         batch.end();
 
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.end();
         else
             fromImage.fbo.end();
@@ -213,18 +211,33 @@ public class Graphics {
         int maxx = fromImage == null ? Display.width : fromImage.getWidth();
         int maxy = fromImage == null ? Display.height : fromImage.getHeight();
 
-        if(destX < 0) { sizeX += destX; destX = 0; }
-        if(destX >= maxx) destX = maxx;
-        if(destY < 0) { sizeY+= destY; destY = 0; }
-        if(destY >= maxy) destY = maxy;
-        if(destX + sizeX >= maxx) sizeX = maxx - destX;
-        if(destY + sizeY >= maxy) sizeY = maxy - destY;
+        if (destX < 0) {
+            sizeX += destX;
+            destX = 0;
+        }
+        if (destX >= maxx) destX = maxx;
+        if (destY < 0) {
+            sizeY += destY;
+            destY = 0;
+        }
+        if (destY >= maxy) destY = maxy;
+        if (destX + sizeX >= maxx) sizeX = maxx - destX;
+        if (destY + sizeY >= maxy) sizeY = maxy - destY;
 
 
-        clipx=destX; clipy=destY; clipw=sizeX; cliph=sizeY;
+        clipx = destX;
+        clipy = destY;
+        clipw = sizeX;
+        cliph = sizeY;
 
-        if(clipw <= 0) { allClipped = true; return;}
-        if(cliph <= 0) { allClipped = true; return;}
+        if (clipw <= 0) {
+            allClipped = true;
+            return;
+        }
+        if (cliph <= 0) {
+            allClipped = true;
+            return;
+        }
 
     }
 
@@ -233,33 +246,43 @@ public class Graphics {
         destX += translatex;
         destY += translatey;
 
-        if(clipx < destX)  {clipw -= destX - clipx; clipx = destX;}
-        if(clipx+clipw > destX+sizeX)  clipw = (destX + sizeX) - clipx;
-        if(clipy < destY)  {cliph -= destY - clipy; clipy = destY;}
-        if(clipy+cliph > destY+sizeY)  cliph = (destY + sizeY) - clipy;
+        if (clipx < destX) {
+            clipw -= destX - clipx;
+            clipx = destX;
+        }
+        if (clipx + clipw > destX + sizeX) clipw = (destX + sizeX) - clipx;
+        if (clipy < destY) {
+            cliph -= destY - clipy;
+            clipy = destY;
+        }
+        if (clipy + cliph > destY + sizeY) cliph = (destY + sizeY) - clipy;
 
-        if(clipw <= 0) { allClipped = true; return;}
-        if(cliph <= 0) { allClipped = true; return;}
+        if (clipw <= 0) {
+            allClipped = true;
+            return;
+        }
+        if (cliph <= 0) {
+            allClipped = true;
+            return;
+        }
 
     }
 
-    public void drawImage(Image img, int x, int y, int flags)
-    {
+    public void drawImage(Image img, int x, int y, int flags) {
         _drawImage(this, img, x, y, flags);
     }
 
-    public static void _drawImage(Graphics g, Image img, int x, int y, int flags)
-    {
-        if(g.allClipped || img.texture == null) return;
+    public static void _drawImage(Graphics g, Image img, int x, int y, int flags) {
+        if (g.allClipped || img.texture == null) return;
 
         {
-            if((flags & HCENTER) != 0)
+            if ((flags & HCENTER) != 0)
                 x -= img.getWidth() / 2;
-            if((flags & VCENTER) != 0)
+            if ((flags & VCENTER) != 0)
                 y -= img.getHeight() / 2;
-            if((flags & RIGHT) != 0)
+            if ((flags & RIGHT) != 0)
                 x -= img.getWidth();
-            if((flags & BOTTOM) != 0)
+            if ((flags & BOTTOM) != 0)
                 y -= img.getHeight();
 
             x += g.translatex;
@@ -273,60 +296,60 @@ public class Graphics {
             float v2 = 1;
 
             //Clipping
-            if(x < g.clipx)
-            {
+            if (x < g.clipx) {
                 int dx = g.clipx - x;
-                x += dx; w -= dx; u+= (float)dx/img.texture.getWidth();
+                x += dx;
+                w -= dx;
+                u += (float) dx / img.texture.getWidth();
             }
-            if(x + w > g.clipx + g.clipw)
-            {
+            if (x + w > g.clipx + g.clipw) {
                 int dx = (x + w) - (g.clipx + g.clipw);
-                w -= dx; u2-= (float)dx/img.texture.getWidth();
+                w -= dx;
+                u2 -= (float) dx / img.texture.getWidth();
             }
-            if(y < g.clipy)
-            {
+            if (y < g.clipy) {
                 int dy = g.clipy - y;
-                y += dy; h -= dy; v+= (float)dy/img.texture.getHeight();
+                y += dy;
+                h -= dy;
+                v += (float) dy / img.texture.getHeight();
             }
-            if(y + h > g.clipy + g.cliph)
-            {
+            if (y + h > g.clipy + g.cliph) {
                 int dy = (y + h) - (g.clipy + g.cliph);
-                h -= dy; v2-= (float)dy/img.texture.getHeight();
+                h -= dy;
+                v2 -= (float) dy / img.texture.getHeight();
             }
 
             int finaly = y;
 
-            if(g.fromImage == null)
+            if (g.fromImage == null)
                 Display.fbo.begin();
             else
                 g.fromImage.fbo.begin();
 
             g.batch.setProjectionMatrix(g.camera.combined);
             g.batch.begin();
-            g.batch.draw(img.texture, x, finaly, w, h, u, v, u2, v2 );
+            g.batch.draw(img.texture, x, finaly, w, h, u, v, u2, v2);
             g.batch.end();
 
-            if(g.fromImage == null)
+            if (g.fromImage == null)
                 Display.fbo.end();
             else
                 g.fromImage.fbo.end();
         }
 
     }
-    
-    public void drawRect(int x, int y, int w, int h)
-    {
-       _drawRect(this, x, y, w, h);
+
+    public void drawRect(int x, int y, int w, int h) {
+        _drawRect(this, x, y, w, h);
     }
 
-    public static void _drawRect(Graphics g, int x, int y, int w, int h)
-    {
-        if(g.allClipped) return;
+    public static void _drawRect(Graphics g, int x, int y, int w, int h) {
+        if (g.allClipped) return;
 
         x += g.translatex;
         y += g.translatey;
 
-        if(g.fromImage == null)
+        if (g.fromImage == null)
             Display.fbo.begin();
         else
             g.fromImage.fbo.begin();
@@ -340,7 +363,7 @@ public class Graphics {
         g.shapeRenderer.rect(x + w - 1, y, 1, h);
         g.shapeRenderer.end();
 
-        if(g.fromImage == null)
+        if (g.fromImage == null)
             Display.fbo.end();
         else
             g.fromImage.fbo.end();
@@ -354,34 +377,32 @@ public class Graphics {
     public static void _fillRect(Graphics g, int x, int y, int w, int h) {
 
         // WARNING: No esta afectado por el clip!!
-        if(g.allClipped) return;
+        if (g.allClipped) return;
 
         x += g.translatex;
         y += g.translatey;
 
-        if(x < g.clipx)
-        {
-            w -= (g.clipx - x); x = g.clipx;
+        if (x < g.clipx) {
+            w -= (g.clipx - x);
+            x = g.clipx;
         }
 
-        if(y < g.clipy)
-        {
-            h -= (g.clipy - y); y = g.clipy;
+        if (y < g.clipy) {
+            h -= (g.clipy - y);
+            y = g.clipy;
         }
 
-        if(x + w > g.clipx + g.clipw)
-        {
+        if (x + w > g.clipx + g.clipw) {
             w = (g.clipx + g.clipw) - x;
         }
 
-        if(y + h > g.clipy + g.cliph)
-        {
+        if (y + h > g.clipy + g.cliph) {
             h = (g.clipy + g.cliph) - y;
         }
 
         int finaly = y;
 
-        if(g.fromImage == null)
+        if (g.fromImage == null)
             Display.fbo.begin();
         else
             g.fromImage.fbo.begin();
@@ -392,15 +413,14 @@ public class Graphics {
         g.shapeRenderer.rect(x, finaly, w, h);
         g.shapeRenderer.end();
 
-        if(g.fromImage == null)
+        if (g.fromImage == null)
             Display.fbo.end();
         else
             g.fromImage.fbo.end();
     }
 
-    public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1)
-    {
-        if(allClipped) return;
+    public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1) {
+        if (allClipped) return;
 
         cx += translatex;
         cy += translatey;
@@ -410,7 +430,7 @@ public class Graphics {
         Gdx.gl.glClearColor(1, 1, 1, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(Display.clippedAreaCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
         shapeRenderer.ellipse(cx, cy, rx, ry);
@@ -419,27 +439,21 @@ public class Graphics {
 
         Display.clippedAreafbo.end();
 
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.begin();
         else
             fromImage.fbo.begin();
 
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
-                clipx/(float)Display.width, clipy/(float)Display.height,
-                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
-        batch.end();
+        drawClippedArea();
 
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.end();
         else
             fromImage.fbo.end();
     }
 
-    public void drawArc(int cx, int cy, int rx, int ry, int a0, int a1)
-    {
-        if(allClipped) return;
+    public void drawArc(int cx, int cy, int rx, int ry, int a0, int a1) {
+        if (allClipped) return;
 
         cx += translatex;
         cy += translatey;
@@ -458,34 +472,29 @@ public class Graphics {
 
         Display.clippedAreafbo.end();
 
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.begin();
         else
             fromImage.fbo.begin();
 
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
-                clipx/(float)Display.width, clipy/(float)Display.height,
-                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
-        batch.end();
+        drawClippedArea();
 
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.end();
         else
             fromImage.fbo.end();
     }
 
     public void fillRoundRect(int i, int i1, int i2, int i3, int i4, int i5) {
-        fillRect(i,i1,i2,i3);
+        fillRect(i, i1, i2, i3);
     }
 
     public void drawRoundRect(int i, int i1, int i2, int i3, int i4, int i5) {
-        drawRect(i,i1,i2,i3);
+        drawRect(i, i1, i2, i3);
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {
-        if(allClipped) return;
+        if (allClipped) return;
 
         x1 += translatex;
         y1 += translatey;
@@ -494,25 +503,23 @@ public class Graphics {
 
         int minx, maxx, miny, maxy;
 
-        if (x1 < x2)
-        {
-            minx = x1; maxx = x2;
-        }
-        else
-        {
-            minx = x2; maxx = x1;
-        }
-
-        if (y1 < y2)
-        {
-            miny = y1; maxy = y2;
-        }
-        else
-        {
-            miny = y2; maxy = y1;
+        if (x1 < x2) {
+            minx = x1;
+            maxx = x2;
+        } else {
+            minx = x2;
+            maxx = x1;
         }
 
-        if(minx > clipx + clipw || miny > clipy + cliph || maxx < clipx || maxy < clipy) return;
+        if (y1 < y2) {
+            miny = y1;
+            maxy = y2;
+        } else {
+            miny = y2;
+            maxy = y1;
+        }
+
+        if (minx > clipx + clipw || miny > clipy + cliph || maxx < clipx || maxy < clipy) return;
 
         Display.clippedAreafbo.begin();
 
@@ -522,26 +529,32 @@ public class Graphics {
         shapeRenderer.setProjectionMatrix(Display.clippedAreaCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(currentColor);
-        shapeRenderer.rectLine(x1+1,y1+1,x2+1,y2+1,1);
+        shapeRenderer.rectLine(x1 + 1, y1 + 1, x2 + 1, y2 + 1, 1);
         shapeRenderer.end();
 
         Display.clippedAreafbo.end();
 
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.begin();
         else
             fromImage.fbo.begin();
 
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
-                clipx/(float)Display.width, clipy/(float)Display.height,
-                (clipx+clipw)/(float)Display.width, (clipy+cliph)/(float)Display.height);
-        batch.end();
+        drawClippedArea();
 
-        if(fromImage == null)
+        if (fromImage == null)
             Display.fbo.end();
         else
             fromImage.fbo.end();
+    }
+
+    public void drawClippedArea()
+    {
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(Display.clippedAreaTexture, clipx, clipy, clipw, cliph,
+                clipx / (float) Display.clippedAreaTexture.getWidth(), clipy / (float) Display.clippedAreaTexture.getHeight(),
+                (clipx + clipw) / (float) Display.clippedAreaTexture.getWidth(), (clipy + cliph) / (float) Display.clippedAreaTexture.getHeight());
+        batch.end();
+
     }
 }

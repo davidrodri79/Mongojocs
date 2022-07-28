@@ -1,6 +1,8 @@
 package com.mygdx.mongojocs.midletemu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -9,6 +11,9 @@ public class DirectGraphics {
     public static final int FLIP_HORIZONTAL = 0x2000;
     public static final int FLIP_VERTICAL = 0x4000;
     public static final int TYPE_INT_8888_ARGB = 1;
+    public static final int ROTATE_90 = 90;
+    public static final int ROTATE_180 = 180;
+    public static final int ROTATE_270 = 270;
     Graphics g;
 
     DirectGraphics(Graphics g)
@@ -41,10 +46,60 @@ public class DirectGraphics {
             Display.fbo.end();
     }
 
-    public void drawImage(Image im, int x, int y, int z, int flags) {
+    public void drawImage(Image im, int x, int y, int anchor, int flags) {
 
         if(g.allClipped) return;
 
+        boolean flipX = false;
+        boolean flipY = true;
+        float rotation = 0;
+
+        if(flags == ROTATE_90)
+        {
+            rotation = 270; y+=im.texture.getWidth();
+        }
+        else if(flags == ROTATE_180)
+        {
+            rotation = 180; x+=im.texture.getWidth(); y+=im.texture.getHeight();
+        }
+        else if(flags == ROTATE_270)
+        {
+            rotation = 90; x+=im.texture.getHeight();
+        }
+        else
+        {
+            flipX = (flags & FLIP_HORIZONTAL) != 0;
+            flipY = (flags & FLIP_VERTICAL) == 0;
+        }
+
+
+        Display.clippedAreafbo.begin();
+
+        Gdx.gl.glClearColor(1, 1, 1, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        g.batch.setProjectionMatrix(Display.clippedAreaCamera.combined);
+        g.batch.begin();
+        //g.batch.draw(im.texture, x, y, w, h, u, v, u2, v2);
+        g.batch.draw(im.texture, x,y,0,0, im.getWidth(),im.getHeight(),1.0f,1.0f,
+                rotation,0,0,im.getWidth(),im.getHeight(),
+                flipX,
+                flipY);
+        g.batch.end();
+
+        Display.clippedAreafbo.end();
+
+        if(g.fromImage == null)
+            Display.fbo.begin();
+        else
+            g.fromImage.fbo.begin();
+
+        g.drawClippedArea();
+
+        if(g.fromImage == null)
+            Display.fbo.end();
+        else
+            g.fromImage.fbo.end();
+/*
         Texture texture = im.texture;
 
         int w = texture.getWidth();
@@ -53,6 +108,7 @@ public class DirectGraphics {
         float v = 0;
         float u2 = 1;
         float v2 = 1;
+
 
         //Clipping
         if(x < g.clipx)
@@ -87,6 +143,24 @@ public class DirectGraphics {
             v = 1.0f - v; v2 = 1.0f - v2;
         }
 
+         if((flags & ROTATE_90) != 0)
+        {
+            u = u;
+            aux = v; v = v2; v2 = aux;
+            u2 = u2;
+        }
+        else if((flags & ROTATE_180) != 0)
+        {
+            aux = u; u = u2; u2 = aux;
+            aux = v; v = v2; v2 = aux;
+        }
+        else if((flags & ROTATE_270) != 0)
+        {
+            aux = u; u = u2; u2 = aux;
+            v = v;
+            v2 = v2;
+        }
+
         if(g.fromImage != null)
             g.fromImage.fbo.begin();
         else
@@ -101,6 +175,7 @@ public class DirectGraphics {
             g.fromImage.fbo.end();
         else
             Display.fbo.end();
+*/
 
     }
 

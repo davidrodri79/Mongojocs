@@ -42,11 +42,11 @@ public class Display {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         fbo.end();
 
-        clippedAreafbo = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
+        clippedAreafbo = new FrameBuffer(Pixmap.Format.RGBA8888, 600, 800, false);
         clippedAreaTexture = clippedAreafbo.getColorBufferTexture();
 
         clippedAreaCamera = new OrthographicCamera();
-        clippedAreaCamera.setToOrtho(false, w, h);
+        clippedAreaCamera.setToOrtho(false, 600, 800);
 
         clippedAreafbo.begin();
         Gdx.gl.glClearColor(1, 1, 1, 0);
