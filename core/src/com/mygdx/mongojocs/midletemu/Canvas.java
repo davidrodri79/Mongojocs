@@ -50,6 +50,11 @@ public class Canvas extends Displayable {
         repaintAsked = true;
     }
 
+    public void repaint(int x, int y, int width, int height)
+    {
+        repaint();
+    }
+
     public void paint(Graphics g)
     {
 
@@ -96,5 +101,12 @@ public class Canvas extends Displayable {
     }
 
     public void setFullScreenMode(boolean b) {
+    }
+
+
+    protected void showNotify() {
+    }
+
+    protected void hideNotify() {
     }
 }

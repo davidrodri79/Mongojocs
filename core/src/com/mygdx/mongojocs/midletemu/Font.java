@@ -55,6 +55,11 @@ public class Font {
        return f;
     }
 
+    public static Font getDefaultFont()
+    {
+        return getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
+    }
+
     public int getHeight()
     {
         if((size & SIZE_LARGE) != 0)

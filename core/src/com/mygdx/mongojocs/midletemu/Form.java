@@ -4,7 +4,7 @@ public class Form extends Displayable {
     public Form(String title) {
     }
 
-    public void append(TextField inputField) {
+    public void append(Item item) {
     }
 
 }

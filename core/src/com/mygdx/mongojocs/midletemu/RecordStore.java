@@ -99,4 +99,14 @@ public class RecordStore {
     public int getRecordSize(int fila) {
         return data.length;
     }
+
+    public RecordEnumeration enumerateRecords(Object o, Object o1, boolean b)
+    {
+        return new RecordEnumeration() {
+            @Override
+            public int nextRecordId() {
+                return 1;
+            }
+        };
+    }
 }

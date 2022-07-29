@@ -12,4 +12,7 @@ public class DeviceControl {
 
     public static void setLights(int i, int i1) {
     }
+
+    public static void stopVibra() {
+    }
 }

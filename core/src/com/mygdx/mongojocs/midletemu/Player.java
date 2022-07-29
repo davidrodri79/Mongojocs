@@ -28,6 +28,9 @@ public class Player {
         music.setLooping(loop == 0);
     }
 
+    public void setMediaTime(int time) {
+    }
+
     public void stop() {
         music.stop();
     }
