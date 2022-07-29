@@ -282,7 +282,7 @@ class CerberusCanvas extends FullCanvas
 					Graphics gg = Sky.getGraphics();
 
 					gg.setColor(0, 3, 29);
-					Graphics._fillRect(gg,0, 64, CANVX, SCREENY - 64);
+					gg.fillRect(0, 64, CANVX, SCREENY - 64);
 
 					for (int i = 0; i < CANVX; i += 32) {
 

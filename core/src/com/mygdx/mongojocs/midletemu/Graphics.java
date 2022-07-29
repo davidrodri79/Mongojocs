@@ -371,13 +371,40 @@ public class Graphics {
 
     public void fillRect(int x, int y, int w, int h) {
 
-        _fillRect(this, x, y, w, h);
+        if (allClipped) return;
+
+        if(w<0 || h<0) return;
+
+        if (fromImage == null)
+            Display.fbo.begin();
+        else
+            fromImage.fbo.begin();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        fillRectPrimitive(this, x, y, w, h);
+
+        shapeRenderer.end();
+
+        if (fromImage == null)
+            Display.fbo.end();
+        else
+            fromImage.fbo.end();
+
+
     }
 
-    public static void _fillRect(Graphics g, int x, int y, int w, int h) {
+    public static void fillRectPrimitive(Graphics g, int x, int y, int w, int h) {
 
+       /* if(g.allClipped)
+            Gdx.app.log("Graphics", "_fillRect (AllClipped)");
+        else
+            Gdx.app.log("Graphics", "_fillRect ("+x+","+y+","+w+","+h+")");*/
         // WARNING: No esta afectado por el clip!!
         if (g.allClipped) return;
+
+        if(w<0 || h<0) return;
 
         x += g.translatex;
         y += g.translatey;
@@ -402,21 +429,10 @@ public class Graphics {
 
         int finaly = y;
 
-        if (g.fromImage == null)
-            Display.fbo.begin();
-        else
-            g.fromImage.fbo.begin();
 
-        g.shapeRenderer.setProjectionMatrix(g.camera.combined);
-        g.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         g.shapeRenderer.setColor(g.currentColor);
         g.shapeRenderer.rect(x, finaly, w, h);
-        g.shapeRenderer.end();
 
-        if (g.fromImage == null)
-            Display.fbo.end();
-        else
-            g.fromImage.fbo.end();
     }
 
     public void fillArc(int cx, int cy, int rx, int ry, int a0, int a1) {
