@@ -75,6 +75,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Cerberus Lair", 2003, NOKIA_SERIES_60,"cerberus", com.mygdx.mongojocs.cerberus.CerberusMain.class),
             new MongoGame("Domino", 2005, NOKIA_SERIES_60,"domino", com.mygdx.mongojocs.domino.Game.class),
             new MongoGame("Escape", 2003, NOKIA_SERIES_60,"escape", com.mygdx.mongojocs.escape.EscapeNMain.class),
+            new MongoGame("FBI", 2004, NOKIA_SERIES_60,"fbi", com.mygdx.mongojocs.fbi.Game.class),
             new MongoGame("Football Mobile", 2004, NOKIA_SERIES_60,"footballmobile", com.mygdx.mongojocs.foootballmobile.Game.class),
             new MongoGame("Frozen World", 2004, NOKIA_SERIES_60,"frozenworld", com.mygdx.mongojocs.frozenworld.Game.class),
             new MongoGame("K-Insectors", 2003, NOKIA_SERIES_60,"kinsectors", com.mygdx.mongojocs.kinsectors.KInsectors.class),
@@ -96,6 +97,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("The Mute", 2003, NOKIA_SERIES_60,"themute", com.mygdx.mongojocs.themute.Game.class),
             new MongoGame("Toro 2", 2005, NOKIA_SERIES_60,"toro2", com.mygdx.mongojocs.toro2.Game.class),
             new MongoGame("Ultranaus", 2003, NOKIA_SERIES_60,"ultranaus", com.mygdx.mongojocs.ultranaus.UltranausMain.class),
+            new MongoGame("Una de Zombis", 2003, NOKIA_SERIES_60,"unadezombis", com.mygdx.mongojocs.unadezombis.Game.class),
             new MongoGame("Wrath of Sekhmet", 2003, NOKIA_SERIES_60,"sekhmet", com.mygdx.mongojocs.sekhmet.Sekhmet.class)
     };
 
