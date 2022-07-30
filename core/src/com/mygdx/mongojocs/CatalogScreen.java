@@ -17,6 +17,43 @@ import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 
+/*
+        Juegos disponibles
+        ====================================
+        3D QBlast 2.0
+        Aminoid X
+        Astro 3003
+        BraveWar
+        Cámara Oscura
+        Club Football 2006
+        Cerberus Lair
+        Domino
+        Escape
+        FBI
+        Football Mobile
+        Frozen World
+        K-Insectors
+        LMA 2007
+        Movistar Racing
+        Movistar Racing 2
+        Ninja Run
+        No Passeu
+        Numa the beast
+        Ping Poyo
+        Poyo's Garden
+        QBlast Ironball
+        Rescue Force
+        Sabotage
+        Sanfermines 2006
+        Sextron
+        Thai Warrior
+        The Mute
+        Toro 2
+        Ultranaus
+        Una de Zombis
+        Wrath of Sekhmet
+*/
+
 public class CatalogScreen implements Screen {
 
     Launcher launcher;
@@ -88,6 +125,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Numa the beast", 2004, NOKIA_SERIES_60,"numa", com.mygdx.mongojocs.numa.BeastMain.class),
             //new MongoGame("Petanca", 2004, NOKIA_SERIES_60,"petanca", com.mygdx.mongojocs.petanca.Game.class),
             new MongoGame("Ping Poyo", 2004, NOKIA_SERIES_60,"pingpoyo", com.mygdx.mongojocs.pingpoyo.Game.class),
+            new MongoGame("Poyo's Garden", 2003, NOKIA_SERIES_60,"poyogarden", com.mygdx.mongojocs.poyogarden.PoyoP.class),
             new MongoGame("QBlast Ironball", 2005, NOKIA_SERIES_60,"qblast", com.mygdx.mongojocs.qblast.QBlastMain.class),
             new MongoGame("Rescue Force", 2003, NOKIA_SERIES_60,"rescue", com.mygdx.mongojocs.rescue.rescue.class),
             new MongoGame("Sabotage", 2003, NOKIA_SERIES_60,"sabotage", com.mygdx.mongojocs.sabotage.Game.class),

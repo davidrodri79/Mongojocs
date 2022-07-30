@@ -82,6 +82,8 @@ public class Graphics {
     public void translate(int X, int Y) {
         translatex += X;
         translatey += Y;
+        clipx += X;
+        clipy += Y;
     }
 
     public static boolean generatingFont = false;
@@ -404,8 +406,6 @@ public class Graphics {
         // WARNING: No esta afectado por el clip!!
         if (g.allClipped) return;
 
-        if(w<0 || h<0) return;
-
         x += g.translatex;
         y += g.translatey;
 
@@ -427,8 +427,9 @@ public class Graphics {
             h = (g.clipy + g.cliph) - y;
         }
 
-        int finaly = y;
+        if(w<0 || h<0) return;
 
+        int finaly = y;
 
         g.shapeRenderer.setColor(g.currentColor);
         g.shapeRenderer.rect(x, finaly, w, h);
