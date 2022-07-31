@@ -181,4 +181,7 @@ public class DirectGraphics {
 
     public void drawPixels(int[] temp, boolean b, int i, int width, int x, int i1, int width1, int i2, int i3, int typeInt8888Argb) {
     }
+
+    public void setARGBColor(int i) {
+    }
 }

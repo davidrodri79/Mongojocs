@@ -173,6 +173,14 @@ public class Graphics {
             x -= currentFont.stringWidth(str) / 2;
         }
 
+        if ((flags & RIGHT) != 0) {
+            x -= currentFont.stringWidth(str);
+        }
+
+        if ((flags & BOTTOM) != 0) {
+            y -= currentFont.getHeight();
+        }
+
         Display.clippedAreafbo.begin();
 
         Gdx.gl.glClearColor(1, 1, 1, 0);
@@ -371,12 +379,8 @@ public class Graphics {
             g.fromImage.fbo.end();
     }
 
-    public void fillRect(int x, int y, int w, int h) {
-
-        if (allClipped) return;
-
-        if(w<0 || h<0) return;
-
+    public void startPrimitives()
+    {
         if (fromImage == null)
             Display.fbo.begin();
         else
@@ -384,16 +388,29 @@ public class Graphics {
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    }
 
-        fillRectPrimitive(this, x, y, w, h);
-
+    public void endPrimitives()
+    {
         shapeRenderer.end();
 
         if (fromImage == null)
             Display.fbo.end();
         else
             fromImage.fbo.end();
+    }
 
+    public void fillRect(int x, int y, int w, int h) {
+
+        if (allClipped) return;
+
+        if(w<0 || h<0) return;
+
+        startPrimitives();
+
+        fillRectPrimitive(this, x, y, w, h);
+
+        endPrimitives();
 
     }
 

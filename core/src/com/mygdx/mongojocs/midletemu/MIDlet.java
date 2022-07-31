@@ -33,6 +33,11 @@ public class MIDlet {
         appClosed = true;
     }
 
+    public void notifyPaused()
+    {
+
+    }
+
     public void startApp()
     {
 
