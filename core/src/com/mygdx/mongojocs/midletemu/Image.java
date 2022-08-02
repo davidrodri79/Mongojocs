@@ -17,12 +17,13 @@ public class Image {
 
         Image image;
         String filename;
-        boolean finished = false;
+        boolean finished;
 
         ImageLoadTask(Image i, String f)
         {
             image = i;
             filename = f;
+            finished = false;
         }
 
         @Override
