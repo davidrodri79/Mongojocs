@@ -76,6 +76,10 @@ public class Graphics {
                 1);
     }
 
+    public int getColor() {
+        return currentColor.toIntBits();
+    }
+
     public void setColor(int r, int g, int b) {
         currentColor = new Color(r / 255.f, g / 255.f, b / 255.f, 1);
     }

@@ -109,4 +109,8 @@ public class RecordStore {
             }
         };
     }
+
+    public int getSizeAvailable() {
+        return 1000000;
+    }
 }
