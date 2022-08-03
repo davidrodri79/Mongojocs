@@ -57,6 +57,7 @@ public class Graphics {
         clipy = 0;
         clipw = Display.width;
         cliph = Display.height;
+        currentFont = Font.getDefaultFont();
     }
 
     public void setFont(Font f) {

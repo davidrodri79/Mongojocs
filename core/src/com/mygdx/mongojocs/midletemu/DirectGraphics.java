@@ -53,10 +53,14 @@ public class DirectGraphics {
         boolean flipX = false;
         boolean flipY = true;
         float rotation = 0;
+        int rotatedWidth = im.getWidth();
+        int rotatedHeight = im.getHeight();
+
 
         if(flags == ROTATE_90)
         {
             rotation = 270; y+=im.texture.getWidth();
+            rotatedWidth = im.getHeight(); rotatedHeight = im.getWidth();
         }
         else if(flags == ROTATE_180)
         {
@@ -65,12 +69,23 @@ public class DirectGraphics {
         else if(flags == ROTATE_270)
         {
             rotation = 90; x+=im.texture.getHeight();
+            rotatedWidth = im.getHeight(); rotatedHeight = im.getWidth();
         }
         else
         {
             flipX = (flags & FLIP_HORIZONTAL) != 0;
             flipY = (flags & FLIP_VERTICAL) == 0;
         }
+
+        if ((anchor & Graphics.HCENTER) != 0)
+            x -= rotatedWidth / 2;
+        if ((anchor & Graphics.VCENTER) != 0)
+            y -= rotatedHeight / 2;
+        if ((anchor & Graphics.RIGHT) != 0)
+            x -= rotatedWidth;
+        if ((anchor & Graphics.BOTTOM) != 0)
+            y -= rotatedHeight;
+
 
 
         Display.clippedAreafbo.begin();
