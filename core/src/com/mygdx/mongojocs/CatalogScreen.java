@@ -133,6 +133,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Poyo's Garden", 2003, NOKIA_SERIES_60,"poyogarden", com.mygdx.mongojocs.poyogarden.PoyoP.class),
             new MongoGame("QBlast Ironball", 2005, NOKIA_SERIES_60,"qblast", com.mygdx.mongojocs.qblast.QBlastMain.class),
             new MongoGame("Rescue Force", 2003, NOKIA_SERIES_60,"rescue", com.mygdx.mongojocs.rescue.rescue.class),
+            new MongoGame("Sexy Snake", 2004, NOKIA_SERIES_60, "sexysnake", com.mygdx.mongojocs.sexysnake.Game.class),
             new MongoGame("Sabotage", 2003, NOKIA_SERIES_60,"sabotage", com.mygdx.mongojocs.sabotage.Game.class),
             new MongoGame("Sanfermines 2006", 2006, NOKIA_SERIES_60,"sanfermines2006", com.mygdx.mongojocs.sanfermines2006.Game.class),
             new MongoGame("Sextron", 2004, NOKIA_SERIES_60,"sextron", com.mygdx.mongojocs.sextron.Game.class),
