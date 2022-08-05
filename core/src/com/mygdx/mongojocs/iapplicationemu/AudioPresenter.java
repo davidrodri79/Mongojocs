@@ -3,7 +3,10 @@ package com.mygdx.mongojocs.iapplicationemu;
 import com.mygdx.mongojocs.parachutist.GameCanvas;
 
 public class AudioPresenter extends MediaPresenter {
+
     public static final int AUDIO_COMPLETE = 1;
+
+    MediaSound currentSound = null;
 
     public static AudioPresenter getAudioPresenter() {
         return new AudioPresenter();
@@ -13,11 +16,14 @@ public class AudioPresenter extends MediaPresenter {
     }
 
     public void setSound(MediaSound mediaSound) {
+        currentSound = mediaSound;
     }
 
     public void play() {
+        currentSound.music.play();
     }
 
     public void stop() {
+        currentSound.music.stop();
     }
 }

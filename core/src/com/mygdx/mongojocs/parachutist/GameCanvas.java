@@ -16,6 +16,9 @@ package com.mygdx.mongojocs.parachutist;
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // ---------------------------------------------------------
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.mongojocs.iapplicationemu.AudioPresenter;
 import com.mygdx.mongojocs.iapplicationemu.Canvas;
 import com.mygdx.mongojocs.iapplicationemu.Connector;
@@ -32,35 +35,43 @@ import com.mygdx.mongojocs.iapplicationemu.MediaManager;
 import com.mygdx.mongojocs.iapplicationemu.MediaPresenter;
 import com.mygdx.mongojocs.iapplicationemu.MediaSound;
 import com.mygdx.mongojocs.iapplicationemu.PhoneSystem;
+import com.mygdx.mongojocs.midletemu.MIDlet;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class GameCanvas extends Canvas implements MediaListener
-{
+public class GameCanvas extends Canvas implements MediaListener {
 
-Game ga;
+	Game ga;
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //  Constructor
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-public GameCanvas(Game ga)
-{
-	this.ga = ga;
-	canvasCreate();
-}
+	public GameCanvas(Game ga) {
+		this.ga = ga;
+		canvasCreate();
+	}
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-public void gameDraw()
-{
-	canvasShow=true;
-	repaint();
-	while (canvasShow==true) {try {Thread.sleep(1);} catch(Exception e) {}}
-}
+	public void gameDraw() {
+		canvasShow = true;
+		repaint();
+		while (canvasShow == true) {
+			try {
+				Thread.sleep(1);
+			} catch (Exception e) {
+			}
+		}
+	}
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -68,28 +79,26 @@ public void gameDraw()
 // Refresco de la pantalla (repaint)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-Graphics scr;
+	Graphics scr;
 
-public void paint(Graphics g)
-{       
-	SoundRUN();
+	public void paint(Graphics g) {
+		SoundRUN();
 
-	if (canvasShow)
-	{
-	canvasShow=false;
+		if (canvasShow) {
+			canvasShow = false;
 
-	g.lock();
+			g.lock();
 
-	scr = g;
+			scr = g;
 
-	canvasDraw();
+			canvasDraw();
 
-	ProgBarIMP(g);
-	FS_ErrorDraw(g, canvasWidth, canvasHeight);
+			ProgBarIMP(g);
+			FS_ErrorDraw(g, canvasWidth, canvasHeight);
 
-	g.unlock(true);
+			g.unlock(true);
+		}
 	}
-}
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -98,45 +107,79 @@ public void paint(Graphics g)
 // Gestion de Eventos (Teclado, Timers, etc...)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-int keyX, keyY, keyMisc, keyMenu;
+	int keyX, keyY, keyMisc, keyMenu;
 
-public void processEvent(int type, int param)
-{
-	if (type == Display.KEY_RELEASED_EVENT)
-	{
-		keyX=0;
-		keyY=0;
-		keyMisc=0;
-		keyMenu=0;
-	}
-	else if (type == Display.KEY_PRESSED_EVENT)
-	{
-		switch (param)
-		{
-		case Display.KEY_SOFT1:
-		case Display.KEY_SOFT2:
-			keyMenu=-1;
-		return;
+	public void processEvent(int type, int param) {
+		if (type == Display.KEY_RELEASED_EVENT) {
+			keyX = 0;
+			keyY = 0;
+			keyMisc = 0;
+			keyMenu = 0;
+		} else if (type == Display.KEY_PRESSED_EVENT) {
+			switch (param) {
+				case Display.KEY_SOFT1:
+				case Display.KEY_SOFT2:
+					keyMenu = -1;
+					return;
 
-		case Display.KEY_UP:	keyY=-1; return;
-		case Display.KEY_DOWN:	keyY= 1; return;
-		case Display.KEY_LEFT:	keyX=-1; return;
-		case Display.KEY_RIGHT: keyX= 1; return;
-		case Display.KEY_SELECT:keyMisc= 5; keyMenu= 2; return;
+				case Display.KEY_UP:
+					keyY = -1;
+					return;
+				case Display.KEY_DOWN:
+					keyY = 1;
+					return;
+				case Display.KEY_LEFT:
+					keyX = -1;
+					return;
+				case Display.KEY_RIGHT:
+					keyX = 1;
+					return;
+				case Display.KEY_SELECT:
+					keyMisc = 5;
+					keyMenu = 2;
+					return;
 
-		case Display.KEY_0: keyMisc=10; return;
-		case Display.KEY_1: keyMisc=1; keyX=-1; keyY=-1; return;
-		case Display.KEY_2: keyMisc=2; keyY=-1; return;
-		case Display.KEY_3: keyMisc=3; keyX= 1; keyY=-1; return;
-		case Display.KEY_4: keyMisc=4; keyX=-1; return;
-		case Display.KEY_5: keyMisc=5; return;
-		case Display.KEY_6: keyMisc=6; keyX= 1; return;
-		case Display.KEY_7: keyMisc=7; return;
-		case Display.KEY_8: keyMisc=8; keyY= 1; return;
-		case Display.KEY_9: keyMisc=9; return;
+				case Display.KEY_0:
+					keyMisc = 10;
+					return;
+				case Display.KEY_1:
+					keyMisc = 1;
+					keyX = -1;
+					keyY = -1;
+					return;
+				case Display.KEY_2:
+					keyMisc = 2;
+					keyY = -1;
+					return;
+				case Display.KEY_3:
+					keyMisc = 3;
+					keyX = 1;
+					keyY = -1;
+					return;
+				case Display.KEY_4:
+					keyMisc = 4;
+					keyX = -1;
+					return;
+				case Display.KEY_5:
+					keyMisc = 5;
+					return;
+				case Display.KEY_6:
+					keyMisc = 6;
+					keyX = 1;
+					return;
+				case Display.KEY_7:
+					keyMisc = 7;
+					return;
+				case Display.KEY_8:
+					keyMisc = 8;
+					keyY = 1;
+					return;
+				case Display.KEY_9:
+					keyMisc = 9;
+					return;
+			}
 		}
 	}
-}
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -145,39 +188,35 @@ public void processEvent(int type, int param)
 //  Rutinas de Impresion en pantalla
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-public void imageDraw(Image Img)
-{
-	imageDraw(Img, (canvasWidth-Img.getWidth())/2, (canvasHeight-Img.getHeight())/2);
-}
+	public void imageDraw(Image Img) {
+		imageDraw(Img, (canvasWidth - Img.getWidth()) / 2, (canvasHeight - Img.getHeight()) / 2);
+	}
 
 // ---------------------------------------------------------
 
-public void imageDraw(Image Img, int X, int Y)
-{
-	scr.drawImage(Img, X,Y);
-}
+	public void imageDraw(Image Img, int X, int Y) {
+		scr.drawImage(Img, X, Y);
+	}
 
 // ---------------------------------------------------------
 
-public void PutSprite(Image Img[],  int X, int Y,  int Frame)
-{
-	scr.drawImage (Img[Frame], X, Y);
+	public void PutSprite(Image Img[], int X, int Y, int Frame) {
+		scr.drawImage(Img[Frame], X, Y);
 
 //	sc.ScrollUpdate(X,Y, Img[Frame].getWidth(), Img[Frame].getHeight() );
-}
+	}
 
 // ---------------------------------------------------------
 
-public void PutSprite(Image[] Img,  int X, int Y,  int Frame, byte[] Coor)
-{
-	Frame*=6;
-	X+=Coor[Frame++];
-	Y+=Coor[Frame++];
+	public void PutSprite(Image[] Img, int X, int Y, int Frame, byte[] Coor) {
+		Frame *= 6;
+		X += Coor[Frame++];
+		Y += Coor[Frame++];
 
-	scr.drawImage (Img[Coor[Frame+2]], X, Y);
+		scr.drawImage(Img[Coor[Frame + 2]], X, Y);
 
 //	sc.ScrollUpdate(X,Y, Coor[Frame++],Coor[Frame++]);
-}
+	}
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -186,38 +225,38 @@ public void PutSprite(Image[] Img,  int X, int Y,  int Frame, byte[] Coor)
 // Rutinas de Entrada y Salida de Medios
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-public Image[] loadImage(String FileName, int Frames)
-{
-	Image Img[] = new Image[Frames];
-	for (int i=0 ; i<Frames ; i++) {Img[i] = loadImage(FileName+i+".gif");}
-	return Img;
-}
+	public Image[] loadImage(String FileName, int Frames) {
+		Image Img[] = new Image[Frames];
+		for (int i = 0; i < Frames; i++) {
+			Img[i] = loadImage(FileName + i + ".gif");
+		}
+		return Img;
+	}
 
 // ---------------------------------------------------------
 
-public Image loadImage(String FileName)
-{
-	MediaImage mimage = MediaManager.getImage("resource://"+FileName);
+	public Image loadImage(String FileName) {
+		MediaImage mimage = MediaManager.getImage("resource://" + FileName);
 
-	try {
-		mimage.use();
-	} catch (Exception ui) {}
+		try {
+			mimage.use();
+		} catch (Exception ui) {
+		}
 
-	return mimage.getImage();
-}
+		return mimage.getImage();
+	}
 
 // ---------------------------------------------------------
 
-public Image loadImage(int Pos)
-{
-	MediaImage mimage = MediaManager.getImage("scratchpad:///0;pos="+Pos);
+	public Image loadImage(int Pos) {
+		MediaImage mimage = MediaManager.getImage("scratchpad:///0;pos=" + Pos);
 
-	try {
-		mimage.use();
-	} catch (Exception e) {/*Handle UI problem here*/}
+		try {
+			mimage.use();
+		} catch (Exception e) {/*Handle UI problem here*/}
 
-	return mimage.getImage();
-}
+		return mimage.getImage();
+	}
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -226,58 +265,49 @@ public Image loadImage(int Pos)
 // Canvas Fill
 // ===================
 
-boolean canvasFillShow=false;
-int canvasFillRGB;
+	boolean canvasFillShow = false;
+	int canvasFillRGB;
 
-public void canvasFillInit(int RGB)
-{
-	canvasFillRGB = RGB;
-	canvasFillShow = true;
-}
+	public void canvasFillInit(int RGB) {
+		canvasFillRGB = RGB;
+		canvasFillShow = true;
+	}
 
-public void canvasFillDraw(int RGB)
-{
-	scr.setColor(RGB & 0xFFFFFF);
-	scr.fillRect(0,0, canvasWidth,canvasHeight );
-}
+	public void canvasFillDraw(int RGB) {
+		scr.setColor(RGB & 0xFFFFFF);
+		scr.fillRect(0, 0, canvasWidth, canvasHeight);
+	}
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-
-
-String canvasTextStr;
-int canvasTextX;
-int canvasTextY;
-int canvasTextRGB;
-int canvasTextMode;
-boolean canvasTextShow = false;
+	String canvasTextStr;
+	int canvasTextX;
+	int canvasTextY;
+	int canvasTextRGB;
+	int canvasTextMode;
+	boolean canvasTextShow = false;
 
 // -------------------
 // canvasText Init
 // ===================
 
-public void canvasTextInit(String str, int x, int y, int rgb, int mode)
-{
-	canvasTextStr = str;
-	canvasTextX = x;
-	canvasTextY = y;
-	canvasTextRGB = rgb;
-	canvasTextMode = mode;
-	canvasTextShow = true;
-}
+	public void canvasTextInit(String str, int x, int y, int rgb, int mode) {
+		canvasTextStr = str;
+		canvasTextX = x;
+		canvasTextY = y;
+		canvasTextRGB = rgb;
+		canvasTextMode = mode;
+		canvasTextShow = true;
+	}
 
 // -------------------
 // canvasText Draw
 // ===================
 
-public void canvasTextDraw()
-{
-	textDraw(canvasTextStr, canvasTextX, canvasTextY, canvasTextRGB, canvasTextMode);
-}
-
-
-
+	public void canvasTextDraw() {
+		textDraw(canvasTextStr, canvasTextX, canvasTextY, canvasTextRGB, canvasTextMode);
+	}
 
 
 // *********************
@@ -286,57 +316,57 @@ public void canvasTextDraw()
 // =====================
 // *********************
 
-static final int TEXT_PLAIN =	0x000;
-static final int TEXT_BOLD =	0x010;
+	static final int TEXT_PLAIN = 0x000;
+	static final int TEXT_BOLD = 0x010;
 
-static final int TEXT_SMALL =	0x000;
-static final int TEXT_MEDIUM =	0x100;
-static final int TEXT_LARGER =	0x200;
+	static final int TEXT_SMALL = 0x000;
+	static final int TEXT_MEDIUM = 0x100;
+	static final int TEXT_LARGER = 0x200;
 
-static final int TEXT_LEFT =	0x000;
-static final int TEXT_RIGHT =	0x001;
-static final int TEXT_HCENTER =	0x002;
-static final int TEXT_TOP =		0x000;
-static final int TEXT_BOTTON =	0x004;
-static final int TEXT_VCENTER =	0x008;
+	static final int TEXT_LEFT = 0x000;
+	static final int TEXT_RIGHT = 0x001;
+	static final int TEXT_HCENTER = 0x002;
+	static final int TEXT_TOP = 0x000;
+	static final int TEXT_BOTTON = 0x004;
+	static final int TEXT_VCENTER = 0x008;
 
-static final int TEXT_OUTLINE =	0x1000;
+	static final int TEXT_OUTLINE = 0x1000;
 
 // -------------------
 // text Draw
 // ===================
 
-public void textDraw(String Str, int X, int Y, int RGB, int Mode)
-{
-	Font f = Font.getFont(Font.FACE_PROPORTIONAL | ((Mode&0x0F0)==0?Font.STYLE_PLAIN:Font.STYLE_BOLD) | ((Mode&0xF00)==0?Font.SIZE_SMALL : ((Mode&0xF00)==0x100?Font.SIZE_MEDIUM:Font.SIZE_LARGE) ));
-	scr.setFont(f);
+	public void textDraw(String Str, int X, int Y, int RGB, int Mode) {
+		Font f = Font.getFont(Font.FACE_PROPORTIONAL | ((Mode & 0x0F0) == 0 ? Font.STYLE_PLAIN : Font.STYLE_BOLD) | ((Mode & 0xF00) == 0 ? Font.SIZE_SMALL : ((Mode & 0xF00) == 0x100 ? Font.SIZE_MEDIUM : Font.SIZE_LARGE)));
+		scr.setFont(f);
 
-	Y += f.getAscent();
+		Y += f.getAscent();
 
-	if ((Mode & TEXT_HCENTER)!=0) {X+=( canvasWidth-f.stringWidth(Str) )/2;}
-	else
-	if ((Mode & TEXT_RIGHT)!=0) {X+=  canvasWidth-f.stringWidth(Str) ;}
+		if ((Mode & TEXT_HCENTER) != 0) {
+			X += (canvasWidth - f.stringWidth(Str)) / 2;
+		} else if ((Mode & TEXT_RIGHT) != 0) {
+			X += canvasWidth - f.stringWidth(Str);
+		}
 
-	if ((Mode & TEXT_VCENTER)!=0) {Y+=( canvasHeight-f.getHeight() )/2;}
-	else
-	if ((Mode & TEXT_BOTTON)!=0) {Y+=  canvasHeight-f.getHeight() ;}
+		if ((Mode & TEXT_VCENTER) != 0) {
+			Y += (canvasHeight - f.getHeight()) / 2;
+		} else if ((Mode & TEXT_BOTTON) != 0) {
+			Y += canvasHeight - f.getHeight();
+		}
 
-	if ((Mode & TEXT_OUTLINE)!=0)
-	{
-	scr.setColor(0);
-	scr.drawString(Str,  X-1, Y-1);
-	scr.drawString(Str,  X+1, Y-1);
-	scr.drawString(Str,  X-1, Y+1);
-	scr.drawString(Str,  X+1, Y+1);
+		if ((Mode & TEXT_OUTLINE) != 0) {
+			scr.setColor(0);
+			scr.drawString(Str, X - 1, Y - 1);
+			scr.drawString(Str, X + 1, Y - 1);
+			scr.drawString(Str, X - 1, Y + 1);
+			scr.drawString(Str, X + 1, Y + 1);
+		}
+
+		scr.setColor(RGB);
+		scr.drawString(Str, X, Y);
 	}
 
-	scr.setColor(RGB);
-	scr.drawString(Str,  X, Y);
-}
-
 // <=- <=- <=- <=- <=-
-
-
 
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -344,7 +374,6 @@ public void textDraw(String Str, int X, int Y, int RGB, int Mode)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // ---------------------------------------------------------
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 
 
 // ---------------------------------------------------------
@@ -383,7 +412,6 @@ public void textDraw(String Str, int X, int Y, int RGB, int Mode)
 =================================================================== */
 
 
-
 // *******************
 // -------------------
 // Sound - Engine - Rev.0 (28.11.2003)
@@ -392,143 +420,141 @@ public void textDraw(String Str, int X, int Y, int RGB, int Mode)
 // ===================
 // *******************
 
-AudioPresenter SoundPlayer;
-MediaSound[] Sound;
-int SoundOld = -1;
-int SoundLoop;
+	AudioPresenter SoundPlayer;
+	MediaSound[] Sound;
+	int SoundOld = -1;
+	int SoundLoop;
 
 // -------------------
 // Sound INI
 // ===================
 
-public void SoundINI()
-{
-	SoundPlayer = AudioPresenter.getAudioPresenter();
+	public void SoundINI() {
+		SoundPlayer = AudioPresenter.getAudioPresenter();
 
-	Sound = new MediaSound[4];
+		Sound = new MediaSound[4];
 
-	for (int i=0 ; i<Sound.length ; i++) {Sound[i] = LoadSound(1,i);}
+		for (int i = 0; i < Sound.length; i++) {
+			Sound[i] = LoadSound(1, i);
+		}
 
-	SoundPlayer.setMediaListener(this);
-}
+		SoundPlayer.setMediaListener(this);
+	}
 
 // -------------------
 // Sound SET
 // ===================
 
-public void SoundSET(int Ary, int Loop)
-{
-	SoundRES();
+	public void SoundSET(int Ary, int Loop) {
+		SoundRES();
 
-	if (ga.gameSound==0) {return;}
+		if (ga.gameSound == 0) {
+			return;
+		}
 
-	try
-	{
-		SoundPlayer.setSound(Sound[Ary]);
-		SoundPlayer.play();
-		SoundOld=Ary;
-		SoundLoop=Loop-1;
+		try {
+			SoundPlayer.setSound(Sound[Ary]);
+			SoundPlayer.play();
+			SoundOld = Ary;
+			SoundLoop = Loop - 1;
+		} catch (Exception e) {
+		}
 	}
-	catch(Exception e) {}
-}
 
 // -------------------
 // Sound RES
 // ===================
 
-public void SoundRES()
-{
-	if (SoundOld != -1)
-	{
-		try
-		{
-			SoundPlayer.stop();
-			SoundOld = -1;
+	public void SoundRES() {
+		if (SoundOld != -1) {
+			try {
+				SoundPlayer.stop();
+				SoundOld = -1;
+			} catch (Exception e) {
+			}
 		}
-		catch(Exception e) {}
 	}
-}
 
 // -------------------
 // Sound RUN
 // ===================
 
-public void SoundRUN()
-{
-	if ( Vibra_ON && (System.currentTimeMillis() - VibraTimeIni) > VibraTimeFin)
-	{
-	Vibra_ON=false;
-		try {
-		PhoneSystem.setAttribute(PhoneSystem.DEV_VIBRATOR, PhoneSystem.ATTR_VIBRATOR_OFF);
-		} catch (Exception e) {}
+	public void SoundRUN() {
+		if (Vibra_ON && (System.currentTimeMillis() - VibraTimeIni) > VibraTimeFin) {
+			Vibra_ON = false;
+			try {
+				PhoneSystem.setAttribute(PhoneSystem.DEV_VIBRATOR, PhoneSystem.ATTR_VIBRATOR_OFF);
+			} catch (Exception e) {
+			}
+		}
 	}
-}
 
 // -------------------
 // Vibra SET
 // ===================
 
-boolean Vibra_ON;
-long VibraTimeIni;
-int VibraTimeFin;
+	boolean Vibra_ON;
+	long VibraTimeIni;
+	int VibraTimeFin;
 
-public void VibraSET(int Time)
-{
-	if (ga.gameVibra==0) {return;}
+	public void VibraSET(int Time) {
+		if (ga.gameVibra == 0) {
+			return;
+		}
 
-	VibraTimeIni = System.currentTimeMillis();
-	VibraTimeFin = Time;
-	Vibra_ON=true;
+		VibraTimeIni = System.currentTimeMillis();
+		VibraTimeFin = Time;
+		Vibra_ON = true;
 
-	try
-	{
-		PhoneSystem.setAttribute(PhoneSystem.DEV_VIBRATOR, PhoneSystem.ATTR_VIBRATOR_ON);
+		try {
+			PhoneSystem.setAttribute(PhoneSystem.DEV_VIBRATOR, PhoneSystem.ATTR_VIBRATOR_ON);
+		} catch (Exception e) {
+		}
 	}
-	catch (Exception e) {}
-}
 
 
 // -------------------
 // mediaAction para controlar Start, Stop, Complete y as� hacer loops
 // ===================
 
-public void mediaAction(MediaPresenter mp, int type, int value)
-{
-	if (SoundOld!=-1 && mp == SoundPlayer && type == AudioPresenter.AUDIO_COMPLETE)
-	{
-		if (SoundLoop>0) {SoundLoop--;}
+	public void mediaAction(MediaPresenter mp, int type, int value) {
+		if (SoundOld != -1 && mp == SoundPlayer && type == AudioPresenter.AUDIO_COMPLETE) {
+			if (SoundLoop > 0) {
+				SoundLoop--;
+			}
 
-		if (SoundLoop!=0)
-		{
-			try {
-				SoundPlayer.play();
-			} catch(Exception e) {}
+			if (SoundLoop != 0) {
+				try {
+					SoundPlayer.play();
+				} catch (Exception e) {
+				}
+			}
 		}
 	}
-}
 
 
-public MediaSound LoadSound(int Pos)
-{
-	MediaSound msound = MediaManager.getSound("scratchpad:///0;pos="+Pos);
+	public MediaSound LoadSound(int Pos) {
+		MediaSound msound = MediaManager.getSound("scratchpad:///0;pos=" + Pos);
 
-	try {
-		msound.use();
-	} catch (Exception e) {}
+		try {
+			msound.use();
+		} catch (Exception e) {
+		}
 
-	return msound;
-}
+		return msound;
+	}
 
 
-public MediaSound LoadSound(int Pos, int SubPos)
-{
-	Pos = (FS_Data[Pos] / 4 ) + SubPos;
+	public MediaSound LoadSound(int Pos, int SubPos) {
+		//Pos = (FS_Data[Pos] / 4) + SubPos;
+		//return LoadSound(FS_Data[Pos]);
 
-	return LoadSound(FS_Data[Pos]);
-}
+		MediaSound s = new MediaSound();
+		s.music = Gdx.audio.newMusic(Gdx.files.internal(IApplication.assetsFolder+"/"+Pos+"/"+SubPos+".mid"));
+		return s;
+	}
 
 // <=- <=- <=- <=- <=-
-
 
 
 // *************************
@@ -566,99 +592,134 @@ public MediaSound LoadSound(int Pos, int SubPos)
 // 2: Error descargando los archivos (Checksum error)
 // ========================
 
-int FS_Error;
-boolean FS_ErrorShow = false;
+	int FS_Error;
+	boolean FS_ErrorShow = false;
 
-int[] FS_Data;
-byte[] FS_Head;
+	int[] FS_Data;
+	byte[] FS_Head;
 
 // ---------------
 // FS_Create
 // ===============
 
-public boolean FS_Create(String FileName)
-{
-	FS_Head = FS_LoadData(0,0x30);
+	public boolean FS_Create(String FileName) {
+		FS_Head = FS_LoadData(0, 0x30);
 
-	if (FS_Head==null || FS_Head[0]!=0x4D || FS_Head[1]!=0x49)
-	{
-		int Retry = 5;
-		while (true)
-		{
-			if (Retry-- ==0) {FS_ErrorCreate(); return true;}
+		if (FS_Head == null || FS_Head[0] != 0x4D || FS_Head[1] != 0x49) {
+			int Retry = 5;
+			while (true) {
+				if (Retry-- == 0) {
+					FS_ErrorCreate();
+					return true;
+				}
 
-			byte[] Bufer = FS_DownloadData(FileName+".mfs");
+				byte[] Bufer = FS_DownloadData(FileName + ".mfs");
 
-			if (Bufer==null || Bufer.length != 0x30) {FS_Error=1; continue;}	// Controlamos que el Size sea correcto.
+				if (Bufer == null || Bufer.length != 0x30) {
+					FS_Error = 1;
+					continue;
+				}    // Controlamos que el Size sea correcto.
 
-			int Checksum = Bufer[0x0E]; Bufer[0x0E]=0;
-			if (Checksum != FS_Checksum(Bufer, 0, Bufer.length) ) {FS_Error=2; continue;}	// Comprobamos Checksum
+				int Checksum = Bufer[0x0E];
+				Bufer[0x0E] = 0;
+				if (Checksum != FS_Checksum(Bufer, 0, Bufer.length)) {
+					FS_Error = 2;
+					continue;
+				}    // Comprobamos Checksum
 
-			FS_SaveData(0, Bufer);
-			FS_Head = FS_LoadData(0,0x30);
-			break;
+				FS_SaveData(0, Bufer);
+				FS_Head = FS_LoadData(0, 0x30);
+				break;
+			}
 		}
-	}
 
-	ProgBarINS(FS_Head[0x20]);	// Agregamos numero de bloques para cargar en el Slider
-	FS_Notify();				// Se ha descargado un .mfs Ok (HEAD)
+		ProgBarINS(FS_Head[0x20]);    // Agregamos numero de bloques para cargar en el Slider
+		FS_Notify();                // Se ha descargado un .mfs Ok (HEAD)
 
-	int BankSize = ((FS_Head[0x22]&0xFF)<<24) | ((FS_Head[0x23]&0xFF)<<16) | ((FS_Head[0x24]&0xFF)<<8) | (FS_Head[0x25]&0xFF);
+		int BankSize = ((FS_Head[0x22] & 0xFF) << 24) | ((FS_Head[0x23] & 0xFF) << 16) | ((FS_Head[0x24] & 0xFF) << 8) | (FS_Head[0x25] & 0xFF);
 
-	for (int i=0 ; i<FS_Head[0x21] ; i++) {FS_Notify();}
-
-	for (int i=FS_Head[0x21] ; i<FS_Head[0x20] ; i++)
-	{
-		int Retry = 5;
-		while (true)
-		{
-			if (Retry-- ==0) {FS_ErrorCreate(); return true;}
-
-			byte[] Bufer = FS_DownloadData(FileName+i+".mfs");
-
-			if (Bufer==null || Bufer.length != BankSize) {FS_Error=1; continue;}	// Controlamos que el Size sea correcto.
-
-			if (FS_Head[0x26+i] != FS_Checksum(Bufer, 0, Bufer.length) ) {FS_Error=2; continue;}	// Comprobamos Checksum
-
-			FS_SaveData(FS_Head.length+(i*BankSize), Bufer);
-			FS_SaveData(0x21, new byte[] {(byte)(i+1)} );
-			break;
+		for (int i = 0; i < FS_Head[0x21]; i++) {
+			FS_Notify();
 		}
-	FS_Notify();	// Se ha descargado un .mfs Ok (DATA)
-	}
+
+		for (int i = FS_Head[0x21]; i < FS_Head[0x20]; i++) {
+			int Retry = 5;
+			while (true) {
+				if (Retry-- == 0) {
+					FS_ErrorCreate();
+					return true;
+				}
+
+				byte[] Bufer = FS_DownloadData(FileName + i + ".mfs");
+
+				if (Bufer == null || Bufer.length != BankSize) {
+					FS_Error = 1;
+					continue;
+				}    // Controlamos que el Size sea correcto.
+
+				if (FS_Head[0x26 + i] != FS_Checksum(Bufer, 0, Bufer.length)) {
+					FS_Error = 2;
+					continue;
+				}    // Comprobamos Checksum
+
+				FS_SaveData(FS_Head.length + (i * BankSize), Bufer);
+				FS_SaveData(0x21, new byte[]{(byte) (i + 1)});
+				break;
+			}
+			FS_Notify();    // Se ha descargado un .mfs Ok (DATA)
+		}
 
 // Cargamos la "FAT" del MFS
 // -------------------------
-	int Pos  = ((FS_Head[0x14]&0xFF)<<24) | ((FS_Head[0x15]&0xFF)<<16) | ((FS_Head[0x16]&0xFF)<<8) | (FS_Head[0x17]&0xFF);
-	int Size = ((FS_Head[0x18]&0xFF)<<24) | ((FS_Head[0x19]&0xFF)<<16) | ((FS_Head[0x1A]&0xFF)<<8) | (FS_Head[0x1B]&0xFF);
+		int Pos = ((FS_Head[0x14] & 0xFF) << 24) | ((FS_Head[0x15] & 0xFF) << 16) | ((FS_Head[0x16] & 0xFF) << 8) | (FS_Head[0x17] & 0xFF);
+		int Size = ((FS_Head[0x18] & 0xFF) << 24) | ((FS_Head[0x19] & 0xFF) << 16) | ((FS_Head[0x1A] & 0xFF) << 8) | (FS_Head[0x1B] & 0xFF);
 
-	FS_Data = new int[(Size/4)];
+		FS_Data = new int[(Size / 4)];
 
-	try {
-		InputStream in = Connector.openInputStream("scratchpad:///0;pos="+Pos);
+		try {
 
-		for (int i=0 ; i<FS_Data.length ; i++)
-		{
-		FS_Data[i]  = (in.read() & 0xFF)<<24;
-		FS_Data[i] |= (in.read() & 0xFF)<<16;
-		FS_Data[i] |= (in.read() & 0xFF)<<8;
-		FS_Data[i] |= (in.read() & 0xFF);
+			//InputStream in = Connector.openInputStream("scratchpad:///0;pos=" + Pos);
+			// MONGOFIX
+			File file = new File(IApplication.appFilesFolder+"/"+IApplication.assetsFolder, "scratchpad");
+			FileInputStream in = new FileInputStream(file);
+			in.skip(Pos);
+
+			for (int i = 0; i < FS_Data.length; i++) {
+				short s;
+				s = (short)in.read(); if(s<0) s+=256;
+				FS_Data[i] = (s & 0xFF) << 24;
+				s = (short)in.read(); if(s<0) s+=256;
+				FS_Data[i] |= (s & 0xFF) << 16;
+				s = (short)in.read(); if(s<0) s+=256;
+				FS_Data[i] |= (s & 0xFF) << 8;
+				s = (short)in.read(); if(s<0) s+=256;
+				FS_Data[i] |= (s & 0xFF);
+			}
+
+			in.close();
+		} catch (IOException e) {
 		}
 
-		in.close();
-	} catch (IOException e){}
-
-	FS_Error=0;
-	return false;
-}
+		FS_Error = 0;
+		return false;
+	}
 
 
 // ---------------
 // FS_LoadData
 // ===============
 
+public byte[] CargaFichero(String f)
+{
+	FileHandle file = Gdx.files.internal(IApplication.assetsFolder + "/"+f);
+	byte[] bytes = file.readBytes();
+
+	return bytes;
+}
+
 public byte[] FS_LoadData(int Pos, int Size)
 {
+	/*
 	byte[] Bufer = new byte[Size];
 
 	try {
@@ -668,6 +729,47 @@ public byte[] FS_LoadData(int Pos, int Size)
 	} catch (IOException e) {return null;}
 
 	return Bufer;
+*/
+
+	/*File file = new File(IApplication.appFilesFolder+"/"+IApplication.assetsFolder, "scratchpad");
+
+	if(file.exists())
+	{
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			byte b[] = new byte[Size];
+			fis.read(b, Pos, Size);
+			return b;
+		}
+		catch(IOException e)
+		{
+			return null;
+		}
+	}
+	else return null;*/
+
+	RandomAccessFile file;
+
+	try {
+		file = new RandomAccessFile(IApplication.appFilesFolder + "/" + IApplication.assetsFolder + "/scratchpad", "r");
+
+		byte b[] = new byte[Size];
+
+		try {
+			file.seek(Pos);
+			file.read(b, 0, Size);
+			file.close();
+			return b;
+
+		} catch (IOException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+
+	}catch(FileNotFoundException e)
+	{
+		return null;
+	}
 }
 
 // ---------------
@@ -676,13 +778,62 @@ public byte[] FS_LoadData(int Pos, int Size)
 
 public int FS_SaveData(int Pos, byte[] Bufer)
 {
-	try {
+	/*try {
 		OutputStream out=Connector.openOutputStream("scratchpad:///0;pos="+Pos);
 		out.write(Bufer,0,Bufer.length);
 		out.close();
 	} catch (Exception e) {return 0;}
 
-	return Bufer.length;
+	return Bufer.length;*/
+
+	RandomAccessFile file;
+	try {
+		file = new RandomAccessFile(IApplication.appFilesFolder + "/" + IApplication.assetsFolder + "/scratchpad", "rw");
+
+	}catch(FileNotFoundException e)
+	{
+		File dirs = new File(IApplication.appFilesFolder+"/"+IApplication.assetsFolder);
+		dirs.mkdirs();
+		try {
+			file = new RandomAccessFile(IApplication.appFilesFolder + "/" + IApplication.assetsFolder+ "/scratchpad", "rw");
+
+		} catch (IOException e2) {
+			e2.printStackTrace();
+			return 0;
+		}
+	}
+
+	try {
+		file.seek(Pos);
+		file.write(Bufer);
+		return Bufer.length;
+
+	} catch (IOException e) {
+		e.printStackTrace();
+		return 0;
+	}
+/*
+	if(!file.())
+	{
+		File dirs = new File(IApplication.appFilesFolder+"/"+IApplication.assetsFolder);
+		dirs.mkdirs();
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	try {
+		FileOutputStream fos = new FileOutputStream(file, true);
+		fos.write(Bufer, Pos, Bufer.length);
+		fos.close();
+		return Bufer.length;
+
+	} catch(Exception e)
+	{
+		return 0;
+	}*/
 }
 
 // ---------------
@@ -722,7 +873,10 @@ public Image[] FS_LoadImage(int Pos)
 
 	Image[] Img = new Image[Size];
 
-	for (int i=0 ; i<Size ; i++) {Img[i] = loadImage(FS_Data[Ini++]);}
+	for (int i=0 ; i<Size ; i++) {
+		Img[i] = Image.createImage(IApplication.assetsFolder+"/"+Pos+"/"+i+".gif");
+		//Img[i] = loadImage(FS_Data[Ini++]);
+	}
 
 	return Img;
 }
@@ -734,7 +888,10 @@ public Image[] FS_LoadImage(int Pos)
 
 public Image FS_LoadImage(int Pos, int SubPos)
 {
-	return loadImage(FS_Data[(FS_Data[Pos]/4)+SubPos]);
+	Image im = Image.createImage(IApplication.assetsFolder+"/"+Pos+"/"+SubPos+".gif");
+	return im;
+
+	//return loadImage(FS_Data[(FS_Data[Pos]/4)+SubPos]);
 }
 
 
@@ -744,7 +901,11 @@ public Image FS_LoadImage(int Pos, int SubPos)
 
 public byte[] FS_DownloadData(String Filename)
 {
-	byte[] dat = null;
+	FileHandle file = Gdx.files.internal(IApplication.assetsFolder + "/"+Filename);
+	byte[] bytes = file.readBytes();
+
+	return bytes;
+	/*byte[] dat = null;
 
 	int Retry=5;
 	boolean FileOk = false;
@@ -778,7 +939,7 @@ public byte[] FS_DownloadData(String Filename)
 	}
 	while (!FileOk);
 
-	return dat;
+	return dat;*/
 }
 
 // ---------------
@@ -932,7 +1093,7 @@ public void ProgBarSET(int Pos, int Total)
 
 	ProgBar_ON = true;
 
-	canvasShow=true; repaint(); while (canvasShow) {try {Thread.sleep(1);} catch (Exception e) {}}
+	canvasShow=true; repaint(); //while (canvasShow) {try {Thread.sleep(10);} catch (Exception e) {}}
 }
 
 // -------------------

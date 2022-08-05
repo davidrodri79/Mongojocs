@@ -9,6 +9,8 @@ package com.mygdx.mongojocs.parachutist;
 
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.mongojocs.iapplicationemu.Display;
 import com.mygdx.mongojocs.iapplicationemu.IApplication;
 
@@ -49,6 +51,13 @@ public void start()
 
 	run();
 }
+
+	public void _start()
+	{
+		Display.setCurrent(gc);
+
+		//run();
+	}
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
@@ -73,6 +82,8 @@ int  gameSleep;
 
 public void run()
 {
+	_start();
+
 	System.gc();
 	gameCreate(); System.gc();
 	gc.canvasInit(); System.gc();
@@ -121,7 +132,11 @@ void loadFile(byte[] buffer, String Nombre)
 
 public byte[] loadFile(String Nombre)
 {
-	System.gc();
+	FileHandle file = Gdx.files.internal(IApplication.assetsFolder + "/"+Nombre);
+	byte[] bytes = file.readBytes();
+
+	return bytes;
+	/*System.gc();
 
 	InputStream is = getClass().getResourceAsStream(Nombre);
 
@@ -152,7 +167,7 @@ public byte[] loadFile(String Nombre)
 
 	System.gc();
 
-	return buffer;
+	return buffer;*/
 }
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

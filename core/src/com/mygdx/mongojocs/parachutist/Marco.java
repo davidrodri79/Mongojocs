@@ -546,8 +546,8 @@ public void MarcoTextoIMP(Graphics LCD_Gfx, String Str[][], int Dat[][])
 	LCD_Gfx.setFont(f);
 	int t=Dat[i][2];
 	if ((Dat[i][0]&0xF)==0) {LCD_Gfx.drawString(Str[i][t],  MarTexX, MarTexY+SumaY + Ascent );}
-	if ((Dat[i][0]&0xF)==1) {LCD_Gfx.drawString(Str[i][t],  MarTexX+((MarTexSizeX-f.stringWidth(Str[i][0]))/2), MarTexY+SumaY + Ascent );}
-	if ((Dat[i][0]&0xF)==2) {LCD_Gfx.drawString(Str[i][t],  MarTexX+ (MarTexSizeX-f.stringWidth(Str[i][0]))   , MarTexY+SumaY + Ascent );}
+	if ((Dat[i][0]&0xF)==1) {LCD_Gfx.drawString(Str[i][t],  MarTexX+((MarTexSizeX-f._stringWidth(Str[i][0]))/2), MarTexY+SumaY + Ascent );}
+	if ((Dat[i][0]&0xF)==2) {LCD_Gfx.drawString(Str[i][t],  MarTexX+ (MarTexSizeX-f._stringWidth(Str[i][0]))   , MarTexY+SumaY + Ascent );}
 	}
 	SumaY+=f.getHeight();
 	}

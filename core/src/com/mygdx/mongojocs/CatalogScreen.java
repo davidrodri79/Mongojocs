@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.mongojocs.iapplicationemu.IApplication;
 import com.mygdx.mongojocs.midletemu.Display;
 import com.mygdx.mongojocs.midletemu.Font;
 import com.mygdx.mongojocs.midletemu.MIDlet;
@@ -60,26 +61,33 @@ public class CatalogScreen implements Screen {
     OrthographicCamera camera;
     Vector3 lastTouch;
 
+    public static final int J2ME = 0;
+    public static final int DOJA = 1;
+
     public static final int NOKIA_SERIES_40 = 0;
     public static final int NOKIA_SERIES_60 = 1;
+    public static final int NEC_341I = 2;
 
     class Device
     {
         String name;
+        int platform;
         int screenWidth;
         int screenHeight;
 
-        Device(String n, int sw, int sh)
+        Device(String n, int p, int sw, int sh)
         {
             this.name = n;
+            this.platform = p;
             this.screenWidth = sw;
             this.screenHeight = sh;
         }
     }
 
     Device devices[] = {
-            new Device("Nokia series40", 128, 128),
-            new Device("Nokia series60", 176, 208)
+            new Device("Nokia series40", J2ME,128, 128),
+            new Device("Nokia series60", J2ME,176, 208),
+            new Device("iMode", DOJA,162, 180)
     };
 
     class MongoGame
@@ -102,6 +110,9 @@ public class CatalogScreen implements Screen {
     }
 
     MongoGame catalog[]={
+
+            new MongoGame("Parachutist", 2005, NEC_341I, "parachutist", com.mygdx.mongojocs.parachutist.Game.class),
+
 
             new MongoGame("3D QBlast 2.0", 2005, NOKIA_SERIES_60, "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
             new MongoGame("Aminoid X", 2003, NOKIA_SERIES_60,"aminoid", com.mygdx.mongojocs.aminoid.Game.class),
@@ -156,7 +167,8 @@ public class CatalogScreen implements Screen {
 
         for(int i=0; i< catalog.length; i++)
         {
-            catalog[i].icon = new Texture(catalog[i].assetsFolder+"/icon.png");
+            if(devices[catalog[i].platform].platform == J2ME)
+                catalog[i].icon = new Texture(catalog[i].assetsFolder+"/icon.png");
         }
 
         if(launcher.scrollY == -1) launcher.scrollY = catalog.length * 200 - 800;
@@ -183,11 +195,20 @@ public class CatalogScreen implements Screen {
 
                         if(clicked == launcher.selectedGame)
                         {
-                            MIDlet.setAssetsFolder(catalog[launcher.selectedGame].assetsFolder);
+                            if(   devices[catalog[launcher.selectedGame].platform].platform == J2ME ) {
+                                MIDlet.setAssetsFolder(catalog[launcher.selectedGame].assetsFolder);
 
-                            launcher.setScreen(new MIDletRunScreen(launcher, catalog[launcher.selectedGame].midletClass,
-                                                                    devices[catalog[launcher.selectedGame].platform].screenWidth,
-                                                                    devices[catalog[launcher.selectedGame].platform].screenHeight));
+                                launcher.setScreen(new MIDletRunScreen(launcher, catalog[launcher.selectedGame].midletClass,
+                                        devices[catalog[launcher.selectedGame].platform].screenWidth,
+                                        devices[catalog[launcher.selectedGame].platform].screenHeight));
+                            }
+                            if(   devices[catalog[launcher.selectedGame].platform].platform == DOJA ) {
+                                IApplication.setAssetsFolder(catalog[launcher.selectedGame].assetsFolder);
+
+                                launcher.setScreen(new IApplicationRunScreen(launcher, catalog[launcher.selectedGame].midletClass,
+                                        devices[catalog[launcher.selectedGame].platform].screenWidth,
+                                        devices[catalog[launcher.selectedGame].platform].screenHeight));
+                            }
                             dispose();
                         }
                         else
@@ -251,7 +272,8 @@ public class CatalogScreen implements Screen {
             launcher.shapeRenderer.end();
             launcher.batch.end();
             launcher.batch.begin();
-            launcher.batch.draw(catalog[i].icon, 40, catalog.length*200 - launcher.scrollY - i*200 - 200 + 40, 64, 64);
+            if(devices[catalog[i].platform].platform == J2ME)
+                launcher.batch.draw(catalog[i].icon, 40, catalog.length*200 - launcher.scrollY - i*200 - 200 + 40, 64, 64);
             launcher.bigFont.draw(launcher.batch, catalog[i].name, 40, catalog.length*200 - launcher.scrollY - i*200 - 200  + 160);
             launcher.smallFont.draw(launcher.batch, devices[catalog[i].platform].name, 120, catalog.length*200 - launcher.scrollY - i*200 - 200  + 60);
             launcher.smallFont.draw(launcher.batch, ""+catalog[i].year, 120, catalog.length*200 - launcher.scrollY - i*200 - 200  + 100);
