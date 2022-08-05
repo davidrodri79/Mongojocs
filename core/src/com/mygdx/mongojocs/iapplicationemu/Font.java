@@ -20,6 +20,7 @@ public class Font {
 
     public Font(int f)
     {
+        layout = new GlyphLayout();
         flags = f;
     }
 
@@ -28,7 +29,7 @@ public class Font {
     }
 
     public int getAscent() {
-        return 16;
+        return 8;
     }
 
     public int stringWidth(String s)
@@ -40,7 +41,7 @@ public class Font {
         {
            Graphics.fontGenerate(flags, Color.WHITE);
         }
-        fnt = com.mygdx.mongojocs.midletemu.Graphics.bitmapFonts.get(hash);
+        fnt = Graphics.bitmapFonts.get(hash);
 
         if(fnt != null) {
             layout.setText(fnt, s);
@@ -72,6 +73,6 @@ public class Font {
     }
 
     public int getHeight() {
-        return 0;
+        return 10;
     }
 }

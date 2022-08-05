@@ -22,7 +22,7 @@ public class IApplication implements Runnable{
 
     public void terminate()
     {
-
+        appClosed = true;
     }
 
     public String getSourceURL() {

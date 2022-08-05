@@ -111,7 +111,7 @@ public class CatalogScreen implements Screen {
 
     MongoGame catalog[]={
 
-            new MongoGame("Parachutist", 2005, NEC_341I, "parachutist", com.mygdx.mongojocs.parachutist.Game.class),
+            new MongoGame("Parachutist", 2004, NEC_341I, "parachutist", com.mygdx.mongojocs.parachutist.Game.class),
 
 
             new MongoGame("3D QBlast 2.0", 2005, NOKIA_SERIES_60, "qblast20", com.mygdx.mongojocs.qblast20.Game.class),

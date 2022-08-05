@@ -65,12 +65,12 @@ public class GameCanvas extends Canvas implements MediaListener {
 	public void gameDraw() {
 		canvasShow = true;
 		repaint();
-		while (canvasShow == true) {
+		/*while (canvasShow == true) {
 			try {
 				Thread.sleep(1);
 			} catch (Exception e) {
 			}
-		}
+		}*/
 	}
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -236,14 +236,29 @@ public class GameCanvas extends Canvas implements MediaListener {
 // ---------------------------------------------------------
 
 	public Image loadImage(String FileName) {
-		MediaImage mimage = MediaManager.getImage("resource://" + FileName);
+		/*MediaImage mimage = MediaManager.getImage("resource://" + FileName);
 
 		try {
 			mimage.use();
 		} catch (Exception ui) {
 		}
 
-		return mimage.getImage();
+		return mimage.getImage();*/
+		Image im = Image.createImage(IApplication.assetsFolder + FileName);
+		return im;
+	}
+
+	public Image _loadImage(String FileName) {
+		/*MediaImage mimage = MediaManager._getImage("resource://" + FileName);
+
+		try {
+			mimage.use();
+		} catch (Exception ui) {
+		}*/
+
+		Image im = new Image();
+		im._createImage(IApplication.assetsFolder + FileName);
+		return im;
 	}
 
 // ---------------------------------------------------------
@@ -1174,7 +1189,7 @@ Image canvasImg;
 public void canvasCreate()
 {
 	canvasFillInit(0xffffff);
-	canvasImg = loadImage("/Loading.gif");
+	canvasImg = _loadImage("/Loading.gif");
 	
 	canvasShow = true;
 	repaint();

@@ -191,6 +191,20 @@ public class Graphics {
     public void drawLine(int x1, int y1, int x2, int y2) {
     }
 
-    public void drawRect(int x1, int y1, int x2, int y2) {
+    public void drawRect(int x, int y, int w, int h) {
+
+        Display.fbo.begin();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(currentColor);
+        shapeRenderer.rect(x, y, w, 1);
+        shapeRenderer.rect(x, y, 1, h);
+        shapeRenderer.rect(x, y + h, w, 1);
+        shapeRenderer.rect(x + w - 1, y, 1, h);
+        shapeRenderer.end();
+
+        Display.fbo.end();
+
     }
 }
