@@ -82,7 +82,7 @@ int  gameSleep;
 
 public void run()
 {
-	_start();
+	_start(); //MONGOFIX
 
 	System.gc();
 	gameCreate(); System.gc();

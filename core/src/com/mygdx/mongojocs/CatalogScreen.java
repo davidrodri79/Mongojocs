@@ -111,9 +111,6 @@ public class CatalogScreen implements Screen {
 
     MongoGame catalog[]={
 
-            new MongoGame("Parachutist", 2004, NEC_341I, "parachutist", com.mygdx.mongojocs.parachutist.Game.class),
-
-
             new MongoGame("3D QBlast 2.0", 2005, NOKIA_SERIES_60, "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
             new MongoGame("Aminoid X", 2003, NOKIA_SERIES_60,"aminoid", com.mygdx.mongojocs.aminoid.Game.class),
             new MongoGame("Astro 3003", 2003, NOKIA_SERIES_60,"astro", com.mygdx.mongojocs.astro.Game.class),
@@ -139,6 +136,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("No Passeu", 2005, NOKIA_SERIES_40,"nopasseu", com.mygdx.mongojocs.nopasseu.Game.class),
             new MongoGame("Numa the beast", 2004, NOKIA_SERIES_60,"numa", com.mygdx.mongojocs.numa.BeastMain.class),
             //new MongoGame("Petanca", 2004, NOKIA_SERIES_60,"petanca", com.mygdx.mongojocs.petanca.Game.class),
+            new MongoGame("Parachutist", 2004, NEC_341I, "parachutist", com.mygdx.mongojocs.parachutist.Game.class),
             new MongoGame("Ping Poyo", 2004, NOKIA_SERIES_60,"pingpoyo", com.mygdx.mongojocs.pingpoyo.Game.class),
             new MongoGame("Poyo Olimpix", 2004, NOKIA_SERIES_60, "poyoolimpix", com.mygdx.mongojocs.poyoolimpix.Game.class),
             new MongoGame("Poyo's Garden", 2003, NOKIA_SERIES_60,"poyogarden", com.mygdx.mongojocs.poyogarden.PoyoP.class),

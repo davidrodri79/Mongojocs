@@ -139,10 +139,10 @@ public class Graphics {
 
         /*if ((style & com.mygdx.mongojocs.midletemu.Font.STYLE_ITALIC) != 0)
             fontFile = "prazo-cursiva.otf";
-        else {
-            if ((style & com.mygdx.mongojocs.midletemu.Font.STYLE_BOLD) != 0)
+        else {*/
+            if ((flags & Font.STYLE_BOLD) != 0)
                 fontFile = "8bitOperatorPlus-Bold.ttf";
-            else*/
+            else
                 fontFile = "8bitOperatorPlus-Regular.ttf";
         //}
 
@@ -150,7 +150,7 @@ public class Graphics {
         FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
         params.minFilter = Texture.TextureFilter.Nearest;
         params.magFilter = Texture.TextureFilter.Nearest;
-        params.size = 12;//Font.getPixelWidth(size);
+        params.size = Font.getPixelWidth(flags);
         params.borderWidth = 0; //style == Font.STYLE_BOLD ? 1 : 0;
         params.borderColor = color;
         params.color = color;
@@ -189,6 +189,34 @@ public class Graphics {
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {
+
+        /*int minx, maxx, miny, maxy;
+
+        if (x1 < x2) {
+            minx = x1;
+            maxx = x2;
+        } else {
+            minx = x2;
+            maxx = x1;
+        }
+
+        if (y1 < y2) {
+            miny = y1;
+            maxy = y2;
+        } else {
+            miny = y2;
+            maxy = y1;
+        }*/
+
+        Display.fbo.begin();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(currentColor);
+        shapeRenderer.rectLine(x1 + 1, y1 + 1, x2 + 1, y2 + 1, 1);
+        shapeRenderer.end();
+
+        Display.fbo.end();
     }
 
     public void drawRect(int x, int y, int w, int h) {

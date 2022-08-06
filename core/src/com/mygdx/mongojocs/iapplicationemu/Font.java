@@ -72,7 +72,23 @@ public class Font {
 
     }
 
-    public int getHeight() {
-        return 10;
+    public int getHeight()
+    {
+        if((flags & SIZE_LARGE) != 0)
+            return 16;
+        else if((flags & SIZE_SMALL) != 0)
+            return 12;
+        else
+            return 14;
+    }
+
+    public static  int getPixelWidth(int size)
+    {
+        if((size & SIZE_LARGE) != 0)
+            return 14;
+        else if((size & SIZE_SMALL) != 0)
+            return 10;
+        else
+            return 12;
     }
 }
