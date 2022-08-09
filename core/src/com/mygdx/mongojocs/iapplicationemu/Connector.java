@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Connector {
-    public static final Object READ = 1;
+    public static final int READ = 1;
 
     public static InputStream openInputStream(String s) {
         return new InputStream() {

@@ -16,6 +16,13 @@ import java.util.HashMap;
 public class Graphics {
 
     public static boolean generatingFont = false;
+    int originX = 0;
+    int originY = 0;
+
+    public void setOrigin(int x, int y) {
+        originX = x;
+        originY = y;
+    }
 
     static class FontGenerateTask implements Runnable {
 
@@ -66,6 +73,9 @@ public class Graphics {
         if (img.texture == null) return;
 
         {
+            x += originX;
+            y += originY;
+
             int w = img.texture.getWidth();
             int h = img.texture.getHeight();
             float u = 0;
@@ -97,6 +107,9 @@ public class Graphics {
     public void fillRect(int x, int y, int w, int h)
     {
         if(w<0 || h<0) return;
+
+        x += originX;
+        y += originY;
 
         Display.fbo.begin();
 
@@ -177,6 +190,9 @@ public class Graphics {
 
         // Draw text
 
+        x += originX;
+        y += originY;
+
         Display.fbo.begin();
 
         batch.setProjectionMatrix(textCamera.combined);
@@ -208,6 +224,11 @@ public class Graphics {
             maxy = y1;
         }*/
 
+        x1 += originX;
+        y1 += originY;
+        x2 += originX;
+        y2 += originY;
+
         Display.fbo.begin();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -220,6 +241,9 @@ public class Graphics {
     }
 
     public void drawRect(int x, int y, int w, int h) {
+
+        x += originX;
+        y += originY;
 
         Display.fbo.begin();
 

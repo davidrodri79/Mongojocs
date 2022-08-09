@@ -24,7 +24,7 @@ public class Canvas {
 
     }
 
-    protected void repaint()
+    public void repaint()
     {
         repaintAsked = true;
     }
