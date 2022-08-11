@@ -104,6 +104,10 @@ public class Graphics {
                 1);
     }
 
+    public int getColorOfRGB(int r, int g, int b) {
+        return (r << 16) | (g << 8) | b;
+    }
+
     public void fillRect(int x, int y, int w, int h)
     {
         if(w<0 || h<0) return;
