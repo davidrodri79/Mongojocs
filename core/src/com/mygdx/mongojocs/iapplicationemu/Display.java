@@ -32,6 +32,7 @@ public class Display {
 
     public static final int KEY_SOFT1 = 20;
     public static final int KEY_SOFT2 = 21;
+    public static final int KEY_ASTERISK = 30;
     public static int width;
     public static int height;
 
@@ -42,6 +43,10 @@ public class Display {
 
     public static void setCurrent(Canvas c) {
         theCanvas = c;
+    }
+
+    public static void setCurrent(Panel p) {
+
     }
 
     public static void setSize(int w, int h) {

@@ -15,14 +15,19 @@ import java.util.HashMap;
 
 public class Graphics {
 
+    public static final int BLACK = 0;
+    public static final int RED = 1;
+    public static final int WHITE = 2;
     public static boolean generatingFont = false;
     int originX = 0;
     int originY = 0;
+
 
     public void setOrigin(int x, int y) {
         originX = x;
         originY = y;
     }
+
 
     static class FontGenerateTask implements Runnable {
 
@@ -57,7 +62,7 @@ public class Graphics {
         textCamera.setToOrtho(true, Display.width, Display.height);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        //currentFont = Font.getDefaultFont();
+        currentFont = Font.getDefaultFont();
     }
 
     public void lock() {
@@ -104,8 +109,19 @@ public class Graphics {
                 1);
     }
 
-    public int getColorOfRGB(int r, int g, int b) {
+    public static int getColorOfRGB(int r, int g, int b) {
         return (r << 16) | (g << 8) | b;
+    }
+
+    public static int getColorOfName(int c) {
+        switch (c)
+        {
+            case RED : return getColorOfRGB(255,0,0);
+            case BLACK : return getColorOfRGB(0,0,0);
+            default :
+            case WHITE : return getColorOfRGB(255,255,255);
+
+        }
     }
 
     public void fillRect(int x, int y, int w, int h)
@@ -206,6 +222,10 @@ public class Graphics {
 
         Display.fbo.end();
 
+    }
+
+    public void drawChars(char[] text, int x, int y, int i, int length) {
+        drawString(new String(text,i,length), x, y);
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {

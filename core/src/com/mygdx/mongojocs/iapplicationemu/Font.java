@@ -28,6 +28,10 @@ public class Font {
         return new Font(f);
     }
 
+    public static Font getDefaultFont() {
+        return new Font(FACE_PROPORTIONAL | STYLE_PLAIN | SIZE_MEDIUM);
+    }
+
     public int getAscent() {
         return 8;
     }
@@ -90,5 +94,13 @@ public class Font {
             return 10;
         else
             return 12;
+    }
+
+    public int getBBoxWidth(String s) {
+        return stringWidth(s);
+    }
+
+    public int _getBBoxWidth(String s) {
+        return _stringWidth(s);
     }
 }

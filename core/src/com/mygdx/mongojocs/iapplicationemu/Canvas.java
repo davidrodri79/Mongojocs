@@ -5,6 +5,9 @@ import com.mygdx.mongojocs.iapplicationemu.Graphics;
 
 public class Canvas {
 
+    public static final int SOFT_KEY_1 = 1;
+    public static final int SOFT_KEY_2 = 1;
+
     public Graphics graphics;
     public boolean repaintAsked = false;
     public static String softKey1 = null;
@@ -31,7 +34,7 @@ public class Canvas {
         repaintAsked = true;
     }
 
-    protected void setSoftLabel(int k, String s)
+    public void setSoftLabel(int k, String s)
     {
         if(k == Frame.SOFT_KEY_1)
             softKey1 = s;
