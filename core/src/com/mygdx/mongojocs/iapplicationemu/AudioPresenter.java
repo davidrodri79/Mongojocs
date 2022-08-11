@@ -6,7 +6,7 @@ public class AudioPresenter extends MediaPresenter {
 
     public static final int AUDIO_COMPLETE = 1;
 
-    MediaSound currentSound = null;
+    static MediaSound currentSound = null;
 
     public static AudioPresenter getAudioPresenter() {
         return new AudioPresenter();

@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 
@@ -24,6 +25,7 @@ public class IApplicationRunScreen implements Screen {
 
     Launcher launcher;
     OrthographicCamera camera;
+    GlyphLayout layout;
     IApplication game;
     Thread thread;
 
@@ -89,6 +91,8 @@ public class IApplicationRunScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 176, 208);
+
+        layout = new GlyphLayout();
 
         Gdx.input.setInputProcessor(new InputAdapter(){
 
@@ -183,7 +187,7 @@ public class IApplicationRunScreen implements Screen {
             Display.theCanvas.flushRepaints();
 
         int px = (176 - Display.width) / 2;
-        int py = (208 - Display.height) / 2;
+        int py = (208 - (Display.height+20)) / 2;
 
         launcher.shapeRenderer.setProjectionMatrix(camera.combined);
         launcher.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -193,7 +197,19 @@ public class IApplicationRunScreen implements Screen {
 
         launcher.batch.setProjectionMatrix(camera.combined);
         launcher.batch.begin();
-        launcher.batch.draw(Display.screenBuffer, px, py, Display.width, Display.height, 0, 1, 1, 0);
+        launcher.batch.draw(Display.screenBuffer, px, py+20, Display.width, Display.height, 0, 1, 1, 0);
+        launcher.batch.end();
+
+        // SOFTLABELS
+
+        launcher.batch.setProjectionMatrix(camera.combined);
+        launcher.batch.begin();
+        if(Canvas.softKey1 != null)
+            launcher.smallFont.draw(launcher.batch, Canvas.softKey1, 0, 20);
+        if(Canvas.softKey2 != null) {
+            layout.setText(launcher.smallFont, Canvas.softKey2);
+            launcher.smallFont.draw(launcher.batch, Canvas.softKey2, 176-layout.width, 20);
+        }
         launcher.batch.end();
 
         // KEYBOARD LAYOUT

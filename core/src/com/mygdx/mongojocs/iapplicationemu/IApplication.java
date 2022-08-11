@@ -22,6 +22,8 @@ public class IApplication implements Runnable{
 
     public void terminate()
     {
+        if(AudioPresenter.currentSound != null)
+            AudioPresenter.currentSound.music.stop();
         appClosed = true;
     }
 

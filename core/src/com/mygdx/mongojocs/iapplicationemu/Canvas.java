@@ -7,6 +7,8 @@ public class Canvas {
 
     public Graphics graphics;
     public boolean repaintAsked = false;
+    public static String softKey1 = null;
+    public static String softKey2 = null;
 
     public Canvas()
     {
@@ -31,7 +33,10 @@ public class Canvas {
 
     protected void setSoftLabel(int k, String s)
     {
-
+        if(k == Frame.SOFT_KEY_1)
+            softKey1 = s;
+        else if(k == Frame.SOFT_KEY_2)
+            softKey2 = s;
     }
 
     public int getWidth()

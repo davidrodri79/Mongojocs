@@ -110,7 +110,6 @@ public class CatalogScreen implements Screen {
     }
 
     MongoGame catalog[]={
-            new MongoGame("Defendinf Inca", 2004, NEC_341I, "defendinginca", com.mygdx.mongojocs.defendinginca.Game.class),
 
             new MongoGame("3D QBlast 2.0", 2005, NOKIA_SERIES_60, "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
             new MongoGame("Aminoid X", 2003, NOKIA_SERIES_60,"aminoid", com.mygdx.mongojocs.aminoid.Game.class),
@@ -120,6 +119,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Club Football 2005", 2004, NOKIA_SERIES_60,"clubfootball2005", com.mygdx.mongojocs.clubfootball2005.Game.class),
             new MongoGame("Club Football 2006", 2005, NOKIA_SERIES_60,"clubfootball2006", com.mygdx.mongojocs.clubfootball2006.Game.class),
             new MongoGame("Cerberus Lair", 2003, NOKIA_SERIES_60,"cerberus", com.mygdx.mongojocs.cerberus.CerberusMain.class),
+            new MongoGame("Defending Inca", 2004, NEC_341I, "defendinginca", com.mygdx.mongojocs.defendinginca.Game.class),
             new MongoGame("Domino", 2005, NOKIA_SERIES_60,"domino", com.mygdx.mongojocs.domino.Game.class),
             new MongoGame("Escape", 2003, NOKIA_SERIES_60,"escape", com.mygdx.mongojocs.escape.EscapeNMain.class),
             new MongoGame("FBI", 2004, NOKIA_SERIES_60,"fbi", com.mygdx.mongojocs.fbi.Game.class),
@@ -146,6 +146,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Sexy Snake", 2004, NOKIA_SERIES_60, "sexysnake", com.mygdx.mongojocs.sexysnake.Game.class),
             new MongoGame("Sabotage", 2003, NOKIA_SERIES_60,"sabotage", com.mygdx.mongojocs.sabotage.Game.class),
             new MongoGame("Sanfermines 2006", 2006, NOKIA_SERIES_60,"sanfermines2006", com.mygdx.mongojocs.sanfermines2006.Game.class),
+            new MongoGame("Sea Invasion", 2004, NEC_341I, "seainvasion", com.mygdx.mongojocs.seainvasion.Game.class),
             new MongoGame("Sextron", 2004, NOKIA_SERIES_60,"sextron", com.mygdx.mongojocs.sextron.Game.class),
             new MongoGame("Sliddisk", 2004, NEC_341I, "sliddisk", com.mygdx.mongojocs.sliddisk.Game.class),
             new MongoGame("Thai Warrior", 2004, NOKIA_SERIES_60,"thaiwarrior", com.mygdx.mongojocs.thaiwarrior.nokia.Boot60.class),
