@@ -33,6 +33,7 @@ public class Display {
     public static final int KEY_SOFT1 = 20;
     public static final int KEY_SOFT2 = 21;
     public static final int KEY_ASTERISK = 30;
+    public static final int KEY_POUND = 31;
     public static int width;
     public static int height;
 

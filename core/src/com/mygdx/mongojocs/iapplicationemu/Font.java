@@ -8,11 +8,13 @@ import com.mygdx.mongojocs.iapplicationemu.Graphics;
 public class Font {
 
     public static final int FACE_PROPORTIONAL = 1;
+    public static final int FACE_SYSTEM = 2;
     public static final int STYLE_PLAIN = 4;
     public static final int STYLE_BOLD = 8;
     public static final int SIZE_SMALL = 32;
     public static final int SIZE_MEDIUM = 64;
     public static final int SIZE_LARGE = 128;
+
 
     public int flags;
 
