@@ -18,6 +18,11 @@ public class Graphics {
     public static final int BLACK = 0;
     public static final int RED = 1;
     public static final int WHITE = 2;
+    public static final int GREEN = 3;
+    public static final int BLUE = 4;
+    public static final int YELLOW = 5;
+    public static final int LIME = 6;
+    public static final int FUCHSIA = 7;
     public static boolean generatingFont = false;
     int originX = 0;
     int originY = 0;
@@ -117,6 +122,11 @@ public class Graphics {
         switch (c)
         {
             case RED : return getColorOfRGB(255,0,0);
+            case GREEN : return getColorOfRGB(0,255,0);
+            case BLUE : return getColorOfRGB(0,0,255);
+            case YELLOW: return getColorOfRGB(255,255,0);
+            case LIME: return getColorOfRGB(255,255,0);
+            case FUCHSIA: return getColorOfRGB(255, 0,255);
             case BLACK : return getColorOfRGB(0,0,0);
             default :
             case WHITE : return getColorOfRGB(255,255,255);
@@ -283,4 +293,30 @@ public class Graphics {
         Display.fbo.end();
 
     }
+
+    public void fillPolygon(int[] xPoints, int[] yPoints, int nverts) {
+
+
+        Display.fbo.begin();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        float vert[] = new float[nverts*2];
+
+        for(int i = 0; i < nverts; i++)
+        {
+            vert[2*i] = xPoints[i] + originX;
+            vert[2*i+1] = yPoints[i] + originY;
+        }
+
+        shapeRenderer.setColor(currentColor);
+        //shapeRenderer.polygon(vert, 0, nverts*2);
+        shapeRenderer.triangle(vert[0],vert[1],vert[2],vert[3],vert[4],vert[5]);
+
+        shapeRenderer.end();
+
+        Display.fbo.end();
+    }
+
 }

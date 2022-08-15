@@ -35,7 +35,7 @@ public class Font {
     }
 
     public int getAscent() {
-        return 8;
+        return 0;
     }
 
     public int stringWidth(String s)

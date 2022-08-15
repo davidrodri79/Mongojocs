@@ -1015,9 +1015,9 @@ public MediaSound LoadSound(int Pos)
 	String[] FS_strError = new String[] {
 			"- ERROR -",
 			" ",
-			"- Si es la primera vez que ejecuta esta aplicaci�n, aseg�rese de tener activado el acceso a la red.",
+			"- Si es la primera vez que ejecuta esta aplicación, asegúrese de tener activado el acceso a la red.",
 			" ",
-			"- Posible problema de cobertura GPRS. Int�ntelo de nuevo m�s tarde.",
+			"- Posible problema de cobertura GPRS. Inténtelo de nuevo más tarde.",
 	};
 
 // <=- <=- <=- <=- <=-
