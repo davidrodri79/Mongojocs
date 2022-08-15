@@ -111,9 +111,6 @@ public class CatalogScreen implements Screen {
 
     MongoGame catalog[]={
 
-            new MongoGame("Mr Boom", 2004, NEC_341I, "mrboom", com.mygdx.mongojocs.mrboom.Game.class),
-
-
             new MongoGame("3D QBlast 2.0", 2005, NOKIA_SERIES_60, "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
             new MongoGame("Aminoid X", 2003, NOKIA_SERIES_60,"aminoid", com.mygdx.mongojocs.aminoid.Game.class),
             new MongoGame("Astro 3003", 2003, NOKIA_SERIES_60,"astro", com.mygdx.mongojocs.astro.Game.class),
@@ -137,6 +134,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Machine Crisis", 2004, NEC_341I, "machinecrisis", com.mygdx.mongojocs.machinecrisis.Game.class),
             new MongoGame("Movistar Racing", 2003, NOKIA_SERIES_60,"mr", com.mygdx.mongojocs.mr.Moto.class),
             new MongoGame("Movistar Racing 2", 2005, NOKIA_SERIES_60,"mr2", com.mygdx.mongojocs.mr2.Game.class),
+            new MongoGame("Mr Boom", 2004, NEC_341I, "mrboom", com.mygdx.mongojocs.mrboom.Game.class),
             //new MongoGame("Movistar Racing 3", 2005, NOKIA_SERIES_60,"mr3", com.mygdx.mongojocs.mr3.Game.class),
             new MongoGame("Ninja Run", 2004, NOKIA_SERIES_60,"ninjarun", com.mygdx.mongojocs.ninjarun.ITGame01.class),
             new MongoGame("No Passeu", 2005, NOKIA_SERIES_40,"nopasseu", com.mygdx.mongojocs.nopasseu.Game.class),
