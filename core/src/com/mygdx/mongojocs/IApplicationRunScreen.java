@@ -35,11 +35,11 @@ public class IApplicationRunScreen implements Screen {
         int y;
         int w;
         int h;
-        int code;
+        int codes[];
         String label;
-        VirtualKey(int xx, int yy, int ww, int hh, int c, String l)
+        VirtualKey(int xx, int yy, int ww, int hh, int c[], String l)
         {
-            x=xx; y=yy; w=ww; h=hh; code = c; label=l;
+            x=xx; y=yy; w=ww; h=hh; codes = c; label=l;
         }
         boolean inside(int xx, int yy)
         {
@@ -69,19 +69,19 @@ public class IApplicationRunScreen implements Screen {
 
     VirtualKey vkeys[] =
             {
-                    new VirtualKey(176-35,5,30, 30, -1, "o"),
-                    new VirtualKey(0,39,59, 39, Display.KEY_1, "1"),
-                    new VirtualKey(59,39,59, 39, Display.KEY_2, "2"),
-                    new VirtualKey(118,39,59, 39, Display.KEY_3, "3"),
-                    new VirtualKey(0,78,59, 39, Display.KEY_4, "4"),
-                    new VirtualKey(59,78,59, 39, Display.KEY_5, "5"),
-                    new VirtualKey(118,78,59, 39, Display.KEY_6, "6"),
-                    new VirtualKey(0,117,59, 39, Display.KEY_7, "7"),
-                    new VirtualKey(59,117,59, 39, Display.KEY_8, "8"),
-                    new VirtualKey(118,117,59, 39, Display.KEY_9, "9"),
-                    new VirtualKey(0,156,59, 39, Display.KEY_SOFT1, ""),
-                    new VirtualKey(59,156,59, 39, Display.KEY_0, "0"),
-                    new VirtualKey(118,156,59, 39, Display.KEY_SOFT2, "")
+                    new VirtualKey(176-35,5,30, 30, null, "o"),
+                    new VirtualKey(0,39,59, 39, new int[] {Display.KEY_1}, "1"),
+                    new VirtualKey(59,39,59, 39,  new int[] {Display.KEY_2, Display.KEY_UP}, "2"),
+                    new VirtualKey(118,39,59, 39,  new int[] {Display.KEY_3}, "3"),
+                    new VirtualKey(0,78,59, 39,  new int[] {Display.KEY_4, Display.KEY_LEFT}, "4"),
+                    new VirtualKey(59,78,59, 39,  new int[] {Display.KEY_5}, "5"),
+                    new VirtualKey(118,78,59, 39,  new int[] {Display.KEY_6, Display.KEY_RIGHT}, "6"),
+                    new VirtualKey(0,117,59, 39,  new int[] {Display.KEY_7}, "7"),
+                    new VirtualKey(59,117,59, 39,  new int[] {Display.KEY_8, Display.KEY_DOWN}, "8"),
+                    new VirtualKey(118,117,59, 39,  new int[] {Display.KEY_9}, "9"),
+                    new VirtualKey(0,156,59, 39,  new int[] {Display.KEY_SOFT1}, ""),
+                    new VirtualKey(59,156,59, 39,  new int[] {Display.KEY_0}, "0"),
+                    new VirtualKey(118,156,59, 39,  new int[] {Display.KEY_SOFT2, Display.KEY_SELECT}, "")
             };
     VirtualKey pressedKey = null;
 
@@ -107,12 +107,13 @@ public class IApplicationRunScreen implements Screen {
                     //game.gameCanvas.g.camera.unproject(touchPos);
 
                     if(vkeys[i].inside((int)touchPos.x, 208 - (int)touchPos.y)) {
-                        if(vkeys[i].code == -1)
+                        if(vkeys[i].codes == null)
                         {
                             launcher.currentLayout = (launcher.currentLayout+1)%layouts.length;
                         }
                         else {
-                            Display.theCanvas.processEvent(Display.KEY_PRESSED_EVENT, vkeys[i].code);
+                            for(int j = 0; j < vkeys[i].codes.length; j++)
+                                Display.theCanvas.processEvent(Display.KEY_PRESSED_EVENT, vkeys[i].codes[j]);
                             pressedKey = vkeys[i];
                         }
                     }
@@ -124,7 +125,8 @@ public class IApplicationRunScreen implements Screen {
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
                 if(pressedKey != null) {
-                    Display.theCanvas.processEvent(Display.KEY_RELEASED_EVENT, pressedKey.code);
+                    for(int j = 0; j < pressedKey.codes.length; j++)
+                        Display.theCanvas.processEvent(Display.KEY_RELEASED_EVENT, pressedKey.codes[j]);
                     pressedKey = null;
                 }
                 return true;
@@ -222,7 +224,7 @@ public class IApplicationRunScreen implements Screen {
             int y = 208 - vk.y - vk.h - 4;
             int w = vk.w - 8;
             int h = vk.h - 8;
-            float alpha = vk.code == -1 ? 0.5f : (vk == pressedKey ? 0.25f : layouts[launcher.currentLayout].alpha);
+            float alpha = vk.codes == null ? 0.5f : (vk == pressedKey ? 0.25f : layouts[launcher.currentLayout].alpha);
 
             Gdx.gl.glEnable(GL20.GL_BLEND);
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -230,15 +232,15 @@ public class IApplicationRunScreen implements Screen {
             launcher.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             launcher.shapeRenderer.setColor(new Color(1,1,1,alpha));
             launcher.shapeRenderer.rect(x, y, w, h);
-            if(vk.code == Display.KEY_2)
+            if(vk.label.equals("2"))
                 launcher.shapeRenderer.triangle(x+4,y+4,x+w-4,y+4,x+w/2,y+h-4);
-            if(vk.code == Display.KEY_8)
+            if(vk.label.equals("8"))
                 launcher.shapeRenderer.triangle(x+4,y+h-4,x+w-4,y+h-4,x+w/2,y+4);
-            if(vk.code == Display.KEY_4)
+            if(vk.label.equals("4"))
                 launcher.shapeRenderer.triangle(x+4,y+h/2,x+w-4,y+h-4,x+w-4,y+4);
-            if(vk.code == Display.KEY_6)
+            if(vk.label.equals("6"))
                 launcher.shapeRenderer.triangle(x+w-4,y+h/2,x+4,y+h-4,x+4,y+4);
-            if(vk.code == Display.KEY_5)
+            if(vk.label.equals("5"))
                 launcher.shapeRenderer.circle(x+w/2, y+h/2, h/2 - 4);
             launcher.shapeRenderer.end();
 
@@ -250,7 +252,7 @@ public class IApplicationRunScreen implements Screen {
             }
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
-            if(layouts[launcher.currentLayout].numbers || vk.code == -1) {
+            if(layouts[launcher.currentLayout].numbers || vk.codes == null) {
                 launcher.shapeRenderer.setColor(new Color(1,1,1,alpha));
                 launcher.batch.setProjectionMatrix(camera.combined);
                 launcher.batch.begin();
