@@ -1,7 +1,10 @@
 package com.mygdx.mongojocs.iapplicationemu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.mygdx.mongojocs.midletemu.MIDlet;
 
 public class Image {
@@ -28,6 +31,7 @@ public class Image {
         }
     }
 
+    FrameBuffer fbo;
     public Texture texture = null;
 
     public static Image createImage(String fileName)
@@ -53,6 +57,18 @@ public class Image {
     {
         texture = new Texture(fileName);
         Gdx.app.log("Image", "createImage "+fileName.toString());
+    }
+
+    public void _createImage(int w, int h)
+    {
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, w, h, false);
+        texture = fbo.getColorBufferTexture();
+
+        fbo.begin();
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        fbo.end();
+        Gdx.app.log("Image", "createImage ("+w+","+h+")");
     }
 
     public int getWidth() {

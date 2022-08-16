@@ -111,9 +111,6 @@ public class CatalogScreen implements Screen {
 
     MongoGame catalog[]={
 
-            new MongoGame("Snaiky", 2004, NEC_341I, "snaiky", com.mygdx.mongojocs.snaiky.Moto.class),
-
-
             new MongoGame("3D QBlast 2.0", 2005, NOKIA_SERIES_60, "qblast20", com.mygdx.mongojocs.qblast20.Game.class),
             new MongoGame("Aminoid X", 2003, NOKIA_SERIES_60,"aminoid", com.mygdx.mongojocs.aminoid.Game.class),
             new MongoGame("Astro 3003", 2003, NOKIA_SERIES_60,"astro", com.mygdx.mongojocs.astro.Game.class),
@@ -129,6 +126,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Football Mobile", 2004, NOKIA_SERIES_60,"footballmobile", com.mygdx.mongojocs.foootballmobile.Game.class),
             new MongoGame("Frozen World", 2004, NOKIA_SERIES_60,"frozenworld", com.mygdx.mongojocs.frozenworld.Game.class),
             new MongoGame("Garbage Collector", 2004, NEC_341I, "garbage", com.mygdx.mongojocs.garbage.Moto.class),
+            new MongoGame("Hot Speed", 2004, NEC_341I, "hotspeed", com.mygdx.mongojocs.hotspeed.Game.class),
             new MongoGame("Juego de la Verdad", 2004, NOKIA_SERIES_60, "juegoverdad", com.mygdx.mongojocs.juegoverdad.Game.class),
             new MongoGame("K-Insectors", 2003, NOKIA_SERIES_60,"kinsectors", com.mygdx.mongojocs.kinsectors.KInsectors.class),
             new MongoGame("LMA 2005", 2004, NOKIA_SERIES_60,"lma2005", com.mygdx.mongojocs.lma2005.Game.class),
@@ -158,6 +156,7 @@ public class CatalogScreen implements Screen {
             new MongoGame("Sea Invasion", 2004, NEC_341I, "seainvasion", com.mygdx.mongojocs.seainvasion.Game.class),
             new MongoGame("Sextron", 2004, NOKIA_SERIES_60,"sextron", com.mygdx.mongojocs.sextron.Game.class),
             new MongoGame("Sliddisk", 2004, NEC_341I, "sliddisk", com.mygdx.mongojocs.sliddisk.Game.class),
+            new MongoGame("Snaiky", 2004, NEC_341I, "snaiky", com.mygdx.mongojocs.snaiky.Moto.class),
             new MongoGame("Thai Warrior", 2004, NOKIA_SERIES_60,"thaiwarrior", com.mygdx.mongojocs.thaiwarrior.nokia.Boot60.class),
             new MongoGame("The Mute", 2003, NOKIA_SERIES_60,"themute", com.mygdx.mongojocs.themute.Game.class),
             new MongoGame("TOCA RD 2", 2004, NOKIA_SERIES_60, "toca", com.mygdx.mongojocs.toca.Game.class),

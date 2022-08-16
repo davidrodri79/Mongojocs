@@ -50,8 +50,17 @@ public class Font {
         fnt = Graphics.bitmapFonts.get(hash);
 
         if(fnt != null) {
+
+            int space;
+            if((flags & SIZE_LARGE) != 0)
+                space = 4;
+            else if((flags & SIZE_SMALL) != 0)
+                space = 2;
+            else
+                space = 3;
+
             layout.setText(fnt, s);
-            return (int) layout.width;
+            return (int) layout.width + (s.length() == 1 ? space : 0);
         }
         else
             return 0;
